@@ -68,6 +68,7 @@ class ComposerStaticInit8fcd035aa7e7ef6c6eb0cc16cb7eff03
             'Symfony\\Component\\Debug\\' => 24,
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
+            'Spatie\\EloquentSortable\\' => 24,
             'Seld\\PharUtils\\' => 15,
             'Seld\\JsonLint\\' => 14,
         ),
@@ -271,6 +272,10 @@ class ComposerStaticInit8fcd035aa7e7ef6c6eb0cc16cb7eff03
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
+        ),
+        'Spatie\\EloquentSortable\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/eloquent-sortable/src',
         ),
         'Seld\\PharUtils\\' => 
         array (
@@ -489,6 +494,7 @@ class ComposerStaticInit8fcd035aa7e7ef6c6eb0cc16cb7eff03
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/app/Http/Middleware/TrimStrings.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Http\\Middleware\\Website\\IsAuth' => __DIR__ . '/../..' . '/app/Http/Middleware/Website/IsAuth.php',
         'App\\Http\\Middleware\\Website\\SetLocale' => __DIR__ . '/../..' . '/app/Http/Middleware/Website/SetLocale.php',
         'App\\Model\\Category' => __DIR__ . '/../..' . '/app/Model/Category.php',
         'App\\Model\\Cms\\PermissionCms' => __DIR__ . '/../..' . '/app/Model/Cms/PermissionCms.php',
@@ -496,6 +502,7 @@ class ComposerStaticInit8fcd035aa7e7ef6c6eb0cc16cb7eff03
         'App\\Model\\Cms\\UserCms' => __DIR__ . '/../..' . '/app/Model/Cms/UserCms.php',
         'App\\Model\\Domain' => __DIR__ . '/../..' . '/app/Model/Domain.php',
         'App\\Model\\Fotogallery' => __DIR__ . '/../..' . '/app/Model/Fotogallery.php',
+        'App\\Model\\Macrocategory' => __DIR__ . '/../..' . '/app/Model/Macrocategory.php',
         'App\\Model\\Module' => __DIR__ . '/../..' . '/app/Model/Module.php',
         'App\\Model\\ModuleConfig' => __DIR__ . '/../..' . '/app/Model/ModuleConfig.php',
         'App\\Model\\Page' => __DIR__ . '/../..' . '/app/Model/Page.php',
@@ -3985,6 +3992,8 @@ class ComposerStaticInit8fcd035aa7e7ef6c6eb0cc16cb7eff03
         'Seld\\JsonLint\\Undefined' => __DIR__ . '/..' . '/seld/jsonlint/src/Seld/JsonLint/Undefined.php',
         'Seld\\PharUtils\\Linter' => __DIR__ . '/..' . '/seld/phar-utils/src/Linter.php',
         'Seld\\PharUtils\\Timestamps' => __DIR__ . '/..' . '/seld/phar-utils/src/Timestamps.php',
+        'Spatie\\EloquentSortable\\Sortable' => __DIR__ . '/..' . '/spatie/eloquent-sortable/src/Sortable.php',
+        'Spatie\\EloquentSortable\\SortableTrait' => __DIR__ . '/..' . '/spatie/eloquent-sortable/src/SortableTrait.php',
         'Symfony\\Component\\Console\\Application' => __DIR__ . '/..' . '/symfony/console/Application.php',
         'Symfony\\Component\\Console\\CommandLoader\\CommandLoaderInterface' => __DIR__ . '/..' . '/symfony/console/CommandLoader/CommandLoaderInterface.php',
         'Symfony\\Component\\Console\\CommandLoader\\ContainerCommandLoader' => __DIR__ . '/..' . '/symfony/console/CommandLoader/ContainerCommandLoader.php',

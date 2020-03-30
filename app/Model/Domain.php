@@ -10,4 +10,9 @@ class Domain extends Model
         'locale',
         'nome',
     ];
+
+    public function urls()
+    {
+        return $this->hasMany('App\Model\Url');
+    }
 }

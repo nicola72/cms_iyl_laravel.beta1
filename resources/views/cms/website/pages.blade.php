@@ -9,7 +9,7 @@
                     <div class="ibox-title">
 
                         <!-- Nuovo Dominio -->
-                        <a href="javascript:void(0)" onclick="get_modal('{{url("cms/website/create_domain")}}')" class="btn btn-w-m btn-primary">Nuovo</a>
+                        <a href="javascript:void(0)" onclick="get_modal('{{url("cms/website/create_page")}}')" class="btn btn-w-m btn-primary">Nuovo</a>
                         <!-- fine pulsante nuovo -->
 
                         <!-- indietro -->
@@ -26,27 +26,19 @@
                         <table id="table-moduli" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
-                                <th>Locale</th>
                                 <th>Nome</th>
                                 <th data-orderable="false">Azioni</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($domains as $domain)
+                            @foreach($pages as $page)
                                 <tr>
-                                    <td>{{$domain->locale}}</td>
 
-                                    <td>{{$domain->nome}}</td>
+                                    <td>{{$page->nome}}</td>
 
                                     <td>
-                                        <!-- Pulsante per modificare -->
-                                        <a class="azioni-table" onclick="get_modal('{{url('/cms/website/edit_domain',[$domain->id])}}')"  href="javascript:void(0)">
-                                            <i class="fa fa-edit fa-2x"></i>
-                                        </a>
-                                        <!-- -->
-
                                         <!-- pulsante per eliminare -->
-                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/website/destroy_domain',[$domain->id])}}">
+                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/website/destroy_page',[$page->id])}}">
                                             <i class="fa fa-trash fa-2x"></i>
                                         </a>
                                         <!-- -->

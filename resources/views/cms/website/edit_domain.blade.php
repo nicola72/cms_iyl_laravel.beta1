@@ -4,7 +4,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Nuovo Dominio</h4>
+            <h4 class="modal-title">Modifica Dominio</h4>
         </div>
         <div class="modal-body">
             <form action="" method="POST" id="{{ $form_name }}">
@@ -14,13 +14,17 @@
                     <?php $lingue = explode(",",$website_config->get('lingue')) ?>
                     <select id="lang" name="lang" class="form-control" >
                         @foreach($lingue as $lingua)
-                            <option value="{{$lingua}}">{{$lingua}}</option>
+                            @if($lingua == $domain->locale)
+                                <option value="{{$lingua}}" selected>{{$lingua}}</option>
+                            @else
+                                <option value="{{$lingua}}">{{$lingua}}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Nome* <small>(senza il www)</small></label>
-                    <input type="text" name="nome" id="nome" class="form-control" />
+                    <label>Nome*</label>
+                    <input type="text" name="nome" id="nome" value="{{$domain->nome}}" class="form-control" />
                 </div>
                 <div class="form-group">
                     <span>* campi obbligatori</span>
@@ -46,7 +50,7 @@
         {
             $.ajax({
                 type: "POST",
-                url: "{{url('cms/website/store_domain')}}",
+                url: "{{url('cms/website/update_domain',[$domain->id])}}",
                 data: $("#{{$form_name}}").serialize(),
                 dataType: "json",
                 success: function (data)

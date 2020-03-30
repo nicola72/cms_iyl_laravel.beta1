@@ -15,7 +15,7 @@
     return view('welcome');
 });*/
 
-Auth::routes();
+//Auth::routes();
 
 //Route::get('/home', 'HomeController@index')->name('home');
 
@@ -24,7 +24,6 @@ Route::get('/','Website\PageController@index')->name('website.home');
 
 Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'middleware' => 'setlocale'],function(){
 
-    Route::get('/contatti','Website\PageController@contatti');
     Route::get('/{slug}','Website\PageController@page');
 });
 
@@ -74,11 +73,18 @@ Route::group(['prefix' => 'cms'], function ()
 
         Route::get('/website/domains', 'Cms\WebsiteController@domains')->name('cms.website.domains');
         Route::get('/website/create_domain', 'Cms\WebsiteController@create_domain');
+        Route::get('/website/edit_domain/{id}', 'Cms\WebsiteController@edit_domain');
+        Route::get('/website/destroy_domain/{id}', 'Cms\WebsiteController@destroy_domain');
+        Route::post('/website/update_domain/{id}', 'Cms\WebsiteController@update_domain');
         Route::post('/website/store_domain','Cms\WebsiteController@store_domain');
         Route::get('/website','Cms\WebsiteController@index')->name('cms.website');
         Route::get('/website/pages','Cms\WebsiteController@pages');
         Route::get('/website/create_page','Cms\WebsiteController@create_page');
-        Route::post('/website/store_page','cms\WebsiteController@store_page');
+        Route::get('/website/destroy_page/{id}','Cms\WebsiteController@destroy_page');
+        Route::post('/website/store_page','Cms\WebsiteController@store_page');
+        Route::get('/website/urls','Cms\WebsiteController@urls');
+        Route::get('/website/edit_url/{id}','Cms\WebsiteController@edit_url');
+        Route::post('/website/update_url/{id}','Cms\WebsiteController@update_url');
 
 
     });

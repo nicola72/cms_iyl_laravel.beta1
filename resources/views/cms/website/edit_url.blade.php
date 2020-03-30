@@ -4,23 +4,43 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Nuovo Dominio</h4>
+            <h4 class="modal-title">Modifica Dominio</h4>
         </div>
         <div class="modal-body">
             <form action="" method="POST" id="{{ $form_name }}">
                 {{ csrf_field() }}
                 <div class="form-group">
-                    <label>Locale*</label>
-                    <?php $lingue = explode(",",$website_config->get('lingue')) ?>
-                    <select id="lang" name="lang" class="form-control" >
-                        @foreach($lingue as $lingua)
-                            <option value="{{$lingua}}">{{$lingua}}</option>
+                    <label>Dominio</label>
+                    <select name="domain_id" id="domain_id" class="form-control">
+                        @foreach($domains as $domain)
+                            @if($domain->id == $url->domain_id)
+                                <option value="{{$domain->id}}" selected>{{$domain->nome}}</option>
+                            @else
+                                <option value="{{$domain->id}}">{{$domain->nome}}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Nome* <small>(senza il www)</small></label>
-                    <input type="text" name="nome" id="nome" class="form-control" />
+                    <label>Tipo</label>
+                    <input type="text" value="{{$url->urlable_type}}" disabled class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Locale*</label>
+                    <?php $lingue = explode(",",$website_config->get('lingue')) ?>
+                    <select id="lang" name="lang" class="form-control" >
+                        @foreach($lingue as $lingua)
+                            @if($lingua == $url->locale)
+                                <option value="{{$lingua}}" selected>{{$lingua}}</option>
+                            @else
+                                <option value="{{$lingua}}">{{$lingua}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Slug*</label>
+                    <input type="text" name="slug" id="nome" value="{{$url->slug}}" class="form-control" />
                 </div>
                 <div class="form-group">
                     <span>* campi obbligatori</span>
@@ -40,13 +60,13 @@
 </div>
 <script>
     $("#{{$form_name}}").validate({
-        rules: { nome:{required:true}, locale:{required:true} },
-        messages: { nome:{required:"Campo Obbligatorio"}, locale: {required: "Campo Obbligatorio"}},
+        rules: { slug:{required:true}, locale:{required:true} },
+        messages: { slug:{required:"Campo Obbligatorio"}, locale: {required: "Campo Obbligatorio"}},
         submitHandler: function (form)
         {
             $.ajax({
                 type: "POST",
-                url: "{{url('cms/website/store_domain')}}",
+                url: "{{url('cms/website/update_url',[$url->id])}}",
                 data: $("#{{$form_name}}").serialize(),
                 dataType: "json",
                 success: function (data)

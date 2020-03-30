@@ -16,6 +16,10 @@
                         <a href="{{url('cms/website/pages')}}" class="btn btn-w-m btn-primary">Pagine</a>
                         <!-- -->
 
+                        <!-- Urls -->
+                        <a href="{{url('cms/website/urls')}}" class="btn btn-w-m btn-primary">Urls</a>
+                        <!-- -->
+
 
                         <div class="ibox-tools">
                             <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>

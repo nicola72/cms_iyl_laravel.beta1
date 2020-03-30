@@ -16,13 +16,9 @@ class Url extends Model
         return $this->morphTo();
     }
 
-    public function page()
+    public function domain()
     {
-        return $this->belongsTo('App\Model\Page');
+        return $this->belongsTo('App\Model\Domain');
     }
 
-    public function pages()
-    {
-        return $this->belongsToMany('App\Model\Page');
-    }
 }

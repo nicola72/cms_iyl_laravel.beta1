@@ -22,9 +22,11 @@
             <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
         @show
 
-        @include('layouts.website_google_analytics');
-        @include('layouts.website_fb_script');
-        @include('layouts.website_twitter_script');
+        @include('layouts.website_google_analytics')
+        @include('layouts.website_fb_script')
+        @include('layouts.website_twitter_script')
+
+        @stack('head')
     </head>
     <body>
         <div id="preloader">
@@ -32,7 +34,9 @@
         </div>
         <a name="top"></a>
 
-        @include('layouts.website_header');
+        @include('layouts.website_header')
+        @include('layouts.website_flash-message')
+
         @yield('content')
 
         <?php //$site->setPartial('common/footer') ?>
@@ -44,6 +48,7 @@
         <!-- FINE MODALE -->
 
     @section('scripts')
+        <script src="/assets/js/jquery.js"></script>
         <script src="/assets/js/bootstrap.min.js"></script>
         <script src="/assets/js/bootstrap-dropdownhover.min.js"></script>
         <!-- Plugin JavaScript -->

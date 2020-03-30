@@ -9,7 +9,7 @@
                     <div class="ibox-title">
 
                         <!-- Nuovo Dominio -->
-                        <a href="javascript:void(0)" onclick="get_modal('{{url("cms/website/create_domain")}}')" class="btn btn-w-m btn-primary">Nuovo</a>
+                        <a href="javascript:void(0)" onclick="get_modal('{{url("cms/website/create_page")}}')" class="btn btn-w-m btn-primary">Nuovo</a>
                         <!-- fine pulsante nuovo -->
 
                         <!-- indietro -->
@@ -26,28 +26,30 @@
                         <table id="table-moduli" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
+                                <th>Completa</th>
+                                <th>Dominio</th>
                                 <th>Locale</th>
-                                <th>Nome</th>
+                                <th>Slug</th>
+                                <th>Tipo</th>
+                                <th>Id</th>
+                                <th>Nome Tipo</th>
                                 <th data-orderable="false">Azioni</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($domains as $domain)
+                            @foreach($urls as $url)
                                 <tr>
-                                    <td>{{$domain->locale}}</td>
-
-                                    <td>{{$domain->nome}}</td>
-
+                                    <td>www.{{$url->domain->nome}}/{{$url->locale}}/{{$url->slug}}</td>
+                                    <td>{{$url->domain->nome}}</td>
+                                    <td>{{$url->locale}}</td>
+                                    <td>{{$url->slug}}</td>
+                                    <td>{{$url->urlable_type}}</td>
+                                    <td>{{$url->urlable->id}}</td>
+                                    <td>{{$url->urlable->nome}}</td>
                                     <td>
                                         <!-- Pulsante per modificare -->
-                                        <a class="azioni-table" onclick="get_modal('{{url('/cms/website/edit_domain',[$domain->id])}}')"  href="javascript:void(0)">
+                                        <a class="azioni-table" onclick="get_modal('{{url('/cms/website/edit_url',[$url->id])}}')"  href="javascript:void(0)">
                                             <i class="fa fa-edit fa-2x"></i>
-                                        </a>
-                                        <!-- -->
-
-                                        <!-- pulsante per eliminare -->
-                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/website/destroy_domain',[$domain->id])}}">
-                                            <i class="fa fa-trash fa-2x"></i>
                                         </a>
                                         <!-- -->
                                     </td>
@@ -62,29 +64,5 @@
     </div>
 @endsection
 @section('js_script')
-    <script>
-        $(document).ready(function()
-        {
-            $('.elimina').click(function (e)
-            {
-                e.preventDefault();
-                var url = $(this).attr('href');
 
-                swal({
-                    title: "Sei sicuro?",
-                    text: "Sarà impossibile recuperare il file!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Sì, elimina!",
-                    closeOnConfirm: false
-                }, function ()
-                {
-                    location.href = url;
-                });
-            });
-
-
-        });
-    </script>
 @stop

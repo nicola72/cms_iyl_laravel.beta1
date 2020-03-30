@@ -13,11 +13,13 @@ class Category extends Model
         'nome_de',
         'nome_fr',
         'nome_es',
+        'nome_ru',
         'desc_it',
         'desc_en',
         'desc_de',
         'desc_fr',
         'desc_es',
+        'desc_ru',
         'visibile',
         'stato'
     ];

@@ -21,6 +21,13 @@ class CreateMacrocategoriesTable extends Migration
             $table->string('nome_fr')->nullable();
             $table->string('nome_es')->nullable();
             $table->string('nome_ru')->nullable();
+            $table->string('desc_it')->nullable();
+            $table->string('desc_en')->nullable();
+            $table->string('desc_de')->nullable();
+            $table->string('desc_fr')->nullable();
+            $table->string('desc_es')->nullable();
+            $table->string('desc_ru')->nullable();
+            $table->integer('order');
             $table->timestamps();
         });
     }

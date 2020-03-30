@@ -59,6 +59,9 @@ Route::group(['prefix' => 'cms'], function ()
         Route::resource('/seo','Cms\SeoController');
         Route::get('/seo', 'Cms\SeoController@index')->name('cms.seo');
 
+        Route::resource('/macrocategory','Cms\MacrocategoryController');
+        Route::get('/macrocategory', 'Cms\MacrocategoryController@index')->name('cms.macrocategorie');
+
         Route::resource('/news','Cms\NewsController');
         Route::get('/news', 'Cms\NewsController@index')->name('cms.news');
 

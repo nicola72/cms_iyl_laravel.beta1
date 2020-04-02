@@ -29,11 +29,24 @@ class AppServiceProvider extends ServiceProvider
     {
         Builder::defaultStringLength(191);
 
+        //funzione custom per formattare il prezzo
+        \Blade::directive('money', function ($amount)
+        {
+            return "<?php echo '€' . number_format($amount, 2,',','.'); ?>";
+        });
+
         //i moduli presenti
         view()->share('cms_modules',Module::all());
 
         //la configurazione del sito web
-        view()->share('website_config',$this->getWebsiteConfig());
+        $website_config = $this->getWebsiteConfig();
+        view()->share('website_config',$website_config);
+
+        //le lingue del sito web
+        $langs = explode(",",$website_config->get('lingue'));
+        //per i controller
+        \Config::set('langs', $langs);
+        view()->share('langs',$langs);
     }
 
     protected function getWebsiteConfig()

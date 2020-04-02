@@ -4,42 +4,34 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modifica Dominio</h4>
+            <h4 class="modal-title">Nuova Categoria</h4>
         </div>
         <div class="modal-body">
             <form action="" method="POST" id="{{ $form_name }}">
                 {{ csrf_field() }}
                 <div class="form-group">
-                    <label>Dominio</label>
-                    <select name="domain_id" id="domain_id" class="form-control">
-                        @foreach($domains as $domain)
-                            @if($domain->id == $url->domain_id)
-                                <option value="{{$domain->id}}" selected>{{$domain->nome}}</option>
-                            @else
-                                <option value="{{$domain->id}}">{{$domain->nome}}</option>
-                            @endif
+                    <select name="macrocategory_id" id="macrocategory_id" class="form-control">
+                        <option value="">seleziona</option>
+                        @foreach($macros as $macro)
+                            <option value="{{$macro->id}}">{{$macro->nome_it}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Tipo</label>
-                    <input type="text" value="{{$url->urlable_type}}" disabled class="form-control" />
+                    @foreach($langs as $lang)
+                        <label class="d-block">
+                            <img class="lang-icon" src="/img/cms/{{$lang}}.png" alt=""> Nome {{$lang}}*
+                        </label>
+                        <input type="text" name="nome_{{$lang}}" id="nome_{{$lang}}" class="form-control mb-2" />
+                    @endforeach
                 </div>
                 <div class="form-group">
-                    <label>Locale*</label>
-                    <select id="lang" name="lang" class="form-control" >
-                        @foreach($langs as $lingua)
-                            @if($lingua == $url->locale)
-                                <option value="{{$lingua}}" selected>{{$lingua}}</option>
-                            @else
-                                <option value="{{$lingua}}">{{$lingua}}</option>
-                            @endif
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Slug*</label>
-                    <input type="text" name="slug" id="nome" value="{{$url->slug}}" class="form-control" />
+                    @foreach($langs as $lang)
+                        <label class="d-block">
+                            <img class="lang-icon" src="/img/cms/{{$lang}}.png" alt=""> Descrizione {{$lang}}
+                        </label>
+                        <textarea id="desc_{{$lang}}" style="min-height: 100px;" name="desc_{{$lang}}" class="form-control summernote mb-2"  ></textarea>
+                    @endforeach
                 </div>
                 <div class="form-group">
                     <span>* campi obbligatori</span>
@@ -59,13 +51,23 @@
 </div>
 <script>
     $("#{{$form_name}}").validate({
-        rules: { slug:{required:true}, locale:{required:true} },
-        messages: { slug:{required:"Campo Obbligatorio"}, locale: {required: "Campo Obbligatorio"}},
+        rules: {
+            @foreach($langs as $lang)
+                nome_{{$lang}}:{required:true},
+            @endforeach
+                macrocategory_id:{required:true},
+        },
+        messages: {
+            @foreach($langs as $lang)
+            nome_{{$lang}}:{required:'Questo campo è obbligatorio'},
+            @endforeach
+            macrocategory_id:{required:'Questo campo è obbligatorio'},
+        },
         submitHandler: function (form)
         {
             $.ajax({
                 type: "POST",
-                url: "{{url('cms/website/update_url',[$url->id])}}",
+                url: "{{url('cms/category')}}",
                 data: $("#{{$form_name}}").serialize(),
                 dataType: "json",
                 success: function (data)

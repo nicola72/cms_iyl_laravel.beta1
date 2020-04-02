@@ -4,22 +4,26 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Nuovo Dominio</h4>
+            <h4 class="modal-title">Modifica Categoria Principale</h4>
         </div>
         <div class="modal-body">
             <form action="" method="POST" id="{{ $form_name }}">
                 {{ csrf_field() }}
                 <div class="form-group">
-                    <label>Locale*</label>
-                    <select id="lang" name="lang" class="form-control" >
-                        @foreach($langs as $lingua)
-                            <option value="{{$lingua}}">{{$lingua}}</option>
-                        @endforeach
-                    </select>
+                    @foreach($langs as $lang)
+                        <label class="d-block">
+                            <img class="lang-icon" src="/img/cms/{{$lang}}.png" alt=""> Nome {{$lang}}*
+                        </label>
+                        <input type="text" value="{{ $macro->{'nome_'.$lang} }}" name="nome_{{$lang}}" id="nome_{{$lang}}" class="form-control mb-2" />
+                    @endforeach
                 </div>
                 <div class="form-group">
-                    <label>Nome* <small>(senza il www)</small></label>
-                    <input type="text" name="nome" id="nome" class="form-control" />
+                    @foreach($langs as $lang)
+                        <label class="d-block">
+                            <img class="lang-icon" src="/img/cms/{{$lang}}.png" alt=""> Descrizione {{$lang}}
+                        </label>
+                        <textarea id="desc_{{$lang}}" style="min-height: 100px;" name="desc_{{$lang}}" class="form-control summernote mb-2"  >{{$macro->{'desc_'.$lang} }}</textarea>
+                    @endforeach
                 </div>
                 <div class="form-group">
                     <span>* campi obbligatori</span>
@@ -39,13 +43,21 @@
 </div>
 <script>
     $("#{{$form_name}}").validate({
-        rules: { nome:{required:true}, locale:{required:true} },
-        messages: { nome:{required:"Campo Obbligatorio"}, locale: {required: "Campo Obbligatorio"}},
+        rules: {
+            @foreach($langs as $lang)
+            nome_{{$lang}}:{required:true},
+            @endforeach
+        },
+        messages: {
+            @foreach($langs as $lang)
+            nome_{{$lang}}:{required:'Questo campo è obbligatorio'},
+            @endforeach
+        },
         submitHandler: function (form)
         {
             $.ajax({
-                type: "POST",
-                url: "{{url('cms/website/store_domain')}}",
+                type: "PUT",
+                url: "{{route('macrocategory.update',[$macro->id])}}",
                 data: $("#{{$form_name}}").serialize(),
                 dataType: "json",
                 success: function (data)

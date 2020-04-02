@@ -59,8 +59,28 @@ Route::group(['prefix' => 'cms'], function ()
         Route::resource('/seo','Cms\SeoController');
         Route::get('/seo', 'Cms\SeoController@index')->name('cms.seo');
 
+        Route::get('/macrocategory/switch_stato','Cms\MacrocategoryController@switch_stato');
         Route::resource('/macrocategory','Cms\MacrocategoryController');
+        Route::get('/macrocategory/move_up/{id}', 'Cms\MacrocategoryController@move_up');
+        Route::get('/macrocategory/move_down/{id}', 'Cms\MacrocategoryController@move_down');
+        Route::get('/macrocategory/destroy/{id}', 'Cms\MacrocategoryController@destroy');
         Route::get('/macrocategory', 'Cms\MacrocategoryController@index')->name('cms.macrocategorie');
+
+
+        Route::get('/category/switch_stato','Cms\CategoryController@switch_stato');
+        Route::get('/category/syncro', 'Cms\CategoryController@syncro');
+        Route::resource('/category','Cms\CategoryController');
+        Route::get('/category/move_up/{id}', 'Cms\CategoryController@move_up');
+        Route::get('/category/move_down/{id}', 'Cms\CategoryController@move_down');
+        Route::get('/category/destroy/{id}', 'Cms\CategoryController@destroy');
+        Route::get('/category', 'Cms\CategoryController@index')->name('cms.categorie');
+
+        Route::get('/product/switch_visibility','Cms\ProductController@switch_visibility');
+        Route::get('/product/switch_visibility_italfama','Cms\ProductController@switch_visibility_italfama');
+        Route::get('/product/switch_offerta','Cms\ProductController@switch_offerta');
+        Route::get('/product/switch_novita','Cms\ProductController@switch_novita');
+        Route::resource('/product','Cms\ProductController');
+        Route::get('/product','Cms\ProductController@index')->name('cms.prodotti');
 
         Route::resource('/news','Cms\NewsController');
         Route::get('/news', 'Cms\NewsController@index')->name('cms.news');

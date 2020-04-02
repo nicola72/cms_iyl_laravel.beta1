@@ -93,10 +93,7 @@ class WebsiteController extends Controller
         }
 
         //1# Creo una url di default per ogni lingua
-        $websiteModule = Module::where('nome','website')->first();
-        $websiteConfigs = ModuleConfig::where('module_id',$websiteModule->id)->get();
-        $langsconfig = $websiteConfigs->where('nome','lingue')->first();
-        $langs = explode(",",$langsconfig->value);
+        $langs = \Config::get('langs');
 
         foreach ($langs as $lang)
         {
@@ -205,6 +202,13 @@ class WebsiteController extends Controller
     {
         $page = Page::find($id);
         $page->delete();
+
+        //elimino anche le url associate alla macro
+        $urls = Url::where('urlable_id',$page->id)->where('urlable_type','App\Model\Page')->get();
+        foreach ($urls as $url)
+        {
+            $url->delete();
+        }
         return back()->with('success','Elemento cancellato!');
     }
 }

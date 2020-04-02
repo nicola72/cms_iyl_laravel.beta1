@@ -3,11 +3,21 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 
-class Category extends Model
+class Category extends Model implements Sortable
 {
+    use SortableTrait;
+
+    public $sortable = [
+        'order_column_name' => 'order',
+        'sort_when_creating' => true,
+    ];
+
     protected $fillable = [
-        'parent_id',
+        'id',
+        'macrocategory_id',
         'nome_it',
         'nome_en',
         'nome_de',
@@ -20,7 +30,22 @@ class Category extends Model
         'desc_fr',
         'desc_es',
         'desc_ru',
-        'visibile',
+        'order',
         'stato'
     ];
+
+    public function macrocategory()
+    {
+        return $this->belongsTo('App\Model\Macrocategory');
+    }
+
+    public function product()
+    {
+        return $this->hasOne('App\Model\Product');
+    }
+
+    public function products()
+    {
+        return $this->hasMany('App\Model\Product');
+    }
 }

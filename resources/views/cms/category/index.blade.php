@@ -8,10 +8,8 @@
                     <!-- header del box -->
                     <div class="ibox-title">
 
-                        <!-- NUOVA MACRO -->
-                        @if(Auth::user()->role->id == 1)
-                        <a href="javascript:void(0)" onclick="get_modal('{{url('cms/macrocategory/create')}}')" class="btn btn-w-m btn-primary">Aggiungi</a>
-                        @endif
+                        <!-- NUOVA CATEGORIA -->
+                        <a href="javascript:void(0)" onclick="get_modal('{{url('cms/category/create')}}')" class="btn btn-w-m btn-primary">Aggiungi</a>
                         <!-- fine pulsante nuovo -->
 
                         <div class="ibox-tools">
@@ -21,33 +19,35 @@
                     <!-- fine header -->
 
                     <div class="ibox-content">
-                        <table id="table-macrocategories" style="font-size:12px" class="table table-striped table-bordered">
+                        <table id="table-categories" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
                                 <th>Nome</th>
+                                <th>Macro</th>
                                 <th>Descrizione</th>
                                 <th>Stato</th>
                                 <th>Ordine</th>
+                                <th data-orderable="false">Sposta</th>
                                 <th data-orderable="false">Azioni</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($macros as $macro)
+                            @foreach($categorie as $cat)
                                 <tr>
-                                    <td>{{$macro->nome_it}}</td>
-
-                                    <td>{{$macro->desc_it}}</td>
+                                    <td>{{$cat->nome_it}}</td>
+                                    <td>{{$cat->macrocategory->nome_it}}</td>
+                                    <td>{{$cat->desc_it}}</td>
 
                                     <td data-orderable="false">
 
                                         <!-- Pulsante Switch Stato -->
                                         <div class="switch">
                                             <div class="onoffswitch">
-                                                <input type="checkbox" id="switch_{{$macro->id}}"
-                                                       data-id="{{$macro->id}}"
+                                                <input type="checkbox" id="switch_{{$cat->id}}"
+                                                       data-id="{{$cat->id}}"
                                                        class="onoffswitch-checkbox"
-                                                        {{ ($macro->stato == 1) ? "checked" : "" }} />
-                                                <label class="onoffswitch-label" for="switch_{{$macro->id}}">
+                                                        {{ ($cat->stato == 1) ? "checked" : "" }} />
+                                                <label class="onoffswitch-label" for="switch_{{$cat->id}}">
                                                     <span class="onoffswitch-inner"></span>
                                                     <span class="onoffswitch-switch"></span>
                                                 </label>
@@ -56,28 +56,29 @@
                                         <!-- -->
 
                                     </td>
-                                    <td>{{$macro->order}}</td>
+                                    <td>{{$cat->order}}</td>
                                     <td data-orderable="false">
-                                        <!-- Pulsante per modificare -->
-                                        <a class="azioni-table" onclick="get_modal('{{route('macrocategory.edit',['id'=>$macro->id])}}')"  href="javascript:void(0)">
-                                            <i class="fa fa-edit fa-2x"></i>
-                                        </a>
-                                        <!-- -->
-
                                         <!-- Pulsante per ordinare in su -->
-                                        <a class="azioni-table pl-1"  href="{{url('/cms/macrocategory/move_up',[$macro->id])}}">
+                                        <a class="azioni-table"  href="{{url('/cms/category/move_up',[$cat->id])}}">
                                             <i class="fa fa-arrow-circle-up fa-2x"></i>
                                         </a>
                                         <!-- -->
 
                                         <!-- Pulsante per ordinare in giù -->
-                                        <a class="azioni-table pl-1"  href="{{url('/cms/macrocategory/move_down',[$macro->id])}}">
+                                        <a class="azioni-table pl-1"  href="{{url('/cms/category/move_down',[$cat->id])}}">
                                             <i class="fa fa-arrow-circle-down fa-2x"></i>
+                                        </a>
+                                        <!-- -->
+                                    </td>
+                                    <td data-orderable="false">
+                                        <!-- Pulsante per modificare -->
+                                        <a class="azioni-table" onclick="get_modal('{{route('category.edit',['id'=>$cat->id])}}')"  href="javascript:void(0)">
+                                            <i class="fa fa-edit fa-2x"></i>
                                         </a>
                                         <!-- -->
 
                                         <!-- pulsante per eliminare -->
-                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/macrocategory/destroy',[$macro->id])}}">
+                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/category/destroy',[$cat->id])}}">
                                             <i class="fa fa-trash fa-2x"></i>
                                         </a>
                                         <!-- -->
@@ -97,12 +98,13 @@
     <script>
         $(document).ready(function ()
         {
-            $('#table-macrocategories').DataTable({
+            $('#table-categories').DataTable({
                 responsive: true,
                 pageLength: 100,
-                order: [[ 3, "asc" ]], //order in base a order
+                order: [[ 4, "asc" ]], //order in base a order
                 language:{ "url": "/cms_assets/js/plugins/dataTables/dataTable.ita.lang.json" }
             });
+
         });
 
         //Per il Pulsante ELIMINA
@@ -135,7 +137,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "/cms/macrocategory/switch_stato",
+                url: "/cms/category/switch_stato",
                 data: {id: $(this).attr('data-id'), stato : stato},
                 dataType: "json",
                 success: function (data){ alert(data.msg);},

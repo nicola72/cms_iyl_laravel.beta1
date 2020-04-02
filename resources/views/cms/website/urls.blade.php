@@ -45,7 +45,13 @@
                                     <td>{{$url->slug}}</td>
                                     <td>{{$url->urlable_type}}</td>
                                     <td>{{$url->urlable->id}}</td>
-                                    <td>{{$url->urlable->nome}}</td>
+                                    <td>
+                                        @if(isset($url->urlable->nome))
+                                            {{$url->urlable->nome}}
+                                        @else
+                                            {{$url->urlable->nome_it}}
+                                        @endif
+                                    </td>
                                     <td>
                                         <!-- Pulsante per modificare -->
                                         <a class="azioni-table" onclick="get_modal('{{url('/cms/website/edit_url',[$url->id])}}')"  href="javascript:void(0)">

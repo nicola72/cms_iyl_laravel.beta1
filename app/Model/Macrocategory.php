@@ -27,6 +27,17 @@ class Macrocategory extends Model implements Sortable
         'desc_de',
         'desc_fr',
         'desc_es',
-        'desc_ru'
+        'desc_ru',
+        'stato'
     ];
+
+    public function category()
+    {
+        return $this->hasOne('App\Model\Category');
+    }
+
+    public function categories()
+    {
+        return $this->hasMany('App\Model\Category');
+    }
 }

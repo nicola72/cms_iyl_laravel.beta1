@@ -8,7 +8,7 @@
                     <!-- header del box -->
                     <div class="ibox-title">
 
-                        <!-- NUOVO -->
+                        <!-- Indietro -->
                         <a href="{{url('cms/product')}}" class="btn btn-w-m btn-primary">Prodotti</a>
                         <!-- fine pulsante nuovo -->
 

@@ -23,7 +23,7 @@
                     <!-- fine header -->
 
                     <div class="ibox-content">
-                        <table id="table-moduli" style="font-size:12px" class="table table-striped table-bordered">
+                        <table id="table-urls" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
                                 <th>Completa</th>
@@ -70,5 +70,15 @@
     </div>
 @endsection
 @section('js_script')
+    <script>
+        $(document).ready(function ()
+        {
+            $('#table-urls').DataTable({
+                responsive: true,
+                pageLength: 100,
+                language:{ "url": "/cms_assets/js/plugins/dataTables/dataTable.ita.lang.json" }
+            });
 
+        });
+    </script>
 @stop

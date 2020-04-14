@@ -67,20 +67,41 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/macrocategory', 'Cms\MacrocategoryController@index')->name('cms.macrocategorie');
 
 
+        Route::get('/category/sync_prodotti', 'Cms\CategoryController@sync_prodotti');
+        Route::get('/category/sync_file_prodotti', 'Cms\CategoryController@sync_file_prodotti');
+        Route::get('/category/sync_abbinamenti', 'Cms\CategoryController@sync_abbinamenti');
+        Route::get('/category/sync_file_abbinamenti', 'Cms\CategoryController@sync_file_abbinamenti');
         Route::get('/category/switch_stato','Cms\CategoryController@switch_stato');
-        Route::get('/category/syncro', 'Cms\CategoryController@syncro');
         Route::resource('/category','Cms\CategoryController');
         Route::get('/category/move_up/{id}', 'Cms\CategoryController@move_up');
         Route::get('/category/move_down/{id}', 'Cms\CategoryController@move_down');
         Route::get('/category/destroy/{id}', 'Cms\CategoryController@destroy');
         Route::get('/category', 'Cms\CategoryController@index')->name('cms.categorie');
 
+        Route::get('/material/switch_stato','Cms\MaterialController@switch_stato');
+        Route::resource('/material','Cms\MaterialController');
+        Route::get('/material/move_up/{id}', 'Cms\MaterialController@move_up');
+        Route::get('/material/move_down/{id}', 'Cms\MaterialController@move_down');
+        Route::get('/material/destroy/{id}', 'Cms\MaterialController@destroy');
+        Route::get('/material/images/{id}', 'Cms\MaterialController@images');
+        Route::get('/material', 'Cms\MaterialController@index')->name('cms.materiali');
+
         Route::get('/product/switch_visibility','Cms\ProductController@switch_visibility');
         Route::get('/product/switch_visibility_italfama','Cms\ProductController@switch_visibility_italfama');
         Route::get('/product/switch_offerta','Cms\ProductController@switch_offerta');
         Route::get('/product/switch_novita','Cms\ProductController@switch_novita');
         Route::resource('/product','Cms\ProductController');
+        Route::post('/product/upload_images', 'Cms\ProductController@upload_images');
+        Route::get('/product/images/{id}', 'Cms\ProductController@images');
+        Route::get('/product/destroy/{id}', 'Cms\ProductController@destroy');
         Route::get('/product','Cms\ProductController@index')->name('cms.prodotti');
+
+        Route::get('/pairing/switch_visibility','Cms\PairingController@switch_visibility');
+        Route::get('/pairing/switch_visibility_italfama','Cms\PairingController@switch_visibility_italfama');
+        Route::get('/pairing/switch_offerta','Cms\PairingController@switch_offerta');
+        Route::resource('/pairing','Cms\PairingController');
+        Route::get('/pairing/destroy/{id}', 'Cms\PairingController@destroy');
+        Route::get('/pairing','Cms\PairingController@index')->name('cms.abbinamenti');
 
         Route::resource('/news','Cms\NewsController');
         Route::get('/news', 'Cms\NewsController@index')->name('cms.news');

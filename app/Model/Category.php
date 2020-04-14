@@ -48,4 +48,10 @@ class Category extends Model implements Sortable
     {
         return $this->hasMany('App\Model\Product');
     }
+
+    public function materials()
+    {
+        return $this->belongsToMany('App\Model\Material', 'category_material');
+    }
+
 }

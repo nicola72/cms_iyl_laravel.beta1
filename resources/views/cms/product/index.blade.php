@@ -115,8 +115,23 @@
                                     </td>
 
                                     <td data-orderable="false">
+                                        <!-- Pulsante per le immagini -->
+                                        <a class="azioni-table"  href="{{url('/cms/product/images',['id'=>$product->id])}}" title="immagini">
+                                            <i class="fa fa-camera fa-2x"></i>
+                                        </a>
+                                        <!-- -->
 
+                                        <!-- Pulsante per modificare -->
+                                        <a class="azioni-table"  href="{{route('product.edit',['id'=>$product->id])}}" title="modifica">
+                                            <i class="fa fa-edit fa-2x"></i>
+                                        </a>
+                                        <!-- -->
 
+                                        <!-- pulsante per eliminare -->
+                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/product/destroy',[$product->id])}}" title="elimina">
+                                            <i class="fa fa-trash fa-2x"></i>
+                                        </a>
+                                        <!-- -->
                                     </td>
 
                                 </tr>

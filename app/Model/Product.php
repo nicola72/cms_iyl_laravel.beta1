@@ -68,4 +68,13 @@ class Product extends Model implements Sortable
         return $this->belongsTo('App\Model\Availability');
     }
 
+    public function prezzo_vendita()
+    {
+        if($this->prezzo_scontato != '0.00')
+        {
+            return $this->prezzo_scontato;
+        }
+        return $this->prezzo;
+    }
+
 }

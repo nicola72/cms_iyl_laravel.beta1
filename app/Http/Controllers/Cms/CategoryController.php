@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Cms;
 
 use App\Model\Category;
 use App\Model\Domain;
+use App\Model\File;
 use App\Model\Macrocategory;
+use App\Model\Pairing;
 use App\Model\Product;
 use App\Model\Url;
 use Illuminate\Http\Request;
@@ -89,28 +91,28 @@ class CategoryController extends Controller
             $product->stock = $item->qta_stock;
             if($item->disponibilita == 'disponibile')
             {
-                $product->disponibilita = 1;
+                $product->availability_id = 1;
             }
             elseif($item->disponibilita == 'non_disponibile')
             {
-                $product->disponibilita = 2;
+                $product->availability_id = 2;
             }
             elseif($item->disponibilita == 'disponibile_a_breve')
             {
-                $product->disponibilita = 3;
+                $product->availability_id = 3;
             }
             else
             {
-                $product->disponibilita = 4;
+                $product->availability_id = 4;
             }
             $product->nome_it = $item->nome_it;
             $product->nome_en = $item->nome_en;
-            $product->desc_it = $item->descrizione_it;
-            $product->desc_en = $item->descrizione_en;
-            $product->desc_breve_it = $item->descrizione_breve_it;
-            $product->desc_breve_en = $item->descrizione_breve_en;
-            $product->misure_it = $item->dimensioni_it;
-            $product->misure_en = $item->dimensioni_en;
+            $product->desc_it = ltrim(strip_tags($item->descrizione_it));
+            $product->desc_en = ltrim(strip_tags($item->descrizione_en));
+            $product->desc_breve_it = ltrim(strip_tags($item->descrizione_breve_it));
+            $product->desc_breve_en = ltrim(strip_tags($item->descrizione_breve_en));
+            $product->misure_it = ltrim(strip_tags($item->dimensioni_it));
+            $product->misure_en = ltrim(strip_tags($item->dimensioni_en));
             $product->peso = $item->peso;
 
             $product->visibile = ($item->visibile == 'si') ? 1:0;
@@ -118,6 +120,137 @@ class CategoryController extends Controller
             $product->novita = ($item->novita == 'si') ? 1:0;
             $product->offerta = ($item->offerta == 'si') ?1:0;
             $product->save();
+
+        }
+        exit();
+    }
+
+    public function sync_file_prodotti()
+    {
+        $vecchi = \DB::table('tb_prodotti')->get();
+        foreach ($vecchi as $item)
+        {
+            if($item->img_1 != '')
+            {
+                $file = new File();
+                $file->path = $item->img_1;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Product';
+                $file->save();
+            }
+            if($item->img_2 != '')
+            {
+                $file = new File();
+                $file->path = $item->img_2;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Product';
+                $file->save();
+            }
+            if($item->img_3 != '')
+            {
+                $file = new File();
+                $file->path = $item->img_3;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Product';
+                $file->save();
+            }
+            if($item->img_4 != '')
+            {
+                $file = new File();
+                $file->path = $item->img_4;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Product';
+                $file->save();
+            }
+            if($item->img_5 != '')
+            {
+                $file = new File();
+                $file->path = $item->img_5;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Product';
+                $file->save();
+            }
+        }
+        exit();
+    }
+
+    public function sync_abbinamenti()
+    {
+        $vecchi = \DB::table('tb_abbinamenti')->get();
+        foreach ($vecchi as $item)
+        {
+            $pairing = new Pairing();
+            $pairing->id = $item->id;
+            $pairing->category_id = $item->id_tipologia;
+            $pairing->product1_id = $item->id_prodotto1;
+            $pairing->product2_id = $item->id_prodotto2;
+            if($item->stile_per_filtro == 'Set Tradizionali da Gioco' )
+            {
+                $pairing->style_id = 1;
+            }
+            elseif ($item->stile_per_filtro == 'Set Classici')
+            {
+                $pairing->style_id = 2;
+            }
+            elseif ($item->stile_per_filtro == 'Set Moderni')
+            {
+                $pairing->style_id = 3;
+            }
+            else
+            {
+                $pairing->style_id = 3;
+            }
+            $pairing->nome_it = $item->titolo;
+            $pairing->nome_en = $item->titolo_en;
+            $pairing->desc_it = ltrim(strip_tags($item->descrizione));
+            $pairing->desc_en = ltrim(strip_tags($item->descrizione_en));
+            $pairing->visibile = ($item->visibile == 'si') ? 1:0;
+            $pairing->italfama = ($item->visibile_su_italfama == 'si') ? 1:0;
+            $pairing->novita = ($item->novita == 'si') ? 1:0;
+            $pairing->offerta = ($item->offerta == 'si') ?1:0;
+            $pairing->save();
+
+        }
+        exit();
+    }
+
+    public function sync_file_abbinamenti()
+    {
+        $vecchi = \DB::table('tb_abbinamenti')->get();
+        foreach ($vecchi as $item)
+        {
+            if($item->img != '')
+            {
+                $file = new File();
+                $file->path = $item->img;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Pairing';
+                $file->save();
+            }
+            if($item->img_2 != '')
+            {
+                $file = new File();
+                $file->path = $item->img_2;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Pairing';
+                $file->save();
+            }
+            if($item->img_3 != '')
+            {
+                $file = new File();
+                $file->path = $item->img_3;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Pairing';
+                $file->save();
+            }
+            if($item->img_4 != '')
+            {
+                $file = new File();
+                $file->path = $item->img_4;
+                $file->fileable_id = $item->id;
+                $file->fileable_type = 'App\Model\Pairing';
+                $file->save();
+            }
 
         }
         exit();
@@ -242,8 +375,8 @@ class CategoryController extends Controller
             {
                 $categoria->{'nome_'.$lang} = $request->{'nome_'.$lang};
                 $categoria->{'desc_'.$lang} = $request->{'desc_'.$lang};
-                $categoria->save();
             }
+            $categoria->save();
 
         }
         catch(\Exception $e){

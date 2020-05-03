@@ -11,7 +11,7 @@
         m.parentNode.insertBefore(a, m)
     })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', '{{$website_config->get('google_analytics')}}', 'auto');
+    ga('create', '{{$website_config['google_analytics']}}', 'auto');
     ga('send', 'pageview');
     ga('set', 'anonymizeIp', true);
 

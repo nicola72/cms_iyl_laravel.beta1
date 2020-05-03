@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cms;
 
 use App\Model\Availability;
 use App\Model\Category;
+use App\Model\Domain;
 use App\Model\File;
 use App\Model\Module;
 use App\Model\ModuleConfig;
@@ -11,6 +12,7 @@ use App\Model\Product;
 use App\Model\Url;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
@@ -84,6 +86,26 @@ class ProductController extends Controller
 
             return ['result' => 0,'msg' => $e->getMessage()];
         }
+
+        //1# Creo una url di default per ogni lingua
+        foreach ($langs as $lang)
+        {
+            $domain = Domain::where('locale',$lang)->first();
+            try{
+                $url = new Url();
+                $url->domain_id = $domain->id;
+                $url->locale = $lang;
+                $url->slug = trans('msg.dettaglio',[],$lang).'-'.$product_id;
+                $url->urlable_id = $product_id;
+                $url->urlable_type = 'App\Model\Product';
+                $url->save();
+            }
+            catch(\Exception $e)
+            {
+                return ['result' => 0,'msg' => $e->getMessage()];
+            }
+        }
+        //1# Fine
 
         $url = route('cms.prodotti');
         return ['result' => 1,'msg' => 'Elemento creato con successo!','url' => $url];
@@ -179,6 +201,13 @@ class ProductController extends Controller
             $url->delete();
         }
 
+        //elimino anche i file associati al prodotto
+        $files = File::where('fileable_id',$product->id)->where('fileable_type','App\Model\Product')->get();
+        foreach ($files as $file)
+        {
+            $file->delete();
+        }
+
         return back()->with('success','Elemento cancellato!');
     }
 
@@ -186,17 +215,27 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
-        $images = File::where('fileable_id',$id)->where('fileable_type','App\Model\Product')->get();
+        $images = File::where('fileable_id',$id)->where('fileable_type','App\Model\Product')->orderBy('order')->get();
+
+        //prendo il file di configurazione del modulo Product
+        $productModule = Module::where('nome','prodotti')->first();
+        $moduleConfigs = ModuleConfig::where('module_id',$productModule->id)->get();
+        $uploadImgConfig = $moduleConfigs->where('nome','upload_image')->first();
+        $upload_config = json_decode($uploadImgConfig->value);
+        //---//
+
+        $file_restanti = $upload_config->max_numero_file - $images->count();
+        $limit_max_file = ($file_restanti > 0) ? false : true;
 
         $params = [
             'title_page' => 'Immagini Prodotto '.$product->codice,
             'images' => $images,
             'product' => $product,
-            'limit_max_file' =>false,
-            'max_numero_file'=> 10,
-            'max_file_size' => 2,
-            'file_restanti' => 5,
-            'extensions'=>'.jpg,.png',
+            'limit_max_file' =>$limit_max_file,
+            'max_numero_file'=> $upload_config->max_numero_file,
+            'max_file_size' => $upload_config->max_file_size,
+            'file_restanti' => $file_restanti,
+            'extensions'=>$upload_config->extensions,
 
         ];
         return view('cms.product.images',$params);
@@ -207,17 +246,12 @@ class ProductController extends Controller
         //prendo il file di configurazione del modulo Product
         $productModule = Module::where('nome','prodotti')->first();
         $moduleConfigs = ModuleConfig::where('module_id',$productModule->id)->get();
-
         $uploadImgConfig = $moduleConfigs->where('nome','upload_image')->first();
         $upload_config = json_decode($uploadImgConfig->value);
         //---//
 
         $fileable_id = $request->fileable_id;
         $fileable_type = 'App\Model\Product';
-        $allowed = ['jpg','jpeg','png','JPG'];
-        $max_file_size = 2000000;
-
-        //$path = $request->file('file')->store('avatars');
 
         $uploadedFile = $request->file('file');
         $filename = time().$uploadedFile->getClientOriginalName();
@@ -231,9 +265,53 @@ class ProductController extends Controller
         }
 
         //se CROP configurato
-        if($upload_config->crop)
+        if(isset($upload_config->crop) && $upload_config->crop)
         {
-            \Image::make($image->getRealPath())->resize(200, 200)->save($path);
+            $x = $upload_config->default_crop_x;
+            $y = $upload_config->default_crop_y;
+            $path = $_SERVER['DOCUMENT_ROOT'].'/file/crop/'.$filename;
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/'.$filename);
+            $img->crop($x, $y);
+            $img->save($path);
+        }
+        //---//
+
+        //se configurate RESIZE
+        if(isset($upload_config->resize))
+        {
+            $resizes = explode(',',$upload_config->resize);
+
+            //faccio 2 resize come il vecchio sito e le chiamo big e small
+            $small = $resizes[0];
+            $big = $resizes[1];
+
+            //la small
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/'.$filename);
+            $path = $_SERVER['DOCUMENT_ROOT'].'/file/small/'.$filename;
+            $img->resize($small, null, function ($constraint) {$constraint->aspectRatio();});
+            $img->save($path);
+
+            //la big
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/'.$filename);
+            $path = $_SERVER['DOCUMENT_ROOT'].'/file/big/'.$filename;
+            $img->resize($big, null, function ($constraint) {$constraint->aspectRatio();});
+            $img->save($path);
+
+            //creo anche le watermarks per chess
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/small/'.$filename);
+            $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark2_small.png', 'bottom-right', 50, 50);
+            $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmi/small/'.$filename);
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$filename);
+            $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark2_small.png', 'bottom-right', 50, 50);
+            $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmi/big/'.$filename);
+
+            //crea anche le watermarks per italfama
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/small/'.$filename);
+            $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark_small.png', 'bottom-right', 50, 50);
+            $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmc/small/'.$filename);
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$filename);
+            $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark_small.png', 'bottom-right', 50, 50);
+            $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmc/big/'.$filename);
         }
         //---//
 
@@ -249,10 +327,28 @@ class ProductController extends Controller
 
             return ['result' => 0,'msg' => $e->getMessage()];
         }
-
+        //---//
 
         $url = route('cms.prodotti');
         return ['result' => 1,'msg' => 'File caricato con successo!','url' => $url];
+    }
+
+    public function sort_images(Request $request)
+    {
+        $positions = $request->pos;
+        $array_pos = explode(";", $positions);
+
+        foreach ($array_pos as $valore)
+        {
+            $temp = explode("=", $valore);
+            $id = intval($temp[0]);
+            $ordine = intval($temp[1]);
+            echo 'id='.$id." ordine=".$ordine;
+            /*$file = File::find($id);
+            $file->order = $ordine;
+            $file->save();*/
+        }
+        return;
     }
 
     public function switch_visibility(Request $request)

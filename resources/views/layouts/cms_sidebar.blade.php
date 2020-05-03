@@ -45,6 +45,15 @@
             </li>
             @endif
 
+            @if(Auth::user()->role->id == 1)
+                <li class="{{ (Route::currentRouteName() == 'cms.sync') ? "active" : "" }}">
+                    <a href="{{route('cms.sync')}}">
+                        <i class="fa fa-cogs"></i>
+                        <span class="nav-label">SINCRONIZZAZIONE</span>
+                    </a>
+                </li>
+            @endif
+
             @foreach($cms_modules as $modulo)
                 @if(($modulo->role_id >= Auth::user()->role->id) && $modulo->stato)
                 <li class="{{ (Route::currentRouteName() == 'cms.'.$modulo->nome) ? "active" : "" }}">

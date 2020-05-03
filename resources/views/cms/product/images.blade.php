@@ -36,7 +36,7 @@
                                     <br>
                                     <em>
                                         Tipo di file consentiti:<b>
-                                        {{$max_file_size}}
+                                        {{$extensions}}
                                         </b>
                                     </em>
                                     <br>
@@ -93,8 +93,8 @@
                                 <span class="corner"></span>
 
                                 <div class="image">
-                                    <a href="/file/{{$img->path}}"  data-gallery="">
-                                        <img src="/file/{{$img->path}}" alt="" class="img-fluid" style="height:200px;" />
+                                    <a href="{{$website_config['cs_big_dir'].$img->path}}"  data-gallery="">
+                                        <img src="{{$website_config['cs_small_dir'].$img->path}}" alt="" class="img-fluid"  />
                                     </a>
                                 </div>
                                 <a class="" data-toggle="collapse" href="#file-name-{{$img->id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -102,9 +102,9 @@
                                 </a>
                                 <div  class="file-name">
                                     <div class="collapse" id="file-name-{{$img->id}}">
-                                        <small class="mb-2">Inserito il: ****</small>
+                                        <small class="mb-2">Inserito il: {{$img->created_at->format('d/m/Y')}}</small>
 
-                                        <form id="form_file_{{$img->id}}" method="post" action="#" >
+                                        <!--<form id="form_file_{{$img->id}}" method="post" action="#" >
                                             <input type="hidden" name="id" value="{{$img->id}}" />
                                             <input type="hidden" name="id_elem" value="{{$product->id}}" />
 
@@ -119,17 +119,17 @@
                                             <input class="form-control form-control-sm mb-2" type="text" value="{{$img->{'didascalia_'.$lang} }}" name="didascalia_{{$lang}}" />
                                             @endforeach
 
-                                        </form>
+                                        </form>-->
                                     </div>
 
                                     <!-- pulsante per effettuare aggiornamento didascalie-titolo -->
-                                    <a href="javascript:void(0)" onclick="" title="salva">
+                                    <!--<a href="javascript:void(0)" onclick="" title="salva">
                                         <i class="fa fa-floppy-o fa-2x"></i>
-                                    </a>
+                                    </a>-->
                                     <!-- fine pulsante per effettuare aggiornamento -->
 
                                     <!-- pulsante per eliminare file -->
-                                    <a href="" class="azione-red float-right elimina" title="elimina">
+                                    <a href="{{url('/cms/file/destroy',[$img->id])}}" class="azione-red float-right elimina" title="elimina">
                                         <i class="fa fa-trash-o fa-2x"></i>
                                     </a>
                                     <!-- fine pulsante per eliminare file -->
@@ -148,7 +148,39 @@
     </div>
 @endsection
 @section('js_script')
+    <!-- librerie per il sortable non possono essere messe nel layout perchè vanno in conflitto con summernote -->
+    <script src="/cms_assets/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="/cms_assets/js/plugins/touchpunch/jquery.ui.touch-punch.min.js"></script>
+    <!-- -->
     <script>
+
+        //per l'ordinamento delle immagini
+        $(document).ready(function(){
+            $("#sortable").sortable({
+                update: function (event, ui)
+                {
+                    var order = [];
+                    $('#sortable .file-box').each(function (e)
+                    {
+                        order.push($(this).attr('id') + '=' + ($(this).index() + 1));
+                    });
+                    var positions = order.join(';');
+                    $.ajax({
+                        type: "POST",
+                        url: "{{url('cms/file/sort_images')}}",
+                        data: "pos=" + positions + "&_token={{csrf_token()}}",
+                        dataType: "html",
+                        success: function (msg)
+                        {
+                            $("#responsosortable").fadeIn();
+                            setTimeout(function (){$("#responsosortable").fadeOut();}, 2000);
+                        }
+                    });
+                }
+            });
+        });
+        //---//
+
 
         Dropzone.options.dropzoneForm =
             {
@@ -162,7 +194,7 @@
                 acceptedFiles:"{{$extensions}}",
                 error:function(error,msg){alert(msg);},
 
-                queuecomplete: function(){location.reload();}
+                queuecomplete: function(){showPreloader();location.reload();}
             };
     </script>
 @stop

@@ -122,6 +122,7 @@
                     closeOnConfirm: false
                 }, function ()
                 {
+                    showPreloader();
                     location.href = url;
                 });
             });

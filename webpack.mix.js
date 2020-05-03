@@ -3,18 +3,11 @@ const mix = require('laravel-mix');
 // PER IL WEBSITE
 mix.styles(
     [
+        'resources/assets/css/jquery-ui.min.css',
         'resources/assets/css/bootstrap.min.css',
-        'resources/assets/css/bootstrap-dropdownhover.min.css',
-        'resources/assets/css/bootstrap-datepicker.css',
-        'resources/assets/font/css/font-awesome.min.css',
-        'resources/assets/simple-line-icon/css/simple-line-icons.css',
-        'resources/assets/css/animate.min.css',
-        'resources/assets/css/style.css',
-        'resources/assets/css/baguetteBox.css',
-        'resources/assets/owl-carousel/owl.carousel.css',
-        'resources/assets/owl-carousel/owl.theme.css',
-        'resources/assets/css/mystyle.css',
+        'resources/assets/css/select_option1.css',
         'resources/assets/css/magnific-popup.css',
+        'resources/assets/css/lightbox.css',
     ],
     'public/assets/css/all.css'
 

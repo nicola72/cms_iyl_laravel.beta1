@@ -16,7 +16,7 @@ class IsAuth extends Middleware
     {
         if (! $request->expectsJson())
         {
-            return route('cms.login');
+            return route('website.login');
         }
     }
 }

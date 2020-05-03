@@ -7,10 +7,29 @@
 
                     <!-- header del box -->
                     <div class="ibox-title">
+                        <!-- Pagine -->
+                        <a href="{{url('cms/website/pages')}}" class="btn btn-w-m btn-primary">Pagine</a>
+                        <!-- -->
 
-                        <!-- Nuovo Dominio -->
-                        <a href="javascript:void(0)" onclick="get_modal('{{url("cms/website/create_page")}}')" class="btn btn-w-m btn-primary">Nuovo</a>
-                        <!-- fine pulsante nuovo -->
+                        <!-- urls solo pagine -->
+                        <a href="{{url('cms/website/urls',['type' => 'App\Model\Page'])}}" class="btn btn-w-m btn-primary">Urls Pagine</a>
+                        <!-- -->
+
+                        <!-- urls solo macrocategorie -->
+                        <a href="{{url('cms/website/urls',['type' => 'App\Model\Macrocategory'])}}" class="btn btn-w-m btn-primary">Urls Macro</a>
+                        <!-- -->
+
+                        <!-- urls solo categorie -->
+                        <a href="{{url('cms/website/urls',['type' => 'App\Model\Category'])}}" class="btn btn-w-m btn-primary">Urls Categorie</a>
+                        <!-- -->
+
+                        <!-- urls solo prodotto -->
+                        <a href="{{url('cms/website/urls',['type' => 'App\Model\Product'])}}" class="btn btn-w-m btn-primary">Urls Prodotto</a>
+                        <!-- -->
+
+                        <!-- urls solo abbinamenti -->
+                        <a href="{{url('cms/website/urls',['type' => 'App\Model\Pairing'])}}" class="btn btn-w-m btn-primary">Urls Abbinamenti</a>
+                        <!-- -->
 
                         <!-- indietro -->
                         <a href="{{url("cms/website")}}" class="btn btn-w-m btn-primary">Indietro</a>
@@ -26,30 +45,41 @@
                         <table id="table-urls" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
+                                <th>Nome Tipo</th>
                                 <th>Completa</th>
                                 <th>Dominio</th>
                                 <th>Locale</th>
                                 <th>Slug</th>
                                 <th>Tipo</th>
                                 <th>Id</th>
-                                <th>Nome Tipo</th>
+                                <th>Seo</th>
                                 <th data-orderable="false">Azioni</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($urls as $url)
                                 <tr>
+                                    <td>
+                                        @if(isset($url->urlable->nome))
+                                            {{$url->urlable->nome}}
+                                        @else
+                                            {{$url->urlable->nome_it}}
+                                        @endif
+                                    </td>
                                     <td>www.{{$url->domain->nome}}/{{$url->locale}}/{{$url->slug}}</td>
                                     <td>{{$url->domain->nome}}</td>
                                     <td>{{$url->locale}}</td>
                                     <td>{{$url->slug}}</td>
                                     <td>{{$url->urlable_type}}</td>
                                     <td>{{$url->urlable->id}}</td>
+
                                     <td>
-                                        @if(isset($url->urlable->nome))
-                                            {{$url->urlable->nome}}
+                                        @if($url->seo_id == null)
+                                            no
                                         @else
-                                            {{$url->urlable->nome_it}}
+                                            <a href="javascript:void(0)" onclick="gat_modal('{{url('cms/seo/show',$url->seo_id)}}')">
+                                                <i class="fa fa-file"></i>
+                                            </a>
                                         @endif
                                     </td>
                                     <td>
@@ -76,6 +106,7 @@
             $('#table-urls').DataTable({
                 responsive: true,
                 pageLength: 100,
+                order: [[ 0, "asc" ]], //order in base a order
                 language:{ "url": "/cms_assets/js/plugins/dataTables/dataTable.ita.lang.json" }
             });
 

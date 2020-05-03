@@ -122,7 +122,7 @@
                                         <!-- -->
 
                                         <!-- Pulsante per modificare -->
-                                        <a class="azioni-table"  href="{{route('product.edit',['id'=>$product->id])}}" title="modifica">
+                                        <a class="azioni-table pl-1"  href="{{route('product.edit',['id'=>$product->id])}}" title="modifica">
                                             <i class="fa fa-edit fa-2x"></i>
                                         </a>
                                         <!-- -->
@@ -176,6 +176,7 @@
                     closeOnConfirm: false
                 }, function ()
                 {
+                    showPreloader();
                     location.href = url;
                 });
             });

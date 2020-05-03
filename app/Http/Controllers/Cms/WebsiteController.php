@@ -26,9 +26,18 @@ class WebsiteController extends Controller
         return view('cms.website.index',$params);
     }
 
-    public function urls()
+    public function urls(Request $request)
     {
-        $urls = Url::all();
+        $type = $request->type;
+        if($type != '')
+        {
+
+            $urls = Url::where('urlable_type',$type)->get();
+        }
+        else
+        {
+            $urls = Url::all();
+        }
         $params = ['title_page' => 'Website Urls','urls'=> $urls];
         return view('cms.website.urls',$params);
     }
@@ -81,9 +90,14 @@ class WebsiteController extends Controller
 
     public function store_page(Request $request)
     {
+        $langs = \Config::get('langs');
         try{
             $page = new Page();
             $page->nome = $request->nome;
+            foreach ($langs as $lang)
+            {
+                $page->{'label_'.$lang} = $request->{'label_'.$lang};
+            }
             $page->save();
             $page_id = $page->id;
         }
@@ -210,5 +224,37 @@ class WebsiteController extends Controller
             $url->delete();
         }
         return back()->with('success','Elemento cancellato!');
+    }
+
+    public function page_move_up(Request $request,$id)
+    {
+        $page = Page::find($id);
+        $page->moveOrderUp();
+        return back();
+    }
+
+    public function page_move_down(Request $request,$id)
+    {
+        $page = Page::find($id);
+        $page->moveOrderDown();
+        return back();
+    }
+
+    public function switch_menu_page(Request $request)
+    {
+        $id = $request->id;
+        $stato = $request->stato;
+
+        try{
+            $item = Page::find($id);
+            $item->menu = $stato;
+            $item->save();
+        }
+        catch(\Exception $e){
+
+            return ['result' => 0,'msg' => $e->getMessage()];
+        }
+        return ['result' => 1,'msg' => 'Elemento aggiornato con successo!'];
+
     }
 }

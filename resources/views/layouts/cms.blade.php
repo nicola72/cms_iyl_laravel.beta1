@@ -6,8 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
-    <meta name="author" content="Atnic">
-
+    <meta name="robots" content="noindex" />
     <title>@yield('title', config('cms.name', 'CMS'))</title>
 
     <!-- CSRF Token -->
@@ -76,7 +75,17 @@
     <script src="/cms_assets/js/plugins/sparkline/jquery.sparkline.min.js"></script>
 
     <script src="/cms_assets/js/cms.js"></script>
+    <script>
+        function showPreloader()
+        {
+            $('#loader-box').show();
+        }
 
+        function hidePreloader()
+        {
+            $('#loader-box').hide();
+        }
+    </script>
 @show
     @yield('js_script')
 @stack('body')

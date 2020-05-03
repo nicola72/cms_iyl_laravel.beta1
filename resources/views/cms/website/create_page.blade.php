@@ -14,6 +14,18 @@
                     <input type="text" name="nome" id="nome" class="form-control" />
                 </div>
                 <div class="form-group">
+                    <div class="row">
+                        @foreach($langs as $lang)
+                            <div class="col-md-6">
+                                <label class="d-block">
+                                    <img class="lang-icon" src="/img/cms/{{$lang}}.png" alt=""> Label {{$lang}}
+                                </label>
+                                <input type="text" name="label_{{$lang}}" id="label_{{$lang}}" class="form-control mb-2" />
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="form-group">
                     <span>* campi obbligatori</span>
                     <br><br>
                     <button class="btn btn-primary btn-lg w-100" type="submit">

@@ -11,6 +11,11 @@ class Url extends Model
         'slug',
     ];
 
+    public function seo()
+    {
+        return $this->belongsTo('App\Model\Seo');
+    }
+
     public function urlable()
     {
         return $this->morphTo();

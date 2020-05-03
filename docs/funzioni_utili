@@ -1,0 +1,2 @@
+@money($valore)  //per formattare il prezzo
+$page->url() //per prendere la url intera della pagina

@@ -16,6 +16,10 @@
                         <a href="javascript:void(0)" onclick="get_modal('{{url('cms/settings/create_copy_config_module',[$modulo->id])}}')" class="btn btn-w-m btn-primary">Copia da Modulo</a>
                         <!-- -->
 
+                        <!-- Indietro -->
+                        <a href="{{url('cms/settings')}}" class="btn btn-w-m btn-primary">Indietro</a>
+                        <!-- -->
+
 
                         <div class="ibox-tools">
                             <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>

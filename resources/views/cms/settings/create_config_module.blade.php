@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group">
                     <label>Valore* <small>(se boolean 1:sì 0:no)</small></label>
-                    <textarea name="value" id="value" class="form-control"></textarea>
+                    <textarea name="value" rows="7" id="value" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
                     <span>* campi obbligatori</span>

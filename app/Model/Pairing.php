@@ -18,6 +18,7 @@ class Pairing extends Model implements Sortable
     protected $fillable = [
         'id',
         'category_id',
+        'style_id',
         'product1_id',
         'product2_id',
         'prezzo',
@@ -49,6 +50,32 @@ class Pairing extends Model implements Sortable
         'stato'
     ];
 
+    public function urls()
+    {
+        return $this->morphMany('App\Model\Url','urlable');
+    }
+
+    public function url()
+    {
+        $locale = \App::getLocale();
+        $urls = $this->morphMany('App\Model\Url','urlable');
+        $url = $urls->where('locale',$locale)->first();
+        $website_config = \Config::get('website_config');
+        return $website_config['protocol']."://www.".$url->domain->nome."/".$locale."/".$url->slug;
+    }
+
+
+    public function cover()
+    {
+        $images = $this->morphMany('App\Model\File','fileable');
+        if($images)
+        {
+            $images = $images->orderBy('order');
+            return $images->first()->path;
+        }
+        return 'default.jpg';
+    }
+
     public function style()
     {
         return $this->belongsTo('App\Model\Style');
@@ -68,4 +95,10 @@ class Pairing extends Model implements Sortable
     {
         return $this->belongsTo('App\Model\Product','product2_id');
     }
+
+    public function images()
+    {
+        return $this->morphMany('App\Model\File','fileable');
+    }
+
 }

@@ -53,6 +53,16 @@ return [
             'root' => 'file'
         ],
 
+        'sliders' => [
+            'driver' => 'local',
+            'root' => 'file/sliders'
+        ],
+
+        'news' => [
+            'driver' => 'local',
+            'root' => 'file/news'
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

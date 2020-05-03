@@ -58,6 +58,20 @@ class Product extends Model implements Sortable
         'stato'
     ];
 
+    public function urls()
+    {
+        return $this->morphMany('App\Model\Url','urlable');
+    }
+
+    public function url()
+    {
+        $locale = \App::getLocale();
+        $urls = $this->morphMany('App\Model\Url','urlable');
+        $url = $urls->where('locale',$locale)->first();
+        $website_config = \Config::get('website_config');
+        return $website_config['protocol']."://www.".$url->domain->nome."/".$locale."/".$url->slug;
+    }
+
     public function category()
     {
         return $this->belongsTo('App\Model\Category');
@@ -66,6 +80,31 @@ class Product extends Model implements Sortable
     public function availability()
     {
         return $this->belongsTo('App\Model\Availability');
+    }
+
+    public function images()
+    {
+        return $this->morphMany('App\Model\File','fileable');
+    }
+
+    public function is_scontato()
+    {
+        if($this->prezzo_scontato != '0.00' && $this->prezzo_scontato != '')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function cover()
+    {
+        $images = $this->morphMany('App\Model\File','fileable');
+        if($images)
+        {
+            $images = $images->orderBy('order');
+            return $images->first()->path;
+        }
+        return 'default.jpg';
     }
 
     public function prezzo_vendita()

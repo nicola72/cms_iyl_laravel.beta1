@@ -23,6 +23,7 @@
                             <thead>
                             <tr>
                                 <th>Id</th>
+                                <th>Nome</th>
                                 <th>Prodotto 1</th>
                                 <th>Prodotto 2</th>
                                 <th>Categoria</th>
@@ -38,6 +39,7 @@
                             @foreach($pairings as $pairing)
                                 <tr>
                                     <td>{{$pairing->id}}</td>
+                                    <td>{{$pairing->nome_it}}</td>
                                     <td>{{$pairing->product1->codice}}</td>
                                     <td>{{$pairing->product2->codice}}</td>
                                     <td>{{$pairing->category->nome_it}}</td>
@@ -114,8 +116,14 @@
                                     </td>
 
                                     <td data-orderable="false">
+                                        <!-- Pulsante per le immagini -->
+                                        <a class="azioni-table"  href="{{url('/cms/pairing/images',['id'=>$pairing->id])}}" title="immagini">
+                                            <i class="fa fa-camera fa-2x"></i>
+                                        </a>
+                                        <!-- -->
+
                                         <!-- Pulsante per modificare -->
-                                        <a class="azioni-table"  href="{{route('pairing.edit',['id'=>$pairing->id])}}" title="modifica">
+                                        <a class="azioni-table pl-1"  href="{{route('pairing.edit',['id'=>$pairing->id])}}" title="modifica">
                                             <i class="fa fa-edit fa-2x"></i>
                                         </a>
                                         <!-- -->
@@ -169,6 +177,7 @@
                     closeOnConfirm: false
                 }, function ()
                 {
+                    showPreloader();
                     location.href = url;
                 });
             });

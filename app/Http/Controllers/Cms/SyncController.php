@@ -232,7 +232,7 @@ class SyncController extends Controller
             }
             else
             {
-                $pairing->style_id = 3;
+                $pairing->style_id = 4;
             }
             $pairing->nome_it = $item->titolo;
             $pairing->nome_en = $item->titolo_en;

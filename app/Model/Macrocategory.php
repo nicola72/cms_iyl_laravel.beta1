@@ -54,4 +54,44 @@ class Macrocategory extends Model implements Sortable
     {
         return $this->hasMany('App\Model\Category');
     }
+
+    public function products()
+    {
+        return $this->hasManyThrough('App\Model\Product','App\Model\Category')
+            ->addSelect(\DB::raw('*'))
+            ->addSelect(\DB::raw('products.id as id_product'))
+            ->addSelect(\DB::raw('IF(prezzo_scontato = \'0.00\', prezzo, prezzo_scontato) as minimal'));
+    }
+
+    public function pairings()
+    {
+        return $this->hasManyThrough('App\Model\Pairing','App\Model\Category');
+    }
+
+    public function pairings_for_list()
+    {
+        $pairings = $this->hasManyThrough('App\Model\Pairing','App\Model\Category')->where('visibile',1)->get();
+
+        if($pairings)
+        {
+            foreach ($pairings as &$pairing)
+            {
+                $product1 = Product::find($pairing->product1_id);
+                $product2 = Product::find($pairing->product2_id);
+
+                $is_scontato = false;
+                if($product1->prezzo_scontato != '0.00' || $product2->prezzo_scontato)
+                {
+                    $is_scontato = true;
+                }
+
+                $prezzo_product1 = ($product1->prezzo_scontato != '0.00') ? $product1->prezzo_scontato : $product1->prezzo;
+                $prezzo_product2 = ($product2->prezzo_scontato != '0.00') ? $product2->prezzo_scontato : $product2->prezzo;
+
+                $pairing->prezzo = $prezzo_product1 + $prezzo_product2;
+                $pairing->is_scontato = $is_scontato;
+            }
+        }
+        return $pairings;
+    }
 }

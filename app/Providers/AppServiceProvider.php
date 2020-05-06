@@ -9,7 +9,9 @@ use App\Model\ModuleConfig;
 use App\Model\Page;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Schema\Builder;
-use mysql_xdevapi\Collection;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,20 @@ class AppServiceProvider extends ServiceProvider
     {
         //serve per il db locale del wamp può essere eliminato
         Builder::defaultStringLength(191);
+
+        //serve per applicare il paginator ad una semplice collection
+        if (!Collection::hasMacro('paginate'))
+        {
+            Collection::macro('paginate',
+                function ($perPage = 15, $page = null, $options = [])
+                {
+                    $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+                    return (new LengthAwarePaginator(
+                        $this->forPage($page, $perPage)->values()->all(), $this->count(), $perPage, $page, $options))
+                        ->withPath('');
+                });
+        }
+        //--- //
 
         //funzione custom per formattare il prezzo
         \Blade::directive('money', function ($amount)

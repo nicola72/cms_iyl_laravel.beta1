@@ -19,11 +19,11 @@
                 <!-- COLONNA A SINISTRA -->
                 <div class="col-md-3 col-sm-12 col-xs-12 sideBar ">
 
-                    <!-- menu prodotti -->
+                <!-- menu prodotti -->
                 @include('layouts.website_menu_prodotti')
                 <!-- fine menu prodotti -->
 
-                    <!-- box facebook -->
+                <!-- box facebook -->
                 @include('layouts.website_box_facebook')
                 <!-- -->
 

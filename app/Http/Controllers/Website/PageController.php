@@ -3,19 +3,23 @@
 namespace App\Http\Controllers\Website;
 
 use App\Mail\Contact;
+use App\Model\Category;
 use App\Model\Domain;
 use App\Model\File;
 use App\Model\Macrocategory;
+use App\Model\Material;
 use App\Model\Newsitem;
 use App\Model\Page;
 use App\Model\Pairing;
 use App\Model\Product;
 use App\Model\Seo;
 use App\Model\Slider;
+use App\Model\Style;
 use Illuminate\Http\Request;
 use App\Model\Url;
 use App\Http\Controllers\Controller;
 use App\Service\GoogleRecaptcha;
+use Illuminate\Pagination\Paginator;
 
 class PageController extends Controller
 {
@@ -27,7 +31,7 @@ class PageController extends Controller
     {
         //per stabilire la lingua dobbiamo basarci sul dominio/alias
         $domain = $request->getHttpHost();
-        $domain = str_replace("www","",$domain);
+        $domain = str_replace("www.","",$domain);
         $domain = Domain::where('nome',$domain)->first();
         $locale = $domain->locale;
         \App::setLocale($locale);
@@ -56,40 +60,14 @@ class PageController extends Controller
         return view('website.page.index',$params);
     }
 
-    public function invia_formcontatti(Request $request)
-    {
-        $data = $request->post();
-        $config = \Config::get('website_config');
-        $secret = $config['recaptcha_secret'];
-
-        if(!GoogleRecaptcha::verifyGoogleRecaptcha($data,$secret))
-        {
-            return ['result' => 0, 'msg' => trans('msg.il_codice_di_controllo_errato')];
-        }
-
-        $to = ($config['in_sviluppo']) ? $config['email_debug'] : $config['email'];
-
-        $mail = new Contact($data);
-
-        try{
-            \Mail::to($to)->send($mail);
-        }
-        catch(\Exception $e)
-        {
-            return ['result' => 0, 'msg' => $e->getMessage()];
-        }
-
-        return ['result' => 1, 'msg' => trans('msg.grazie_per_averci_contattato')];
-
-    }
-
 
     public function page(Request $request)
     {
         $slug = $request->segment(2);
+        $lang = $request->segment(1);
 
         //prendo la url con quello slug e con la lingua
-        $url = Url::where('slug',$slug)->first();
+        $url = Url::where('slug',$slug)->where('locale',$lang)->first();
 
         if($url)
         {
@@ -104,6 +82,9 @@ class PageController extends Controller
             switch ($url->urlable_type) {
                 case 'App\Model\Page':
                     return $this->simplePage($request,$url);
+                    break;
+                case 'App\Model\Macrocategory':
+                    return $this->macrocategoryPage($request,$url);
                     break;
                 case 'App\Model\Category':
                     return $this->categoryPage($request,$url);
@@ -124,9 +105,18 @@ class PageController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $url
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * per le pagine statiche stabilite nel pannello nella sezione Page
+     */
     protected function simplePage(Request $request,$url)
     {
+        //cerca l'oggetto Page con l'id della url
         $page = Page::find($url->urlable_id);
+
+        //poi chiama la funzione col nome della pagina
         if(method_exists($this,$page->nome))
         {
             return $this->{$page->nome}($request,$url);
@@ -137,9 +127,19 @@ class PageController extends Controller
         }
     }
 
+    protected function macrocategoryPage(Request $request,$url)
+    {
+        $macrocategory = Macrocategory::find($url->urlable_id);
+
+        return $this->catalogo($request,$macrocategory,$macrocategory);
+    }
+
     protected function categoryPage(Request $request,$url)
     {
+        $category = Category::find($url->urlable_id);
+        $macrocategory = Macrocategory::find($category->macrocategory_id);
 
+        return $this->catalogo($request,$macrocategory,$category);
     }
 
     protected function productPage(Request $request,$url)
@@ -150,6 +150,206 @@ class PageController extends Controller
     protected function pairingPage(Request $request,$url)
     {
 
+    }
+
+    /**
+     * @param Request $request
+     * @param $macrocategory
+     * @param $model
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * Funzione per visualizzare le pagine Categorie e Macrocategorie
+     * Può essere una lista di Prodotti Singoli o Abbinamenti
+     * Può essere chiamata normalmente oppure tramite ajax cliccando sul paginatore
+     */
+    protected function catalogo(Request $request,$macrocategory,$model)
+    {
+        //il parametro $model può essere o un App\Model|Macrocategory o un App\Model\Category
+        //se il model è di tipo App\Model\Category allora vuol dire che siamo in una pagina categoria
+        $category = ($model instanceof Category) ? $model : false;
+
+        //le configurazioni varie del sito web
+        $website_config = \Config::get('website_config');
+
+        //quanti prodotti per pagina
+        $per_page = $website_config['num_prod_per_page'];
+
+        //le macrocategorie per il menu nella colonna a sinistra
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        //il template della vista in base a se è Ajax o no
+        $view = ($request->ajax()) ? 'website.page.partials.other_products' : 'website.page.product_list';
+
+        //parametro per ORDINAMENTO prodotti  (dalla url o dalla sessione se ajax)
+        //false se non settato
+        $ordinamento = $this->getOrdinamentoParam($request);
+
+        //parametro FILTRO prodotti (solo per gli abbinamenti sono: x Stile, x Materiale Scacchi, x Materiale Scacchiera)
+        //false se non settato
+        $filtro = $this->getFiltroParam($request);
+
+        //parametro PAGE del paginatore dalla url se AJAX altrimenti dalla sessione
+        //false se non settato
+        $page = $this->getPageParam($request, $model);
+
+        //inserisco i vari parametri nella sessione: Page se Ajax, Ordinamento e Filtro se chiamata normale
+        $this->setParamsInSession($request, $ordinamento, $filtro, $page, $model);
+
+        //se settata nella sessione la page la inseriamo nel paginatore (SERVE per il torna indietro del browser)
+        $this->updatePaginator($request,$page);
+
+        $styles = Style::all();
+        $chess_materials = Material::where('per','scacchi')->get();
+        $board_materials = Material::where('per','scacchiera')->get();
+
+        //se la macro id è 22 allora siamo su una categoria ABBINAMENTI
+        if($macrocategory->id == 22)
+        {
+            //nessun prodotto singolo
+            $products = false;
+            //il totale degli abbinamenti presenti in questa categoria o macrocategoria
+            $totali = $this->getTotalPairings($model,$filtro);
+            //gli abbinamenti in base alla pagina ai filtri e all'ordinamento
+            $pairings = $this->getPairings($model,$filtro,$ordinamento,$per_page);
+        }
+        //PRODOTTI SINGOLI
+        else
+        {
+            //nessun abbinamento
+            $pairings = false;
+            //il totale prodotti presenti in questa categoria o macrocategoria
+            $totali = $this->getTotalProducts($model);
+            //i prodotti in base alla pagina e all'ordinamento
+            $products = $this->getProducts($model,$ordinamento,$per_page);
+        }
+
+        $params = [
+            'macrocategory' => $macrocategory,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => $macrocategory->id,
+            'category' => $category,
+            'totali' => $totali,
+            'titolo' => $model->{'nome_'.\App::getLocale()},
+            'products' => $products,
+            'pairings' => $pairings,
+            'ordinamento' => $ordinamento,
+            'descrizione_categoria' => $model->{'desc_'.\App::getLocale()},
+            'styles' => $styles,
+            'chess_materials' => $chess_materials,
+            'board_materials' => $board_materials,
+            'filtro' => $filtro,
+        ];
+
+        return view($view,$params);
+    }
+
+    protected function tutti_prodotti(Request $request,$url)
+    {
+        $seo = $url->seo;
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        //le configurazioni varie del sito web
+        $website_config = \Config::get('website_config');
+
+        //quanti prodotti per pagina
+        $per_page = $website_config['num_prod_per_page'];
+
+        $catalogo = collect();
+        $locale = \App::getLocale();
+
+        foreach ($macrocategorie as $macro)
+        {
+            $products = $macro->products()->where('visibile',1)->where('availability_id','!=',2)->get();
+            if($products)
+            {
+                foreach ($products as $product)
+                {
+                    $product = Product::find($product->id_product);
+                    $prezzo_vendita = $product->prezzo_vendita();
+                    /*$url = Url::where('urlable_id',$product->id)->where('urlable_type','App\Model\Product')->toSql();
+
+                    //$url = $website_config['protocol']."://www.".$url->domain->nome."/".$locale."/".$url->slug;
+                    $product->url = $url;*/
+                    $elem = [
+                        'id'=> $product->id,
+                        'type'=> 'product',
+                        'prezzo'=> $prezzo_vendita,
+                        'object'=>$product];
+                    $catalogo->push($elem);
+                }
+            }
+
+
+            $pairings = $macro->pairings()->where('visibile',1)->get();
+            if($pairings)
+            {
+                foreach ($pairings as $pairing)
+                {
+                    $product1 = Product::find($pairing->product1_id);
+                    $product2 = Product::find($pairing->product1_id);
+                    $prezzo_vendita = $product1->prezzo_vendita() + $product2->prezzo_vendita();
+                    $elem = ['id'=> $pairing->id,'type'=> 'pairing','prezzo'=> $prezzo_vendita,'object'=>$pairing];
+                    $catalogo->push($elem);
+                }
+            }
+        }
+
+        $totali = $catalogo->count();
+
+        //parametro per ORDINAMENTO prodotti  (dalla url o dalla sessione se ajax)
+        //false se non settato
+        $ordinamento = $this->getOrdinamentoParam($request);
+
+        switch ($ordinamento)
+        {
+            //per prezzo crescente
+            case 'prezzo|ASC':
+                $list = $catalogo->sortBy('prezzo')
+                    ->paginate($per_page);
+                break;
+            //per prezzo decrescente
+            case 'prezzo|DESC':
+                $list = $catalogo->sortByDesc('prezzo')
+                    ->paginate($per_page);
+                break;
+            //per codice
+            /*case 'codice|ASC':
+                $nome = 'nome_'.\App::getLocale();
+                $pairings = $model->pairings_for_list()
+                    ->sortBy($nome)
+                    ->paginate($per_page);
+                break;*/
+            default:
+                $list = $catalogo->sortBy('prezzo')
+                    ->paginate($per_page);
+        }
+        /*echo '<pre>';
+        print_r($list);
+        exit();*/
+
+        $params = [
+            'macrocategory' => false,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null,
+            'category' => false,
+            'totali' => $totali,
+            'titolo' => 'Tutti i prodotti',
+            'products' => false,
+            'pairings' => false,
+            'ordinamento' => $ordinamento,
+            'descrizione_categoria' => '',
+            'styles' => false,
+            'chess_materials' => false,
+            'board_materials' => false,
+            'filtro' => false,
+            'list' => $list
+        ];
+
+        /*$params = [
+            'seo' => $seo,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+        ];*/
+        return view('website.page.tutti_prodotti',$params);
     }
 
     protected function azienda(Request $request,$url)
@@ -191,5 +391,296 @@ class PageController extends Controller
             'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
         ];
         return view('website.page.contatti',$params);
+    }
+
+    public function invia_formcontatti(Request $request)
+    {
+        $data = $request->post();
+        $config = \Config::get('website_config');
+        $secret = $config['recaptcha_secret'];
+
+        if(!GoogleRecaptcha::verifyGoogleRecaptcha($data,$secret))
+        {
+            return ['result' => 0, 'msg' => trans('msg.il_codice_di_controllo_errato')];
+        }
+
+        $to = ($config['in_sviluppo']) ? $config['email_debug'] : $config['email'];
+
+        $mail = new Contact($data);
+
+        try{
+            \Mail::to($to)->send($mail);
+        }
+        catch(\Exception $e)
+        {
+            return ['result' => 0, 'msg' => $e->getMessage()];
+        }
+
+        return ['result' => 1, 'msg' => trans('msg.grazie_per_averci_contattato')];
+
+    }
+
+    private function getOrdinamentoParam(Request $request)
+    {
+        if(!$request->ajax())
+        {
+            //se NO AJAX lo prendo dalla query string dell url
+            $ordinamento = $request->query('order', false);
+        }
+        else
+        {
+            //se AJAX il parametro dell'ordinamento lo prendo dalla sessione
+            $ordinamento = $request->session()->get('order',false);
+        }
+        return $ordinamento;
+    }
+
+    private function getFiltroParam(Request $request)
+    {
+        if(!$request->ajax())
+        {
+            //se NO AJAX lo prendo dalla query string dell url
+            $filtro = $request->query('filter',false);
+        }
+        else
+        {
+            //se AJAX il parametro del filtro lo prendo dalla sessione
+            $filtro = $request->session()->get('filter',false);
+        }
+        return $filtro;
+    }
+
+    private function getPageParam(Request $request, $model=null)
+    {
+        if(!$request->ajax())
+        {
+            //se NO AJAX lo prendo dalla query string dell url
+            if($model instanceof Category)
+            {
+                $page = $request->session()->get('page_cat_'.$model->id,false);
+            }
+            elseif($model instanceof Macrocategory)
+            {
+                $page = $request->session()->get('page_mac_'.$model->id,false);
+            }
+            else
+            {
+                $page = $request->session()->get('page',false);
+            }
+        }
+        else
+        {
+            //se AJAX il parametro PAGE lo prendo dalla url
+            $page = $request->get('page');
+        }
+        return $page;
+    }
+
+    private function setParamsInSession(Request $request,$ordinamento,$filtro,$page,$model=null)
+    {
+        if(!$request->ajax())
+        {
+            //inserisco l'ordinamento nella sessione per eventuali chiamate ajax tramite paginatore
+            $request->session()->put('order',$ordinamento);
+
+            //inserisco il filtro nella sessione per eventuali chiamate ajax tramite paginatore
+            $request->session()->put('filter',$filtro);
+        }
+        else
+        {
+            //inserisco il parametro page nella sessione
+            if($model instanceof Category)
+            {
+                $request->session()->put('page_cat_'.$model->id,$page);
+            }
+            elseif($model instanceof Macrocategory)
+            {
+                $request->session()->put('page_mac_'.$model->id,$page);
+            }
+            else
+            {
+                $request->session()->put('page',$page);
+            }
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $page
+     * setta il Paginatore ad una determita pagina (utile per il torna indietro del browser)
+     */
+    private function updatePaginator(Request $request,$page)
+    {
+        if(session()->previousUrl() == $request->fullUrl())
+        {
+            if($page)
+            {
+                Paginator::currentPageResolver(function () use ($page) {
+                    return $page;
+                });
+            }
+        }
+    }
+
+    /**
+     * @param $model
+     * @param $filtro
+     * @return mixed
+     * Funzione per sapere il numero totale dei prodotti di una categoria o macrocategoria
+     */
+    private function getTotalPairings($model,$filtro)
+    {
+        if($filtro)
+        {
+            $filtro_arr = explode("|",$filtro);
+            $tipo_filtro = $filtro_arr[0];
+            $parametro_filtro = $filtro_arr[1];
+
+            switch($tipo_filtro)
+            {
+                case 'style':
+                    $totali = $model->pairings()->where('visibile',1)->where('style_id',$parametro_filtro)->count();
+                    break;
+                case 'material_chess':
+                    $totali = $model->pairings_for_list($tipo_filtro,$parametro_filtro)->count();
+                    break;
+                case 'material_board':
+                    $totali = $model->pairings_for_list($tipo_filtro,$parametro_filtro)->count();
+                    break;
+                default:
+                    $totali = $model->pairings_for_list()->count();
+            }
+        }
+        else
+        {
+            $totali = $model->pairings()->where('visibile',1)->count();
+        }
+
+        return $totali;
+    }
+
+    /**
+     * @param $model
+     * @param $filtro
+     * @param $ordinamento
+     * @param $per_page
+     * @return mixed
+     * Funzione per ottenere tutti gli abbinamenti in base ai filtri e all'ordinamento stabiliti e per paginatore
+     */
+    private function getPairings($model, $filtro, $ordinamento, $per_page)
+    {
+        //Se Presente il parametro filtro allora prendo gli abbinamenti in base al filtro
+        if($filtro)
+        {
+            $filtro_arr = explode("|",$filtro);
+            $tipo_filtro = $filtro_arr[0];
+            $parametro_filtro = $filtro_arr[1];
+
+            switch($tipo_filtro)
+            {
+                //per stile
+                case 'style':
+                    $pairings = $model->pairings_for_list()
+                        ->sortBy('prezzo')
+                        ->where('style_id',$parametro_filtro)
+                        ->paginate($per_page);
+                    break;
+                //per materiale scacchi
+                case 'material_chess':
+                    $pairings = $model->pairings_for_list($tipo_filtro,$parametro_filtro)
+                        ->sortBy('prezzo')
+                        ->paginate($per_page);
+                    break;
+                //per materiale scacchiera
+                case 'material_board':
+                    $pairings = $model->pairings_for_list($tipo_filtro,$parametro_filtro)
+                        ->sortBy('prezzo')
+                        ->paginate($per_page);
+                    break;
+                default:
+                    $pairings = $model->pairings_for_list()
+                        ->sortBy('prezzo')
+                        ->paginate($per_page);
+            }
+        }
+        //altrimenti prendo i prodotti in base all'ordinamento
+        else
+        {
+            //ATTENZIONE!! in questo caso usiamo sortBy perchè il risultato è una collection e non un eloquent array
+            switch ($ordinamento)
+            {
+                //per prezzo crescente
+                case 'prezzo|ASC':
+                    $pairings = $model->pairings_for_list()
+                        ->sortBy('prezzo')
+                        ->paginate($per_page);
+                    break;
+                //per prezzo decrescente
+                case 'prezzo|DESC':
+                    $pairings = $model->pairings_for_list()
+                        ->sortByDesc('prezzo')
+                        ->paginate($per_page);
+                    break;
+                //per codice
+                case 'codice|ASC':
+                    $nome = 'nome_'.\App::getLocale();
+                    $pairings = $model->pairings_for_list()
+                        ->sortBy($nome)
+                        ->paginate($per_page);
+                    break;
+                default:
+                    $pairings = $model->pairings_for_list()
+                        ->sortBy('prezzo')
+                        ->paginate($per_page);
+            }
+        }
+        return $pairings;
+    }
+
+    /**
+     * @param $model
+     * @return mixed
+     * Funzione per sapere il numero totale di una categoria o macrocategoria
+     */
+    private function getTotalProducts($model)
+    {
+        return $model->products()->where('visibile',1)->where('availability_id','!=',2)->count();
+    }
+
+    private function getProducts($model,$ordinamento,$per_page)
+    {
+        switch ($ordinamento)
+        {
+            case 'prezzo|ASC':
+                $products = $model->products()
+                    ->where('visibile',1)
+                    ->where('availability_id','!=',2)
+                    ->orderBy('minimal','ASC')
+                    ->paginate($per_page);
+                break;
+            case 'prezzo|DESC':
+                $products = $model->products()
+                    ->where('visibile',1)
+                    ->where('availability_id','!=',2)
+                    ->orderBy('minimal','DESC')
+                    ->paginate($per_page);
+                break;
+            case 'nome|ASC':
+                $nome = 'nome_'.\App::getLocale();
+                $products = $model->products()
+                    ->where('visibile',1)
+                    ->where('availability_id','!=',2)
+                    ->orderBy($nome,'ASC')
+                    ->paginate($per_page);
+                break;
+            default:
+                $products = $model->products()
+                    ->where('visibile',1)
+                    ->where('availability_id','!=',2)
+                    ->orderBy('minimal')
+                    ->paginate($per_page);
+        }
+
+        return $products;
     }
 }

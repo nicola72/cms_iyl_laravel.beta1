@@ -38,6 +38,18 @@ return[
     'errore' => 'Error',
     'il_codice_di_controllo_errato' => 'The control code is not correct!',
     'grazie_per_averci_contattato' => 'Thanks for contacting us.<br/><br/>We will reply as soon as possible.',
-
-
+    'su_ordinazione' => 'made to order',
+    'codice_prodotto' => 'Product code',
+    'dettagli_prodotto' => 'product details',
+    'ci_sono_n_prodotti_in_questa_categoria' => 'There are :number products in this category',
+    'prodotti' => 'Products',
+    'ordina_per' => 'Order by',
+    'filtra_per' => 'Filter by',
+    'prezzo_dal_piu_basso' => 'Price: from lowest',
+    'prezzo_dal_piu_alto' => 'Price: from highest',
+    'nome_dalla_a_alla_z' => 'Product name: from A to Z',
+    'codice_dalla_a_alla_z' => 'Product code: from A to Z',
+    'stile' => 'Style',
+    'materiale_scacchi' => 'Chess Man Material',
+    'materiale_scacchiera' => 'Chess Board Material',
 ];

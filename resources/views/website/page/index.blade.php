@@ -99,7 +99,15 @@
                                                     </div>
                                                 </a>
                                                 <div class="fjalla prezzo">
-                                                    @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita()) &euro;
+                                                    @if($pairing->product1->prezzo_scontato != '0.00' && $pairing->product2->prezzo_scontato != '0.00')
+                                                        <span class="FullProdPrice">
+                                                            @money($pairing->product1->prezzo + $pairing->product2->prezzo)
+                                                        </span>
+                                                        @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita())
+                                                    @else
+                                                        @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita())
+                                                    @endif
+
                                                 </div>
                                             </div>
                                         </div>
@@ -165,7 +173,14 @@
                                                     </div>
                                                 </a>
                                                 <div class="fjalla prezzo">
-                                                    @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita()) &euro;
+                                                    @if($pairing->product1->prezzo_scontato != '0.00' || $pairing->product2->prezzo_scontato != '0.00')
+                                                        <span class="FullProdPrice">
+                                                            @money($pairing->product1->prezzo + $pairing->product2->prezzo)
+                                                        </span>
+                                                        @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita())
+                                                    @else
+                                                        @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita())
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>

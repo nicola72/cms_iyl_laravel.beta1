@@ -38,5 +38,20 @@ return[
     'errore' => 'Errore',
     'il_codice_di_controllo_errato' => 'Il codice di controllo è errato!',
     'grazie_per_averci_contattato' => 'Grazie per averci contattato.<br/><br/>Ti risponderemo al più presto.',
+    'su_ordinazione' => 'su ordinazione',
+    'codice_prodotto' => 'Codice prodotto',
+    'dettagli_prodotto' => 'dettagli prodotto',
+    'ci_sono_n_prodotti_in_questa_categoria' => 'Ci sono :number prodotti in questa categoria',
+    'prodotti' => 'Prodotti',
+    'ordina_per' => 'Ordina per',
+    'filtra_per' => 'Filtra per',
+    'prezzo_dal_piu_basso' => 'Prezzo dal più basso',
+    'prezzo_dal_piu_alto' => 'Prezzo dal più alto',
+    'nome_dalla_a_alla_z' => 'Nome del prodotto: dalla A alla Z',
+    'codice_dalla_a_alla_z' => 'Codice del prodotto: dalla A alla Z',
+    'stile' => 'Stile',
+    'materiale_scacchi' => 'Materiale Scacchi',
+    'materiale_scacchiera' => 'Materiale Scacchiera',
+
 
 ];

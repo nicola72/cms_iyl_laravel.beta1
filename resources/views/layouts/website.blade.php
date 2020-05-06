@@ -76,6 +76,26 @@
         <script src="/assets/js/additional-methods.js"></script>
         <script src="/assets/js/custom.js"></script>
         <script src="/assets/js/website.js"></script>
+        <script>
+            function show_others(url)
+            {
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    dataType: "html",
+                    success: function (data)
+                    {
+                        $('#product_list').html(data);
+                        window.scrollTo(0, 0);
+
+                    },
+                    error: function ()
+                    {
+                        alert("Si è verificato un errore! Riprova!");
+                    }
+                });
+            }
+        </script>
 
     @show
         @yield('js_script')

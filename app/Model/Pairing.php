@@ -71,7 +71,11 @@ class Pairing extends Model implements Sortable
         if($images)
         {
             $images = $images->orderBy('order');
-            return $images->first()->path;
+            $prima_img = $images->first();
+            if(is_object($prima_img))
+            {
+                return $images->first()->path;
+            }
         }
         return 'default.jpg';
     }

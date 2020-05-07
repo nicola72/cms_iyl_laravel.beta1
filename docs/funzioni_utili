@@ -14,3 +14,6 @@ if (!Collection::hasMacro('paginate'))
                         ->withPath('');
                 });
         }
+
+per recuperare l'user autenticato
+Request::user('website'), ho messo website perchè non è la guard di default

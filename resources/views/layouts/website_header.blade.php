@@ -4,7 +4,7 @@
         <h1 class="h1 hidden-xs">{{$seo->h1  ?? ""}}</h1>
         <div class="container">
             <div class="row">
-                <div class="col-md-6 hidden-sm hidden-xs">
+                <div class="col-md-5 hidden-sm hidden-xs">
                     <ul class="list-inline">
                         <li>
                             <a href="https://www.facebook.com/Marsilis-Company-316915328512344/" target="_blank">
@@ -13,7 +13,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-6 col-xs-12">
+                <div class="col-md-7 col-xs-12">
                     <ul class="list-inline pull-right">
 
                         <!-- MENU' LINGUE -->
@@ -39,13 +39,13 @@
                         </li>
                         <!-- FINE MENU LINGUE -->
 
-                        @auth
+                        <!-- MENU USER O GUEST -->
+                        @if(Auth::guard('website')->check())
                             @include('layouts.website_auth_menu')
-                        @endauth
-
-                        @guest
+                        @else
                             @include('layouts.website_guest_menu')
-                        @endguest
+                        @endif
+                        <!-- -->
 
                         <li class="dropdown searchBox">
                             <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">

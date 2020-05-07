@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $guard = 'web';
+    protected $guard = 'website';
 
     /**
      * The attributes that are mass assignable.
@@ -32,5 +32,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = ['email_verified_at' => 'datetime'];
+
+    public function userdetail()
+    {
+        return $this->hasOne('App\Model\Website\UserDetail');
+    }
 
 }

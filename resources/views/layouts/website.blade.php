@@ -9,6 +9,7 @@
         <meta http-equiv="Cache-control" content="public">
         <meta name="author" content="Designed by InYourLife- https://www.inyourlife.info" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="function" content="{{ $function ?? '' }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link rel="shortcut icon" href="/favicon.png">
         <!-- CSRF Token -->
@@ -100,6 +101,7 @@
     @show
         @yield('js_script')
         @yield('js_script_form')
+        @yield('js_script_form2')
     @stack('body')
     </body>
 </html>

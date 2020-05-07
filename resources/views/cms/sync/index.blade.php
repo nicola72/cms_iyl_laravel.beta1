@@ -105,6 +105,36 @@
                                 </a>
                             </div>
                         </div>
+
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Sincronizza la tabella users e clearpasswords con i vecchi dati</em>
+                                <br>
+                                <a href="{{url('cms/sync/sync_users')}}" class="btn btn-w-m btn-primary">
+                                    Sincronizza gli utenti per i login
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Sincronizza la tabella userdetails con i vecchi dati</em>
+                                <br>
+                                <a href="{{url('cms/sync/sync_user_details')}}" class="btn btn-w-m btn-primary">
+                                    Sincronizza dettaglio utenti
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Sincronizza le recensioni dalla tabella tb_guestbook alla tabella reviews</em>
+                                <br>
+                                <a href="{{url('cms/sync/sync_reviews')}}" class="btn btn-w-m btn-primary">
+                                    Sincronizza le recensioni
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

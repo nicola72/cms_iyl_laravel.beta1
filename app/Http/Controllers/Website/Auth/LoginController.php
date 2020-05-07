@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Website\Auth;
 
+use App\Model\Domain;
+use App\Model\Macrocategory;
+use App\Model\Page;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -19,7 +22,7 @@ class LoginController extends Controller
     protected $redirectTo = '/';
 
     //la chiave di configurazione per l'autenticazione
-    protected $guard = 'web';
+    protected $guard = 'website';
 
     //numero max di tentativi
     protected $maxAttempts = 5;
@@ -36,24 +39,26 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    /**
-     * Show the application's login form.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
-     */
-    public function showLoginForm()
+    public function showLoginAndRegisterForm()
     {
-        return view('cms.auth.login');
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'form_login' => 'form_login',
+            'form_registrazione' => 'form_registrazione',
+        ];
+        return view('website.auth.login_and_registration',$params);
     }
 
-    /**
-     * Handle a login request to the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Symfony\Component\HttpFoundation\Response|void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
+
+    public function showLoginForm()
+    {
+        return view('website.auth.login');
+    }
+
+
     public function login(Request $request)
     {
         //controlla se i dati per il login sono in forma giusta
@@ -80,14 +85,6 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-    /**
-     * Validate the user login request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     protected function validateLogin(Request $request)
     {
         $request->validate(['email' => 'required|string','password' => 'required|string']);
@@ -115,18 +112,18 @@ class LoginController extends Controller
         return $request->only('email', 'password');
     }
 
-    /**
-     * Send the response after the user was authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     protected function sendLoginResponse(Request $request)
     {
         $request->session()->regenerate();
         $this->clearLoginAttempts($request);
 
-        return redirect($this->redirectTo);
+        $website_config = \Config::get('website_config');
+        $domain = Domain::where('locale',\App::getLocale())->first();
+        $url = $website_config['protocol'].'://www.'.$domain->nome;
+
+        return ['result'=>1, 'msg' => trans('msg.credenziali_corrette'),'url' => $url];
+        //return redirect($this->redirectTo);
     }
 
     /**
@@ -138,7 +135,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        //
+        return ['result' => 1,'msg'=>trans('msg.credenziali_corrette')];
     }
 
     /**

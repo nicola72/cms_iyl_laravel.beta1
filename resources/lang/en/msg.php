@@ -52,4 +52,8 @@ return[
     'stile' => 'Style',
     'materiale_scacchi' => 'Chess Man Material',
     'materiale_scacchiera' => 'Chess Board Material',
+    'inserire_almeno_4_caratteri' => 'Enter at least 4 characters for the search!',
+    'sei_gia_iscritto' => 'You are already registered',
+    'recupera_password' => 'Retrieve password',
+    'crea_un_account' => 'Create an account',
 ];

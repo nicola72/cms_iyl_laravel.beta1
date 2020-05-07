@@ -1,14 +1,14 @@
 <li>
 	<span>
-		<a href='{{url(app()->getLocale().'/login')}}'>
+		<a href='{{route('website.logout',['locale' => app()->getLocale()])}}'>
 			<i class="fa fa-sign-out"></i>
 			&nbsp;&nbsp;
-            <span class="hidden-xs">@lang('msg.logout')</span>
+            <span class="hidden-xs text-capitalize">@lang('msg.logout')</span>
 		</a>
         <span class="hidden-xs"><small> | </small></span>
         <a href='{{url(app()->getLocale().'/account')}}' title="@lang('msg.mio_account')">
             <i class="fa fa-user"></i>
-            <span class="hidden-xs">
+            <span class="hidden-xs text-capitalize">
                 &nbsp;&nbsp;
                 @lang('msg.mio_account')
             </span>
@@ -17,7 +17,7 @@
 
         <a href='{{url(app()->getLocale().'/orders')}}' title="@lang('msg.miei_ordini')">
             <i class="fa fa-book"></i>
-            <span class="hidden-xs">
+            <span class="hidden-xs text-capitalize">
                 &nbsp;&nbsp;
                 @lang('msg.miei_ordini')
             </span>

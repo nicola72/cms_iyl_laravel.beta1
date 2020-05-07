@@ -9,7 +9,11 @@ use App\Model\Module;
 use App\Model\ModuleConfig;
 use App\Model\Pairing;
 use App\Model\Product;
+use App\Model\Review;
 use App\Model\Url;
+use App\Model\Website\Clearpassword;
+use App\Model\Website\User;
+use App\Model\Website\UserDetail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
@@ -21,6 +25,93 @@ class SyncController extends Controller
     {
         $params = ['title_page' => 'Operazioni'];
         return view('cms.sync.index',$params);
+    }
+
+    public function sync_users()
+    {
+        \DB::table('users')->truncate();
+        \DB::table('clearpasswords')->truncate();
+
+        $vecchi = \DB::table('tb_users')->get();
+
+        foreach($vecchi as $item)
+        {
+            $email = $item->email;
+            $name = $item->nome . ' '.$item->cognome;
+            $clear = \DB::table('tb_clear_pwd')->where('id_user',$item->id)->first();
+
+            if($clear)
+            {
+                $clear_pwd = $clear->pwd;
+                $new_pass = \Hash::make($clear_pwd);
+
+                $user = new User();
+                $user->name = $name;
+                $user->email = $email;
+                $user->password = $new_pass;
+                $user->save();
+
+                $user_id = $user->id;
+                $clear = new Clearpassword();
+                $clear->user_id = $user_id;
+                $clear->password = $clear_pwd;
+                $clear->save();
+
+            }
+            else
+            {
+                continue;
+            }
+        }
+
+        return back()->with('success','User sincronizzati!');
+    }
+
+    public function sync_user_details()
+    {
+        \DB::table('user_details')->truncate();
+
+        $vecchi = \DB::table('tb_user_details')->get();
+
+        foreach ($vecchi as $item)
+        {
+            $detail = new UserDetail();
+            $detail->user_id = $item->id_user;
+            if($item->data_nascita != '0000-00-00')
+            {
+                $detail->data_nascita = $item->data_nascita;
+            }
+
+            $detail->citta_nascita = $item->citta_nascita;
+            $detail->save();
+        }
+        return back()->with('success','User details sincronizzati!');
+    }
+
+    public function sync_reviews()
+    {
+        \DB::table('reviews')->truncate();
+
+        $vecchie = \DB::table('tb_guestbook')->get();
+
+        foreach($vecchie as $item)
+        {
+            $review = new Review();
+            $review->nome = $item->nome;
+            $review->messaggio = $item->messaggio;
+            if($item->data_evento != '' && $item->data_evento != null)
+            {
+                $review->data_evento = $item->data_evento;
+            }
+
+            if($item->visibile == 'si')
+            {
+                $review->visibile = 1;
+            }
+            $review->save();
+        }
+
+        return back()->with('success','Recensioni aggiornate');
     }
 
     public function sync_categorie()

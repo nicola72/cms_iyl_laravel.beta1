@@ -1,23 +1,5 @@
 <?php
 
-//ROUTES DEL WEBSITE
-Route::get('/','Website\PageController@index')->name('website.home');
-Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'middleware' => 'setlocale'],function(){
-
-    Route::post('/invia_formcontatti','Website\PageController@invia_formcontatti')->name('invia_formcontatti');
-    Route::get('/{slug}','Website\PageController@page');
-
-    //per L'autorizzazione
-    Route::get('/login', 'Website\Auth\LoginController@showLoginForm')->name('website.login');
-    Route::post('/login','Website\Auth\LoginController@login')->name('website.login');
-    Route::get('/logout', 'Website\Auth\LoginController@logout')->name('website.logout');
-    Route::get('/register','Website\Auth\RegisterController@showRegistrationForm')->name('website.register');
-    Route::post('/register','Website\Auth\RegisterController@register');
-    Route::get('/password/reset','Website\Auth\ForgotPasswordController@showLinkRequestForm')->name('website.password.request');
-});
-
-
-
 //ROUTES DEL CMS
 Route::group(['prefix' => 'cms'], function ()
 {
@@ -47,6 +29,9 @@ Route::group(['prefix' => 'cms'], function ()
         Route::post('/settings/store_copy_config_module','Cms\SettingsController@store_copy_config_module');
 
         Route::get('/sync', 'Cms\SyncController@index')->name('cms.sync');
+        Route::get('/sync/sync_users','Cms\SyncController@sync_users');
+        Route::get('/sync/sync_user_details','Cms\SyncController@sync_user_details');
+        Route::get('/sync/sync_reviews','Cms\SyncController@sync_reviews');
         Route::get('/sync/sync_categorie','Cms\SyncController@sync_categorie');
         Route::get('/sync/sync_url_categorie','Cms\SyncController@sync_url_categorie');
         Route::get('/sync/sync_prodotti','Cms\SyncController@sync_prodotti');
@@ -77,6 +62,7 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/sliders/images/{id}', 'Cms\SlidersController@images');
         Route::get('/sliders', 'Cms\SlidersController@index')->name('cms.sliders');
 
+        Route::get('/review', 'Cms\ReviewController@index')->name('cms.recensioni');
 
         Route::get('/macrocategory/switch_stato','Cms\MacrocategoryController@switch_stato');
         Route::resource('/macrocategory','Cms\MacrocategoryController');
@@ -176,5 +162,27 @@ Route::group(['prefix' => 'cms'], function ()
     Route::get('/password/reset','Cms\Auth\ForgotPasswordController@showLinkRequestForm')->name('cms.password.request');
 
 });
+
+//ROUTES DEL WEBSITE
+Route::get('/','Website\PageController@index')->name('website.home');
+
+Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'middleware' => 'setlocale'],function(){
+
+    //per L'autorizzazione
+    Route::get('/login', 'Website\Auth\LoginController@showLoginAndRegisterForm')->name('website.login');
+    Route::post('/login','Website\Auth\LoginController@login')->name('website.login');
+    Route::get('/logout', 'Website\Auth\LoginController@logout')->name('website.logout');
+    Route::get('/register','Website\Auth\RegisterController@showRegistrationForm')->name('website.register');
+    Route::post('/register','Website\Auth\RegisterController@register');
+    Route::get('/password/reset','Website\Auth\ForgotPasswordController@showLinkRequestForm')->name('website.password.request');
+
+    Route::post('/invia_formcontatti','Website\PageController@invia_formcontatti')->name('invia_formcontatti');
+    Route::get('/{slug}','Website\PageController@page');
+
+});
+
+
+
+
 
 

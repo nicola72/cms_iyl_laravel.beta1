@@ -131,7 +131,20 @@ class PageController extends Controller
     {
         $macrocategory = Macrocategory::find($url->urlable_id);
 
-        return $this->catalogo($request,$macrocategory,$macrocategory);
+        $seo = $url->seo; //se ha un seo specifico
+        //altrimenti cerco il seo generico per le categorie
+        if(!$seo)
+        {
+            $seo = Seo::where('bind_to','App\Model\Macrocategory')->where('locale',\App::getLocale())->first();
+            $segnaposto = $macrocategory->{'nome_'.\App::getLocale()};
+            $seo->title = str_replace("%s",$segnaposto ,$seo->title);
+            $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
+            $seo->description = str_replace("%s",$segnaposto ,$seo->description);
+            $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
+            $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+        }
+
+        return $this->catalogo($request,$macrocategory,$macrocategory,$seo);
     }
 
     protected function categoryPage(Request $request,$url)
@@ -139,7 +152,20 @@ class PageController extends Controller
         $category = Category::find($url->urlable_id);
         $macrocategory = Macrocategory::find($category->macrocategory_id);
 
-        return $this->catalogo($request,$macrocategory,$category);
+        $seo = $url->seo; //se ha un seo specifico
+        //altrimenti cerco il seo generico per le categorie
+        if(!$seo)
+        {
+            $seo = Seo::where('bind_to','App\Model\Category')->where('locale',\App::getLocale())->first();
+            $segnaposto = $category->{'nome_'.\App::getLocale()};
+            $seo->title = str_replace("%s",$segnaposto ,$seo->title);
+            $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
+            $seo->description = str_replace("%s",$segnaposto ,$seo->description);
+            $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
+            $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+        }
+
+        return $this->catalogo($request,$macrocategory,$category,$seo);
     }
 
     protected function productPage(Request $request,$url)
@@ -161,7 +187,7 @@ class PageController extends Controller
      * Può essere una lista di Prodotti Singoli o Abbinamenti
      * Può essere chiamata normalmente oppure tramite ajax cliccando sul paginatore
      */
-    protected function catalogo(Request $request,$macrocategory,$model)
+    protected function catalogo(Request $request,$macrocategory,$model,$seo = null)
     {
         //il parametro $model può essere o un App\Model|Macrocategory o un App\Model\Category
         //se il model è di tipo App\Model\Category allora vuol dire che siamo in una pagina categoria
@@ -223,6 +249,7 @@ class PageController extends Controller
         }
 
         $params = [
+            'seo' => $seo,
             'macrocategory' => $macrocategory,
             'macrocategorie' => $macrocategorie,
             'macro_request' => $macrocategory->id,
@@ -237,9 +264,90 @@ class PageController extends Controller
             'chess_materials' => $chess_materials,
             'board_materials' => $board_materials,
             'filtro' => $filtro,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
         ];
 
         return view($view,$params);
+    }
+
+    protected function ricerca(Request $request,$url)
+    {
+        $seo = $url->seo;
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $search = $request->get('searchterm',null);
+        if(strlen($search) < 4)
+        {
+            return back()->with('error',trans('msg.inserire_almeno_4_caratteri'));
+        }
+
+        $catalogo = collect();
+
+        foreach ($macrocategorie as $macro)
+        {
+            $products = $macro->products()->where('visibile',1)->where('availability_id','!=',2)->where('products.nome_'.\App::getLocale(),'LIKE','%' . $search . '%')->get();
+            if($products)
+            {
+                foreach ($products as $product)
+                {
+                    $product = Product::find($product->id_product);
+                    $prezzo_vendita = $product->prezzo_vendita();
+                    $elem = [
+                        'id'=> $product->id,
+                        'type'=> 'product',
+                        'prezzo'=> $prezzo_vendita,
+                        'nome' => $product->{'nome_'.\App::getLocale()},
+                        'object'=>$product
+                    ];
+                    $catalogo->push($elem);
+                }
+            }
+
+
+            $pairings = $macro->pairings()->where('visibile',1)->where('pairings.nome_'.\App::getLocale(),'LIKE','%' . $search . '%')->get();
+            if($pairings)
+            {
+                foreach ($pairings as $pairing)
+                {
+                    $product1 = Product::find($pairing->product1_id);
+                    $product2 = Product::find($pairing->product1_id);
+                    $prezzo_vendita = $product1->prezzo_vendita() + $product2->prezzo_vendita();
+                    $elem = [
+                        'id'=> $pairing->id,
+                        'type'=> 'pairing',
+                        'prezzo'=> $prezzo_vendita,
+                        'nome' => $pairing->{'nome_'.\App::getLocale()},
+                        'object'=>$pairing
+                    ];
+                    $catalogo->push($elem);
+                }
+            }
+        }
+
+        $totali = $catalogo->count();
+        $list = $catalogo->sortBy('prezzo');
+
+        $params = [
+            'seo' => $seo,
+            'macrocategory' => false,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null,
+            'category' => false,
+            'totali' => $totali,
+            'titolo' => 'Ricerca per '.$search,
+            'products' => false,
+            'pairings' => false,
+            'ordinamento' => false,
+            'descrizione_categoria' => '',
+            'styles' => false,
+            'chess_materials' => false,
+            'board_materials' => false,
+            'filtro' => false,
+            'list' => $list,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+
+        return view('website.page.ricerca',$params);
     }
 
     protected function tutti_prodotti(Request $request,$url)
@@ -254,7 +362,6 @@ class PageController extends Controller
         $per_page = $website_config['num_prod_per_page'];
 
         $catalogo = collect();
-        $locale = \App::getLocale();
 
         foreach ($macrocategorie as $macro)
         {
@@ -265,15 +372,13 @@ class PageController extends Controller
                 {
                     $product = Product::find($product->id_product);
                     $prezzo_vendita = $product->prezzo_vendita();
-                    /*$url = Url::where('urlable_id',$product->id)->where('urlable_type','App\Model\Product')->toSql();
-
-                    //$url = $website_config['protocol']."://www.".$url->domain->nome."/".$locale."/".$url->slug;
-                    $product->url = $url;*/
                     $elem = [
                         'id'=> $product->id,
                         'type'=> 'product',
                         'prezzo'=> $prezzo_vendita,
-                        'object'=>$product];
+                        'nome' => $product->{'nome_'.\App::getLocale()},
+                        'object'=>$product
+                    ];
                     $catalogo->push($elem);
                 }
             }
@@ -287,7 +392,13 @@ class PageController extends Controller
                     $product1 = Product::find($pairing->product1_id);
                     $product2 = Product::find($pairing->product1_id);
                     $prezzo_vendita = $product1->prezzo_vendita() + $product2->prezzo_vendita();
-                    $elem = ['id'=> $pairing->id,'type'=> 'pairing','prezzo'=> $prezzo_vendita,'object'=>$pairing];
+                    $elem = [
+                        'id'=> $pairing->id,
+                        'type'=> 'pairing',
+                        'prezzo'=> $prezzo_vendita,
+                        'nome' => $pairing->{'nome_'.\App::getLocale()},
+                        'object'=>$pairing
+                    ];
                     $catalogo->push($elem);
                 }
             }
@@ -297,7 +408,19 @@ class PageController extends Controller
 
         //parametro per ORDINAMENTO prodotti  (dalla url o dalla sessione se ajax)
         //false se non settato
-        $ordinamento = $this->getOrdinamentoParam($request);
+        $ordinamento = $request->query('order', false);
+
+        if($ordinamento)
+        {
+            //inserisco l'ordinamento nella sessione per eventuali chiamate ajax tramite paginatore
+            $request->session()->put('order',$ordinamento);
+        }
+        //se non arriva dalla query string provo dalla sessione
+        else
+        {
+            $ordinamento = $request->session()->get('order',false);
+        }
+
 
         switch ($ordinamento)
         {
@@ -311,20 +434,16 @@ class PageController extends Controller
                 $list = $catalogo->sortByDesc('prezzo')
                     ->paginate($per_page);
                 break;
-            //per codice
-            /*case 'codice|ASC':
+            //per nome
+            case 'nome|ASC':
                 $nome = 'nome_'.\App::getLocale();
-                $pairings = $model->pairings_for_list()
-                    ->sortBy($nome)
+                $list = $catalogo->sortBy('nome')
                     ->paginate($per_page);
-                break;*/
+                break;
             default:
                 $list = $catalogo->sortBy('prezzo')
                     ->paginate($per_page);
         }
-        /*echo '<pre>';
-        print_r($list);
-        exit();*/
 
         $params = [
             'macrocategory' => false,
@@ -341,14 +460,10 @@ class PageController extends Controller
             'chess_materials' => false,
             'board_materials' => false,
             'filtro' => false,
-            'list' => $list
+            'list' => $list,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
         ];
 
-        /*$params = [
-            'seo' => $seo,
-            'macrocategorie' => $macrocategorie,
-            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
-        ];*/
         return view('website.page.tutti_prodotti',$params);
     }
 
@@ -361,6 +476,7 @@ class PageController extends Controller
             'seo' => $seo,
             'macrocategorie' => $macrocategorie,
             'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
         ];
         return view('website.page.azienda',$params);
     }
@@ -374,6 +490,7 @@ class PageController extends Controller
             'seo' => $seo,
             'macrocategorie' => $macrocategorie,
             'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
         ];
         return view('website.page.dove_siamo',$params);
     }
@@ -389,6 +506,7 @@ class PageController extends Controller
             'form_action' => route('invia_formcontatti',app()->getLocale()),
             'form_name' => 'form_contatti',
             'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
         ];
         return view('website.page.contatti',$params);
     }

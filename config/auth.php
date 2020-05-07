@@ -16,6 +16,11 @@ return [
             'provider' => 'users',
         ],
 
+        'website' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
         'cms' => [
             'driver' => 'session',
             'provider' => 'users_cms',

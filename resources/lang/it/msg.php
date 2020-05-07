@@ -52,6 +52,10 @@ return[
     'stile' => 'Stile',
     'materiale_scacchi' => 'Materiale Scacchi',
     'materiale_scacchiera' => 'Materiale Scacchiera',
+    'inserire_almeno_4_caratteri' => 'Inserire almeno 4 caratteri per la ricerca!',
+    'sei_gia_iscritto' => 'Sei già iscritto',
+    'recupera_password' => 'Recupera password',
+    'crea_un_account' => 'Crea un account',
 
 
 ];

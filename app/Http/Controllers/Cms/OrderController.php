@@ -1,18 +1,11 @@
 <?php
 namespace App\Http\Controllers\Cms;
 
-use App\Model\Category;
-use App\Model\Domain;
-use App\Model\File;
-use App\Model\Macrocategory;
+
 use App\Model\Order;
-use App\Model\OrderDetail;
-use App\Model\Pairing;
-use App\Model\Product;
-use App\Model\Url;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade;
 
 
 class OrderController extends Controller
@@ -45,5 +38,18 @@ class OrderController extends Controller
         ];
 
         return view('cms.order.order',$params);
+    }
+
+    public function pdf(Request $request, $id)
+    {
+        $order = Order::find($id);
+
+        $params = [
+            'title_page' => 'Ordine '.$order->id,
+            'order' => $order
+        ];
+
+        $pdf = \PDF::loadView('cms.order.pdf_order', $params);
+        return $pdf->download('invoice.pdf');
     }
 }

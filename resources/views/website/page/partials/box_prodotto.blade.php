@@ -1,7 +1,7 @@
 <div class="col-sm-4">
     <div class="productBox">
         <div class="productImage clearfix">
-            <a href="">
+            <a href="{{ $product->url() }}">
                 <img src="{{ $website_config['cs_small_dir'].$product->cover() }}" alt="{{$seo->alt ?? ''}}">
             </a>
         </div>
@@ -21,7 +21,7 @@
                     @lang('msg.su_ordinazione')
                 @else
                     @if($product->is_scontato())
-                        <span class="FullProdPrice">@money($product->prezzo)  &euro;</span>
+                        <span class="FullProdPrice">@money($product->prezzo)</span>
                         &nbsp;&nbsp;
                         <span>@money($product->prezzo_scontato)</span>
                     @else

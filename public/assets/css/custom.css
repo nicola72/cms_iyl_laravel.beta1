@@ -61,6 +61,32 @@ body, html{height:100%;}
     display: inline;
     text-transform: inherit;
 }
+.recensione-item{
+    margin-bottom:30px;
+}
+
+.recensione-data{
+    font-size:18px;
+    padding-bottom:8px;
+    font-style: italic;
+    color:#000;
+}
+
+.recensione-nome{
+    font-size:18px;
+    padding-bottom:12px;
+    font-weight:bold;
+    color:#840025;
+}
+
+.recensione-messaggio{
+    font-size:16px;
+    color:#000;
+}
+.recensione-messaggio p{
+    font-size:16px;
+    color:#000;
+}
 @media (max-width:991px){}
 @media (max-width:767px){}
 @media screen and (max-width:1450px){}

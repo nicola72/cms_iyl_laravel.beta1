@@ -23,8 +23,19 @@ class Cart extends Model
         return $this->belongsTo('App\Model\Product');
     }
 
-    public function products()
+    public function getCarts()
     {
-        return $this->belongsToMany('App\Model\Product');
+        if(\Auth::check())
+        {
+            $user = \Auth::getUser();
+            //$carts = Cart::where('user_id',$user->id)->get();
+            $products = $this->belongsToMany('App\Model\Product')->where('user_id',$user->id)->get();
+        }
+        else
+        {
+            //$carts = Cart::where('session_id',session()->getId())->get();
+            $products = $this->belongsToMany('App\Model\Product')->where('session_id',session()->getId())->get();
+        }
+        return $products;
     }
 }

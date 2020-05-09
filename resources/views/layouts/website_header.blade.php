@@ -94,19 +94,17 @@
 
                                     @foreach($carts as $cart)
                                     <li>
-                                        <a href="javascript:void(0)">
-                                            <div class="media">
-                                                <img class="media-left media-object foto_carrello" src="https://www.chess-store.it<?php //echo $img?>" alt="">
-                                                <div class="media-body">
-                                                    <h5 class="media-heading" style="max-width:130px;overflow: hidden;">
-                                                        {{substr($cart->product->{'nome_'.app()->getLocale()},0,10)}}
-                                                        ...
-                                                        <br>
-                                                        <span>{{$cart->qta}} X @money($cart->product->prezzo_vendita())</span>
-                                                    </h5>
-                                                </div>
+                                        <div class="media" style="padding:6px 16px;color:#fff">
+                                            <img class="media-left media-object foto_carrello" src="{{ $website_config['cs_small_dir'].$cart->product->cover() }}" alt="">
+                                            <div class="media-body">
+                                                <h8 class="media-heading" style="max-width:130px;overflow: hidden;font-size:12px">
+                                                    {{substr($cart->product->{'nome_'.app()->getLocale()},0,20)}}
+                                                    ...
+                                                    <br>
+                                                    <span>{{$cart->qta}} X @money($cart->product->prezzo_vendita())</span>
+                                                </h8>
                                             </div>
-                                        </a>
+                                        </div>
                                     </li>
                                     @endforeach
                                 @else

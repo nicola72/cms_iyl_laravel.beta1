@@ -6,7 +6,7 @@ use App\User;
 return [
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'website',
         'passwords' => 'users',
     ],
 

@@ -22,6 +22,7 @@
                         <table id="table-reviews" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
+                                <th>Id</th>
                                 <th>Nome</th>
                                 <th>Data Evento</th>
                                 <th>Messaggio</th>
@@ -32,6 +33,7 @@
                             <tbody>
                             @foreach($reviews as $review)
                                 <tr>
+                                    <td>{{$review->id}}</td>
                                     <td>{{$review->nome}}</td>
                                     <td>{{$review->data_evento}}</td>
                                     <td>{{$review->messaggio}}</td>
@@ -85,7 +87,7 @@
             $('#table-reviews').DataTable({
                 responsive: true,
                 pageLength: 100,
-                order: [[ 4, "asc" ]], //order in base a order
+                order: [[ 0, "desc" ]], //order in base a order
                 language:{ "url": "/cms_assets/js/plugins/dataTables/dataTable.ita.lang.json" }
             });
 

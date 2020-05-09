@@ -7,6 +7,9 @@ use App\Model\Domain;
 use App\Model\File;
 use App\Model\Module;
 use App\Model\ModuleConfig;
+use App\Model\Order;
+use App\Model\OrderDetail;
+use App\Model\OrderShipping;
 use App\Model\Pairing;
 use App\Model\Product;
 use App\Model\Review;
@@ -27,6 +30,91 @@ class SyncController extends Controller
         return view('cms.sync.index',$params);
     }
 
+    public function sync_orders()
+    {
+        \DB::table('orders')->truncate();
+
+        $vecchi = \DB::table('tb_ordini')->get();
+
+        foreach($vecchi as $item)
+        {
+            $order = new Order();
+            $order->id = $item->id;
+            $order->user_id = $item->id_user;
+            $order->created_at = $item->data;
+            $order->spese_spedizione = $item->spese_spedizione;
+            $order->spese_conf_regalo = $item->spese_conf_regalo;
+            $order->spese_contrassegno = $item->spese_contrassegno;
+            $order->modalita_pagamento = $item->modalita_pagamento;
+            if($item->pagato == 'si')
+            {
+                $order->stato_pagamento = 1;
+            }
+            else
+            {
+                $order->stato_pagamento = 0;
+            }
+
+            $order->idtranspag = $item->idtranspag;
+            $order->imponibile = $item->imponibile;
+            $order->iva = $item->iva;
+            $order->sconto_iva = $item->sconto_iva;
+            $order->importo = $item->importo;
+            $order->data_nascita = $item->data_nascita;
+            $order->luogo_nascita = $item->luogo_nascita;
+            $order->locale = $item->idl;
+
+            $order->save();
+        }
+        return back()->with('success','Ordini sincronizzati!');
+    }
+
+    public function sync_order_details()
+    {
+        \DB::table('order_details')->truncate();
+
+        $vecchi = \DB::table('tb_dettaglio_ordini')->get();
+
+        foreach($vecchi as $item)
+        {
+            $detail = new OrderDetail();
+            $detail->order_id = $item->id_ordine;
+            $detail->product_id = $item->id_prodotto;
+            $detail->codice = $item->codice;
+            $detail->nome_prodotto = $item->prodotto;
+            $detail->qta = $item->qta;
+            $detail->prezzo = ($item->importo_tot / $item->qta);
+            $detail->totale = $item->importo_tot;
+            $detail->save();
+        }
+        return back()->with('success','Dettaglio ordini sincronizzati!');
+
+    }
+
+    public function sync_order_shippings()
+    {
+        \DB::table('order_shippings')->truncate();
+
+        $vecchi = \DB::table('tb_spedizione_ordini')->get();
+
+        foreach($vecchi as $item)
+        {
+            $shipp = new OrderShipping();
+            $shipp->order_id = $item->id_ordine;
+            $shipp->nome = $item->nome;
+            $shipp->cognome = $item->cognome;
+            $shipp->email = $item->email;
+            $shipp->telefono = $item->telefono;
+            $shipp->indirizzo = $item->indirizzo;
+            $shipp->cap = $item->cap;
+            $shipp->citta = $item->citta;
+            $shipp->provincia = $item->provincia;
+            $shipp->nazione = $item->nazione;
+            $shipp->save();
+        }
+        return back()->with('success','Spedizioni ordini sincronizzati!');
+    }
+
     public function sync_users()
     {
         \DB::table('users')->truncate();
@@ -37,7 +125,7 @@ class SyncController extends Controller
         foreach($vecchi as $item)
         {
             $email = $item->email;
-            $name = $item->nome . ' '.$item->cognome;
+            $name = $item->nome;
             $clear = \DB::table('tb_clear_pwd')->where('id_user',$item->id)->first();
 
             if($clear)
@@ -47,6 +135,7 @@ class SyncController extends Controller
 
                 $user = new User();
                 $user->name = $name;
+                $user->surname = $item->cognome;
                 $user->email = $email;
                 $user->password = $new_pass;
                 $user->save();
@@ -103,6 +192,7 @@ class SyncController extends Controller
             {
                 $review->data_evento = $item->data_evento;
             }
+            $review->created_at = $item->data_inserimento;
 
             if($item->visibile == 'si')
             {

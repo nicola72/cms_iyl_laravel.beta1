@@ -31,22 +31,44 @@ function filtra(value)
     $('#form_filtro').submit();
 }
 
-/*function cartUpdateQta(id_carrello, lang, id_prodotto) {
-    var qta = $("input[name='qta'][data-idrow='" + id_carrello + "']").val();
+function addToCart(url) {
+
     $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=cartUpdateQta&id_carrello=" + id_carrello + "&lang=" + lang + "&qta=" + qta + "&id_prodotto=" + id_prodotto,
+        url: url,
         dataType: "json",
         type: "get",
-        success: function (data) {
-            if (data.msg != 'success') {
-                $(".modal-title").html('');
-                $("#ajax-test").html(data.msg);
-                $('#myModal').fadeIn();
-                return;
-            } else {
+        success: function (data)
+        {
+            if(data.result === 1)
+            {
+                alert(data.msg);
                 location.reload();
-                return;
+            }
+            else
+            {
+                alert(data.msg);
+            }
+        }
+    });
+}
+
+function cartUpdateQta(url,id_carrello) {
+    var qta = $("input[name='qta'][data-idrow='" + id_carrello + "']").val();
+
+    $.ajax({
+        url: url,
+        data: {'id': id_carrello,'qta':qta },
+        dataType: "json",
+        type: "get",
+        success: function (data)
+        {
+            if(data.result === 1)
+            {
+                location.reload();
+            }
+            else
+            {
+                alert(data.msg);
             }
         }
     });
@@ -62,6 +84,10 @@ function dropProvincia() {
     }
     return;
 }
+
+/*
+
+
 
 function addToNewsletter(lang) {
     var email = $("input[name='news_email']").val();

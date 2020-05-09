@@ -135,6 +135,36 @@
                                 </a>
                             </div>
                         </div>
+
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Sincronizza gli ordini</em>
+                                <br>
+                                <a href="{{url('cms/sync/sync_orders')}}" class="btn btn-w-m btn-primary">
+                                    Sincronizza gli ordini
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Sincronizza dettaglio ordini</em>
+                                <br>
+                                <a href="{{url('cms/sync/sync_order_details')}}" class="btn btn-w-m btn-primary">
+                                    Sincronizza dettaglio ordini
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Sincronizza spedizioni ordine</em>
+                                <br>
+                                <a href="{{url('cms/sync/sync_order_shippings')}}" class="btn btn-w-m btn-primary">
+                                    Sincronizza spedizione ordine
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

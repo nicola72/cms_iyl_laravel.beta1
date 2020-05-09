@@ -74,19 +74,6 @@ class AppServiceProvider extends ServiceProvider
         $pages = Page::all()->sortBy('order');
         view()->share('pages',$pages);
 
-        //il carrello
-        if(\Auth::check())
-        {
-            $user = \Auth::getUser();
-            $carts = Cart::where('user_id',$user->id)->get();
-        }
-        else
-        {
-            $session_id = session()->getId();
-            $carts = Cart::where('session_id',$session_id)->get();
-        }
-        view()->share('carts',$carts);
-
         //i domini/alias del sito web
         $domains = Domain::all();
         view()->share('domains',$domains);
@@ -103,4 +90,5 @@ class AppServiceProvider extends ServiceProvider
         }
         return collect($website_config);
     }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website;
 
 use App\Mail\Contact;
+use App\Model\Cart;
 use App\Model\Category;
 use App\Model\Domain;
 use App\Model\File;
@@ -12,6 +13,7 @@ use App\Model\Newsitem;
 use App\Model\Page;
 use App\Model\Pairing;
 use App\Model\Product;
+use App\Model\Review;
 use App\Model\Seo;
 use App\Model\Slider;
 use App\Model\Style;
@@ -23,8 +25,10 @@ use Illuminate\Pagination\Paginator;
 
 class PageController extends Controller
 {
+
     public function __construct()
     {
+
     }
 
     public function index(Request $request)
@@ -46,7 +50,9 @@ class PageController extends Controller
         $popup = Newsitem::where('visibile',1)->where('popup',1)->first();
 
 
+
         $params = [
+            'carts' => $this->getCarts(),
             'seo' => $seo,
             'slider' => $slider,
             'macrocategorie' => $macrocategorie,
@@ -101,7 +107,10 @@ class PageController extends Controller
         }
         else
         {
-            return view('website.errors.404');
+            $params = [
+                'carts' => $this->getCarts(),
+            ];
+            return view('website.errors.404',$params);
         }
     }
 
@@ -170,12 +179,40 @@ class PageController extends Controller
 
     protected function productPage(Request $request,$url)
     {
+        $product = Product::find($url->urlable_id);
+        $seo = $url->seo; //se ha un seo specifico
+        //altrimenti cerco il seo generico per le categorie
+        if(!$seo)
+        {
+            $seo = Seo::where('bind_to','App\Model\Product')->where('locale',\App::getLocale())->first();
+            $segnaposto = $product->{'nome_'.\App::getLocale()};
+            $seo->title = str_replace("%s",$segnaposto ,$seo->title);
+            $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
+            $seo->description = str_replace("%s",$segnaposto ,$seo->description);
+            $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
+            $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+        }
 
+        //le macrocategorie per il menu nella colonna a sinistra
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'macrocategory' => false,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null,
+            'product' => $product,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+
+        return view('website.page.product',$params);
     }
 
     protected function pairingPage(Request $request,$url)
     {
-
+        echo 'pagina_abbinamento';
+        exit();
     }
 
     /**
@@ -249,6 +286,7 @@ class PageController extends Controller
         }
 
         $params = [
+            'carts' => $this->getCarts(),
             'seo' => $seo,
             'macrocategory' => $macrocategory,
             'macrocategorie' => $macrocategorie,
@@ -328,6 +366,7 @@ class PageController extends Controller
         $list = $catalogo->sortBy('prezzo');
 
         $params = [
+            'carts' => $this->getCarts(),
             'seo' => $seo,
             'macrocategory' => false,
             'macrocategorie' => $macrocategorie,
@@ -446,6 +485,7 @@ class PageController extends Controller
         }
 
         $params = [
+            'carts' => $this->getCarts(),
             'macrocategory' => false,
             'macrocategorie' => $macrocategorie,
             'macro_request' => null,
@@ -473,6 +513,7 @@ class PageController extends Controller
         $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
 
         $params = [
+            'carts' => $this->getCarts(),
             'seo' => $seo,
             'macrocategorie' => $macrocategorie,
             'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
@@ -487,6 +528,7 @@ class PageController extends Controller
         $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
 
         $params = [
+            'carts' => $this->getCarts(),
             'seo' => $seo,
             'macrocategorie' => $macrocategorie,
             'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
@@ -501,6 +543,7 @@ class PageController extends Controller
         $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
 
         $params = [
+            'carts' => $this->getCarts(),
             'seo' => $seo,
             'macrocategorie' => $macrocategorie,
             'form_action' => route('invia_formcontatti',app()->getLocale()),
@@ -509,6 +552,23 @@ class PageController extends Controller
             'function' => __FUNCTION__ //visualizzato nei meta tag della header
         ];
         return view('website.page.contatti',$params);
+    }
+
+    protected function recensioni(Request $request,$url)
+    {
+        $seo = $url->seo;
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+        $reviews = Review::where('visibile',1)->orderBy('id','DESC')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'macrocategorie' => $macrocategorie,
+            'reviews' => $reviews,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.page.recensioni',$params);
     }
 
     public function invia_formcontatti(Request $request)
@@ -800,5 +860,19 @@ class PageController extends Controller
         }
 
         return $products;
+    }
+
+    private function getCarts()
+    {
+        if(\Auth::check())
+        {
+            $user = \Auth::getUser();
+            $carts = Cart::where('user_id',$user->id)->get();
+        }
+        else
+        {
+            $carts = Cart::where('session_id',session()->getId())->get();
+        }
+        return $carts;
     }
 }

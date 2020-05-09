@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php echo'<pre>';print_r(session()->all());echo'</pre>';?>
 <html lang="{{App::getLocale()}}">
     <head>
         <title>{{$seo->title ?? 'Chess Store'}}</title>

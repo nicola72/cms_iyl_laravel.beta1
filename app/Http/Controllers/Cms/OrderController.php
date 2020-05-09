@@ -49,7 +49,7 @@ class OrderController extends Controller
             'order' => $order
         ];
 
-        $pdf = \PDF::loadView('cms.order.pdf_order', $params);
-        return $pdf->download('invoice.pdf');
+        $pdf = \PDF::loadView('cms.order.order_pdf', $params);
+        return $pdf->stream('invoice.pdf');
     }
 }

@@ -8,12 +8,19 @@ class SpeseSpedizione
 {
     public static function get(Country $nazione, $peso, $importo)
     {
+        $extra_dogana = [186,137,12,16,46,2,5,28,30,71,26,123,93,113,117,128,130,150,170,196,198];
+
         //per ITALIA
         if($nazione->id == "101")
         {
+            if($peso > 0 && $peso < 1)
+            {
+                return 9;
+            }
+
             if($importo < 49)
             {
-                return 6;
+                return 9;
             }
             return 0;
         }
@@ -53,35 +60,38 @@ class SpeseSpedizione
                 return 690;
             }
         }
-        //per EUROPA
-        elseif($nazione->is_europa == 1)
+        //per EUROPA DELLA COMUNITA'
+        elseif($nazione->is_europa == 1 && $nazione->eu == 1)
         {
-            $extra_dogana = [186,137,2,5,28,30,93,113,117,128,130,150,170,196,198];
-
-            if($peso > 0 && $peso <= 15)
+            if($peso > 0 && $peso <= 5)
             {
                 if(in_array($nazione->id,$extra_dogana)){ return 39 + 50; }
                 return 39;
             }
-            elseif($peso > 15 && $peso <= 20)
+            if($peso > 5 && $peso <= 15)
             {
-                if(in_array($nazione->id,$extra_dogana)){ return 49 + 50; }
-                return 49;
+                if(in_array($nazione->id,$extra_dogana)){ return 48 + 50; }
+                return 48;
             }
-            elseif($peso > 20 && $peso <= 30)
+            elseif($peso > 15 && $peso <= 20)
             {
                 if(in_array($nazione->id,$extra_dogana)){ return 59 + 50; }
                 return 59;
             }
-            elseif($peso > 30 && $peso <= 50)
+            elseif($peso > 20 && $peso <= 30)
             {
                 if(in_array($nazione->id,$extra_dogana)){ return 69 + 50; }
                 return 69;
             }
+            elseif($peso > 30 && $peso <= 50)
+            {
+                if(in_array($nazione->id,$extra_dogana)){ return 89 + 50; }
+                return 89;
+            }
             elseif($peso > 50 && $peso <= 100)
             {
-                if(in_array($nazione->id,$extra_dogana)){ return 99 + 50; }
-                return 99;
+                if(in_array($nazione->id,$extra_dogana)){ return 129 + 50; }
+                return 129;
             }
             else
             {
@@ -89,40 +99,83 @@ class SpeseSpedizione
                 return 290;
             }
         }
-        // NON EUROPA
-        else
+        //PER EUROPA EXTRA CE
+        elseif($nazione->is_europa == 1 && $nazione->eu == 0)
         {
+
             if($peso > 0 && $peso <= 5)
             {
-                return 69;
+                if(in_array($nazione->id,$extra_dogana)){ return 89 + 50; }
+                return 89;
             }
-            elseif ($peso > 5 && $peso <= 10)
+            elseif($peso > 5 && $peso <= 15)
             {
-                return 109;
-            }
-            elseif($peso > 10 && $peso <= 15)
-            {
-                return 159;
+                if(in_array($nazione->id,$extra_dogana)){ return 98 + 50; }
+                return 98;
             }
             elseif($peso > 15 && $peso <= 20)
             {
-                return 199;
+                if(in_array($nazione->id,$extra_dogana)){ return 109 + 50; }
+                return 109;
             }
             elseif($peso > 20 && $peso <= 30)
             {
-                return 239;
+                if(in_array($nazione->id,$extra_dogana)){ return 119 + 50; }
+                return 119;
             }
             elseif($peso > 30 && $peso <= 50)
             {
-                return 299;
+                if(in_array($nazione->id,$extra_dogana)){ return 139 + 50; }
+                return 139;
             }
             elseif($peso > 50 && $peso <= 100)
             {
-                return 490;
+                if(in_array($nazione->id,$extra_dogana)){ return 179 + 50; }
+                return 179;
             }
             else
             {
-                return 790;
+                return 390;
+            }
+        }
+        // NON EUROPA
+        else
+        {
+            if($peso > 0 && $peso <= 1)
+            {
+                return 69;
+            }
+            elseif($peso > 1 && $peso <= 5)
+            {
+                return 89;
+            }
+            elseif ($peso > 5 && $peso <= 10)
+            {
+                return 119;
+            }
+            elseif($peso > 10 && $peso <= 15)
+            {
+                return 169;
+            }
+            elseif($peso > 15 && $peso <= 20)
+            {
+                return 229;
+            }
+            elseif($peso > 20 && $peso <= 30)
+            {
+                return 269;
+            }
+            elseif($peso > 30 && $peso <= 50)
+            {
+                return 329;
+            }
+            elseif($peso > 50 && $peso <= 100)
+            {
+                return 590;
+            }
+            else
+            {
+                return 980;
             }
         }
     }

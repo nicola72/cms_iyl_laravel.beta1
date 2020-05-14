@@ -128,7 +128,7 @@ class CartController extends Controller
         $esenzione_iva = EsenzioneIva::get($country);
         $spedizione['esenzione_iva'] = $esenzione_iva;
 
-        $spese_pagamento = ($pagamento == 'contrassegno') ? 6 : 0;
+        $spese_pagamento = ($pagamento == 'contrassegno') ? 9 : 0;
         $spedizione['spese_pagamento'] = $spese_pagamento;
 
         $confezione_regalo = array_key_exists('regalo', $request->all()) ? 1 : 0;

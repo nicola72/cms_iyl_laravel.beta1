@@ -181,7 +181,7 @@ class PageController extends Controller
     {
         $product = Product::find($url->urlable_id);
         $seo = $url->seo; //se ha un seo specifico
-        //altrimenti cerco il seo generico per le categorie
+        //altrimenti cerco il seo generico per i prodotti
         if(!$seo)
         {
             $seo = Seo::where('bind_to','App\Model\Product')->where('locale',\App::getLocale())->first();
@@ -211,8 +211,39 @@ class PageController extends Controller
 
     protected function pairingPage(Request $request,$url)
     {
-        echo 'pagina_abbinamento';
-        exit();
+        $pairing = Pairing::find($url->urlable_id);
+
+        $seo = $url->seo; //se ha un seo specifico
+        //altrimenti cerco il seo generico per gli abbinamenti
+        if(!$seo)
+        {
+            $seo = Seo::where('bind_to','App\Model\Pairing')->where('locale',\App::getLocale())->first();
+            $segnaposto = $pairing->{'nome_'.\App::getLocale()};
+            $seo->title = str_replace("%s",$segnaposto ,$seo->title);
+            $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
+            $seo->description = str_replace("%s",$segnaposto ,$seo->description);
+            $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
+            $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+        }
+
+        //le macrocategorie per il menu nella colonna a sinistra
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $pairing_correlati = Pairing::where('product1_id',$pairing->product1_id)->orWhere('product2_id',$pairing->product2_id)->get();
+        $pairing_correlati = $pairing_correlati->where('id','!=',$pairing->id);
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'macrocategory' => false,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null,
+            'pairing' => $pairing,
+            'pairing_correlati' => $pairing_correlati,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+
+        return view('website.page.pairing',$params);
     }
 
     /**

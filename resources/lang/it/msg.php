@@ -96,6 +96,6 @@ return[
     'dettagli_spedizione_pagamento' => 'Dettagli per Spedizione e Pagamento',
     'torna_al_carrello' => 'Torna al Carrello',
     'procedi_col_pagamento' => 'Procedi col pagamento',
-
+    'set_correlati' => 'Set Correlati',
 
 ];

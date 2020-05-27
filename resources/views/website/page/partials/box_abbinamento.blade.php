@@ -8,7 +8,7 @@
         <div class="productCaption clearfix">
             <a href="{{$pairing->url()}}">
                 <div class="titolo_prodotto">
-                    {{$pairing->{'nome_'.app()->getLocale()} }} {{$pairing->product1->category_id }} - {{$pairing->product2->category_id }}
+                    {{$pairing->{'nome_'.app()->getLocale()} }}
                 </div>
             </a>
             <div class="fjalla prezzo" >

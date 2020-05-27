@@ -127,7 +127,7 @@
                                         </a>
                                     </div>
                                 @endif
-                                <a href="javascript:void(0)" onclick="addToWishList('{{ $product->id}}','{{app()->getLocale()}}')" style="background-color: #840025; padding: 10px;">
+                                <a href="javascript:void(0)" onclick="addToWishList('{{ url(app()->getLocale().'/wishlist/addproduct',$product->id) }}')" style="background-color: #840025; padding: 10px;">
                                     <i class="fa fa-heart" aria-hidden="true" style="font-size: 130%;"></i>
                                 </a>
                                 <br />

@@ -96,6 +96,6 @@ return[
     'dettagli_spedizione_pagamento' => 'Details for Shipping and Payment',
     'torna_al_carrello' => 'Back to Cart',
     'procedi_col_pagamento' => 'Proceed with the payment',
-
+    'set_correlati' => 'Suggested combination',
 
 ];

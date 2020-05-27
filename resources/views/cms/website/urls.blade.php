@@ -42,6 +42,18 @@
                     <!-- fine header -->
 
                     <div class="ibox-content">
+                        Le urls vengono generate automaticamente alla creazione di un prodotto, abbinamento, macrocategoria, categoria o pagina.<br>
+                        Dal pannello possono essere eventualmente solo modificate.<br>
+                        Macrocategorie: <em>it/nome_macro_it p en/nome_macro_ing</em><br>
+                        Categorie: <em>it/nome_macro_it-macro_id-categoria_id o en/nome_macro_en-macro_id-categoria_id</em><br>
+                        Prodotti: <em>it/dettaglio-id_prodotto o en/details-id_prodotto</em><br>
+                        Abbinamenti: <em>it/dettaglio_abbinamento-id_abbinamento o en/pairing_detail-id_abbinamento</em><br>
+                        Pagine: <em>it/nome_pagina o en/nome_pagina</em><br>
+                        Le url possono essere associate al seo o singolarmente o per tipo
+
+                    </div>
+
+                    <div class="ibox-content">
                         <table id="table-urls" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cms;
 
 use App\Model\Category;
+use App\Model\Domain;
 use App\Model\File;
 use App\Model\Module;
 use App\Model\ModuleConfig;
@@ -82,6 +83,25 @@ class PairingController extends Controller
         catch(\Exception $e){
 
             return ['result' => 0,'msg' => $e->getMessage()];
+        }
+
+        //1# Creo una url di default per ogni lingua
+        foreach ($langs as $lang)
+        {
+            $domain = Domain::where('locale',$lang)->first();
+            try{
+                $url = new Url();
+                $url->domain_id = $domain->id;
+                $url->locale = $lang;
+                $url->slug = trans('msg.dettaglio_abbinamento',[],$lang).'-'.$pairing->id;
+                $url->urlable_id = $pairing->id;
+                $url->urlable_type = 'App\Model\Pairing';
+                $url->save();
+            }
+            catch(\Exception $e)
+            {
+                return back()->with('error',$e->getMessage());
+            }
         }
 
         $url = route('cms.abbinamenti');

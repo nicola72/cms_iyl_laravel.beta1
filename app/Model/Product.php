@@ -21,6 +21,7 @@ class Product extends Model implements Sortable
         'codice',
         'prezzo',
         'prezzo_scontato',
+        'prezzo_fabbrica',
         'acquistabile',
         'acquistabile_italfama',
         'stock',

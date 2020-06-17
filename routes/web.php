@@ -120,6 +120,14 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/pairing/destroy/{id}', 'Cms\PairingController@destroy');
         Route::get('/pairing','Cms\PairingController@index')->name('cms.abbinamenti');
 
+        Route::get('/italcustomers/switch_vede_p_fabbrica','Cms\ItalcustomersController@switch_vede_p_fabbrica');
+        Route::get('/italcustomers/switch_vede_p_netto','Cms\ItalcustomersController@switch_vede_p_netto');
+        Route::get('/italcustomers/switch_vede_p_vendita','Cms\ItalcustomersController@switch_vede_p_vendita');
+        Route::get('/italcustomers/switch_vede_sconto_bonifico','Cms\ItalcustomersController@switch_vede_sconto_bonifico');
+        Route::resource('/italcustomers','Cms\ItalcustomersController');
+        Route::get('/italcustomers/destroy/{id}', 'Cms\ItalcustomersController@destroy');
+        Route::get('/italcustomers', 'Cms\ItalcustomersController@index')->name('cms.italfama_customers');
+
         Route::get('/news/switch_visibility','Cms\NewsController@switch_visibility');
         Route::get('/news/switch_popup','Cms\NewsController@switch_popup');
         Route::get('/news/move_up/{id}', 'Cms\NewsController@move_up');

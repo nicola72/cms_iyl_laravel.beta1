@@ -88,13 +88,17 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label>Prezzo</label>
                                         <input type="text" name="prezzo" id="prezzo" class="form-control mb-2" />
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label>Prezzo scontato</label>
                                         <input type="text" name="prezzo_scontato" id="prezzo_scontato" class="form-control mb-2" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Prezzo fabbrica</label>
+                                        <input type="text" name="prezzo_fabbrica" id="prezzo_fabbrica" class="form-control mb-2" />
                                     </div>
                                 </div>
                             </div>

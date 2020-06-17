@@ -17,7 +17,19 @@ class ItalUser extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['name', 'surname','email', 'password'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'clear_pwd',
+        'vede_p_fabbrica',
+        'vede_p_vendita',
+        'vede_p_netto',
+        'vede_sconto_bonifico',
+        'sconto',
+        'tipo_sconto',
+        'condizione_cliente',
+        'condizione_pagamento'];
 
     /**
      * The attributes that should be hidden for arrays.

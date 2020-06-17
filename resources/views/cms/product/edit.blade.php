@@ -9,7 +9,7 @@
                     <div class="ibox-title">
 
                         <!-- Indietro -->
-                        <a href="{{url('cms/pairing')}}" class="btn btn-w-m btn-primary">Prodotti</a>
+                        <a href="{{url('cms/products')}}" class="btn btn-w-m btn-primary">Prodotti</a>
                         <!-- fine pulsante nuovo -->
 
                         <div class="ibox-tools">
@@ -92,13 +92,17 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label>Prezzo</label>
                                         <input value="{{$product->prezzo}}" type="text" name="prezzo" id="prezzo" class="form-control mb-2" />
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label>Prezzo scontato</label>
                                         <input value="{{$product->prezzo_scontato}}" type="text" name="prezzo_scontato" id="prezzo_scontato" class="form-control mb-2" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Prezzo fabbrica</label>
+                                        <input value="{{$product->prezzo_fabbrica}}" type="text" name="prezzo_fabbrica" id="prezzo_fabbrica" class="form-control mb-2" />
                                     </div>
                                 </div>
                             </div>

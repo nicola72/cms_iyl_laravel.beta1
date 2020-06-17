@@ -9,7 +9,7 @@
                     <div class="ibox-title">
 
                         <!-- NUOVO -->
-                        <a href="{{url('cms/product/create')}}" class="btn btn-w-m btn-primary">Aggiungi</a>
+                        <a href="{{url('cms/italcustomers/create')}}" class="btn btn-w-m btn-primary">Aggiungi</a>
                         <!-- fine pulsante nuovo -->
 
                         <div class="ibox-tools">
@@ -22,115 +22,102 @@
                         <table id="table-products" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
-                                <th>Id</th>
-                                <th>Codice</th>
                                 <th>Nome</th>
-                                <th>Categoria</th>
-                                <th>Prezzo</th>
-                                <th>Scontato</th>
-                                <th>Fabbrica</th>
-                                <th>Disp.</th>
-                                <th data-orderable="false">Visibile</th>
-                                <th data-orderable="false">Italfama</th>
-                                <th data-orderable="false">Offerta</th>
-                                <th data-orderable="false">Novità</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>P.Fabbrica</th>
+                                <th>P.Vendita</th>
+                                <th>P.Netto</th>
+                                <th>Bon.Banc.</th>
+                                <th>Sconto</th>
+                                <th>Tipo sc.</th>
                                 <th data-orderable="false">Azioni</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($products as $product)
+                            @foreach($customers as $customer)
                                 <tr>
-                                    <td>{{$product->id}}</td>
-                                    <td>{{$product->codice}}</td>
-                                    <td>{{$product->nome_it}}</td>
-                                    <td>{{$product->category->nome_it}}</td>
-                                    <td>@money($product->prezzo)</td>
-                                    <td>@money($product->prezzo_scontato)</td>
-                                    <td>@money($product->prezzo_fabbrica)</td>
-                                    <td>{{$product->availability->nome_it}}</td>
+                                    <td>{{$customer->name}}</td>
+                                    <td>{{$customer->email}}</td>
+                                    <td>{{$customer->clear_pwd}}</td>
+                                    <td>
+                                        <!-- Pulsante Switch visibile Prezzo Fabbrica  -->
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input type="checkbox" id="switch_p_fabbrica_{{$customer->id}}"
+                                                       data-id="{{$customer->id}}"
+                                                       class="onoffswitch-checkbox p_fabbrica-check"
+                                                        {{ ($customer->vede_p_fabbrica == 1) ? "checked" : "" }} />
+                                                <label class="onoffswitch-label" for="switch_p_fabbrica_{{$customer->id}}">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- -->
+                                    </td>
+                                    <td>
+                                        <!-- Pulsante Switch visibile Prezzo Vendita  -->
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input type="checkbox" id="switch_p_vendita_{{$customer->id}}"
+                                                       data-id="{{$customer->id}}"
+                                                       class="onoffswitch-checkbox p_vendita-check"
+                                                        {{ ($customer->vede_p_vendita == 1) ? "checked" : "" }} />
+                                                <label class="onoffswitch-label" for="switch_p_vendita_{{$customer->id}}">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- -->
+                                    </td>
+                                    <td>
+                                        <!-- Pulsante Switch visibile Prezzo Netto  -->
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input type="checkbox" id="switch_p_netto_{{$customer->id}}"
+                                                       data-id="{{$customer->id}}"
+                                                       class="onoffswitch-checkbox p_netto-check"
+                                                        {{ ($customer->vede_p_netto == 1) ? "checked" : "" }} />
+                                                <label class="onoffswitch-label" for="switch_p_netto_{{$customer->id}}">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- -->
+                                    </td>
+                                    <td>
+                                        <!-- Pulsante Switch visibile Sconto Bonifico  -->
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input type="checkbox" id="switch_sconto_bonifico_{{$customer->id}}"
+                                                       data-id="{{$customer->id}}"
+                                                       class="onoffswitch-checkbox sconto_bonifico-check"
+                                                        {{ ($customer->vede_sconto_bonifico == 1) ? "checked" : "" }} />
+                                                <label class="onoffswitch-label" for="switch_sconto_bonifico_{{$customer->id}}">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- -->
+                                    </td>
+                                    <td>{{$customer->sconto}}</td>
+                                    <td>{{$customer->tipo_sconto}}</td>
 
-                                    <td>
-                                        <!-- Pulsante Switch Visibilita -->
-                                        <div class="switch">
-                                            <div class="onoffswitch">
-                                                <input type="checkbox" id="switch_vis_{{$product->id}}"
-                                                       data-id="{{$product->id}}"
-                                                       class="onoffswitch-checkbox vis-check"
-                                                        {{ ($product->visibile == 1) ? "checked" : "" }} />
-                                                <label class="onoffswitch-label" for="switch_vis_{{$product->id}}">
-                                                    <span class="onoffswitch-inner"></span>
-                                                    <span class="onoffswitch-switch"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!-- -->
-                                    </td>
-
-                                    <td>
-                                        <!-- Pulsante Switch Visibilita Italfama -->
-                                        <div class="switch">
-                                            <div class="onoffswitch">
-                                                <input type="checkbox" id="switch_ital_{{$product->id}}"
-                                                       data-id="{{$product->id}}"
-                                                       class="onoffswitch-checkbox ital-check"
-                                                        {{ ($product->italfama == 1) ? "checked" : "" }} />
-                                                <label class="onoffswitch-label" for="switch_ital_{{$product->id}}">
-                                                    <span class="onoffswitch-inner"></span>
-                                                    <span class="onoffswitch-switch"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!-- -->
-
-                                    </td>
-                                    <td>
-                                        <!-- Pulsante Switch Offerta-->
-                                        <div class="switch">
-                                            <div class="onoffswitch">
-                                                <input type="checkbox" id="switch_offer_{{$product->id}}"
-                                                       data-id="{{$product->id}}"
-                                                       class="onoffswitch-checkbox offer-check"
-                                                        {{ ($product->offerta == 1) ? "checked" : "" }} />
-                                                <label class="onoffswitch-label" for="switch_offer_{{$product->id}}">
-                                                    <span class="onoffswitch-inner"></span>
-                                                    <span class="onoffswitch-switch"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!-- -->
-                                    </td>
-                                    <td>
-                                        <!-- Pulsante Switch Novita-->
-                                        <div class="switch">
-                                            <div class="onoffswitch">
-                                                <input type="checkbox" id="switch_novita_{{$product->id}}"
-                                                       data-id="{{$product->id}}"
-                                                       class="onoffswitch-checkbox novita-check"
-                                                        {{ ($product->novita == 1) ? "checked" : "" }} />
-                                                <label class="onoffswitch-label" for="switch_novita_{{$product->id}}">
-                                                    <span class="onoffswitch-inner"></span>
-                                                    <span class="onoffswitch-switch"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!-- -->
-                                    </td>
 
                                     <td data-orderable="false">
-                                        <!-- Pulsante per le immagini -->
-                                        <a class="azioni-table"  href="{{url('/cms/product/images',['id'=>$product->id])}}" title="immagini">
-                                            <i class="fa fa-camera fa-2x"></i>
-                                        </a>
-                                        <!-- -->
 
                                         <!-- Pulsante per modificare -->
-                                        <a class="azioni-table pl-1"  href="{{route('product.edit',['id'=>$product->id])}}" title="modifica">
+                                        <a class="azioni-table pl-1"  href="{{route('italcustomers.edit',['id'=>$customer->id])}}" title="modifica">
                                             <i class="fa fa-edit fa-2x"></i>
                                         </a>
                                         <!-- -->
 
                                         <!-- pulsante per eliminare -->
-                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/product/destroy',[$product->id])}}" title="elimina">
+                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/italcustomers/destroy',[$customer->id])}}" title="elimina">
                                             <i class="fa fa-trash fa-2x"></i>
                                         </a>
                                         <!-- -->
@@ -185,14 +172,14 @@
         });
         //Fine Pulsante ELIMINA
 
-        //Switch per VISIBILITA
-        $('.vis-check').change(function ()
+        //Switch per VISIBILITA PREZZO FABBRICA
+        $('.p_fabbrica-check').change(function ()
         {
             let stato = $(this).is(':checked') ? "1" : "0";
 
             $.ajax({
                 type: "GET",
-                url: "/cms/product/switch_visibility",
+                url: "/cms/italcustomers/switch_vede_p_fabbrica",
                 data: {id: $(this).attr('data-id'), stato : stato},
                 dataType: "json",
                 success: function (data){ alert(data.msg);},
@@ -201,14 +188,14 @@
         });
         //Fine
 
-        //Switch per VISIBILITA ITALFAMA
-        $('.ital-check').change(function ()
+        //Switch per VISIBILITA PREZZO NETTO
+        $('.p_netto-check').change(function ()
         {
             let stato = $(this).is(':checked') ? "1" : "0";
 
             $.ajax({
                 type: "GET",
-                url: "/cms/product/switch_visibility_italfama",
+                url: "/cms/italcustomers/switch_vede_p_netto",
                 data: {id: $(this).attr('data-id'), stato : stato},
                 dataType: "json",
                 success: function (data){ alert(data.msg);},
@@ -217,14 +204,14 @@
         });
         //Fine
 
-        //Switch per OFFERTA
-        $('.offer-check').change(function ()
+        //Switch per VISIBILITA PREZZO VENDITA
+        $('.p_vendita-check').change(function ()
         {
             let stato = $(this).is(':checked') ? "1" : "0";
 
             $.ajax({
                 type: "GET",
-                url: "/cms/product/switch_offerta",
+                url: "/cms/italcustomers/switch_vede_p_vendita",
                 data: {id: $(this).attr('data-id'), stato : stato},
                 dataType: "json",
                 success: function (data){ alert(data.msg);},
@@ -233,14 +220,14 @@
         });
         //Fine
 
-        //Switch per NOVITA
-        $('.novita-check').change(function ()
+        //Switch per VISIBILITA SCONTO BONIFICO
+        $('.sconto_bonifico-check').change(function ()
         {
             let stato = $(this).is(':checked') ? "1" : "0";
 
             $.ajax({
                 type: "GET",
-                url: "/cms/product/switch_novita",
+                url: "/cms/italcustomers/switch_vede_sconto_bonifico",
                 data: {id: $(this).attr('data-id'), stato : stato},
                 dataType: "json",
                 success: function (data){ alert(data.msg);},
@@ -248,6 +235,7 @@
             });
         });
         //Fine
+
 
     </script>
 @stop

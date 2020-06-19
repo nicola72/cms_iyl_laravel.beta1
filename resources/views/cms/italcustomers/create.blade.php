@@ -60,6 +60,19 @@
                             </div>
                             <div class="form-group">
                                 <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Tipo Sconto x Importo</label>
+                                        <select name="sconto_importo" id="sconto_importo" class="form-control mb-2">
+                                            <option value="0">nessuno</option>
+                                            <option value="1">tipologia 1</option>
+                                            <option value="2">tipologia 2</option>
+                                            <option value="3">tipologia 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
                                     <div class="col-md-6">
                                         <label class="d-block">Condizioni cliente</label>
                                         <textarea id="condizioni_cliente" style="min-height: 100px;" name="condizioni_cliente" class="form-control mb-2"  ></textarea>

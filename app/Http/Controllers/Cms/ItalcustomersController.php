@@ -48,6 +48,7 @@ class ItalcustomersController extends Controller
             $customer->clear_pwd = $request->password;
             $customer->sconto = $request->sconto;
             $customer->tipo_sconto = $request->tipo_sconto;
+            $customer->sconto_importo = $request->sconto_importo;
             $customer->condizioni_cliente = $request->condizioni_cliente;
             $customer->condizioni_pagamento = $request->condizioni_pagamento;
 
@@ -88,6 +89,7 @@ class ItalcustomersController extends Controller
             $customer->clear_pwd = $request->password;
             $customer->sconto = $request->sconto;
             $customer->tipo_sconto = $request->tipo_sconto;
+            $customer->sconto_importo = $request->sconto_importo;
             $customer->condizioni_cliente = $request->condizioni_cliente;
             $customer->condizioni_pagamento = $request->condizioni_pagamento;
 

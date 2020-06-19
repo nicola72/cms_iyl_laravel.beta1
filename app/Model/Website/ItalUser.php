@@ -28,6 +28,7 @@ class ItalUser extends Authenticatable
         'vede_sconto_bonifico',
         'sconto',
         'tipo_sconto',
+        'sconto_importo',
         'condizione_cliente',
         'condizione_pagamento'];
 
@@ -45,9 +46,5 @@ class ItalUser extends Authenticatable
      */
     protected $casts = ['email_verified_at' => 'datetime'];
 
-    public function userdetail()
-    {
-        return $this->hasOne('App\Model\Website\UserDetail');
-    }
 
 }

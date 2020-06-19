@@ -307,6 +307,83 @@ class CartController extends Controller
         return back()->with('success',trans('msg.prodotto_eliminato_con_successo'));
     }
 
+    public function addpairing(Request $request)
+    {
+        if(!\Auth::check())
+        {
+            return ['result' => 0,'msg' => trans('msg.devi_effetture_il_login_prima')];
+        }
+
+        $id = $request->id;
+
+        $pairing = Pairing::find($id);
+
+
+        $product1 = $pairing->product1;
+        $product2 = $pairing->product2;
+
+        if(!is_object($product1) || !is_object($product2))
+        {
+            return ['result' => 0,'msg' => trans('msg.errore')];
+        }
+
+        $qta = 1; //la quantità è sempre 1
+
+        $prodotti_da_inserire = [$product1,$product2];
+
+        foreach($prodotti_da_inserire as $product)
+        {
+            //controllo che il prodotto non sia già nel carrello
+            $cart = Cart::where('product_id',$product->id)->where('user_id',\Auth::user()->id)->first();
+
+            //se già nel carrello
+            if($cart)
+            {
+                //se il prodotto non è disponibile
+                if($product->stock < ($qta + $cart->qta))
+                {
+                    return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile')];
+                }
+
+                try{
+
+                    $cart->qta = $cart->qta + 1;
+                    $cart->save();
+                }
+                catch(\Exception $e){
+
+                    return ['result' => 0,'msg' => $e->getMessage()];
+                }
+
+            }
+            else
+            {
+                //se il prodotto non è disponibile
+                if($product->stock < $qta)
+                {
+                    return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile')];
+                }
+
+                try{
+
+                    $cart = new Cart();
+                    $cart->product_id = $product->id;
+                    $cart->session_id = session()->getId();
+                    $cart->qta = $qta;
+                    $cart->user_id = \Auth::user()->id;
+                    $cart->save();
+                }
+                catch(\Exception $e){
+
+                    return ['result' => 0,'msg' => $e->getMessage()];
+                }
+
+            }
+        }
+
+        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello')];
+    }
+
     public function addproduct(Request $request)
     {
         $id = $request->id;
@@ -391,4 +468,6 @@ class CartController extends Controller
         }
         return $carts;
     }
+
+
 }

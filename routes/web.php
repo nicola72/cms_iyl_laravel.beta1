@@ -74,6 +74,17 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/order/order/{id}','Cms\OrderController@order');
         Route::get('/order/pdf/{id}','Cms\OrderController@pdf');
 
+        Route::post('/catalog/upload_pdf', 'Cms\CatalogController@upload_pdf');
+        Route::get('/catalog/pdf/{id}', 'Cms\CatalogController@pdf');
+        Route::post('/catalog/upload_images', 'Cms\CatalogController@upload_images');
+        Route::get('/catalog/images/{id}', 'Cms\CatalogController@images');
+        Route::get('/catalog/switch_visibility','Cms\CatalogController@switch_visibility');
+        Route::resource('/catalog','Cms\CatalogController');
+        Route::get('/catalog/move_up/{id}', 'Cms\CatalogController@move_up');
+        Route::get('/catalog/move_down/{id}', 'Cms\CatalogController@move_down');
+        Route::get('/catalog/destroy/{id}', 'Cms\CatalogController@destroy');
+        Route::get('/catalog', 'Cms\CatalogController@index')->name('cms.cataloghi');
+
         Route::get('/macrocategory/switch_stato','Cms\MacrocategoryController@switch_stato');
         Route::resource('/macrocategory','Cms\MacrocategoryController');
         Route::get('/macrocategory/move_up/{id}', 'Cms\MacrocategoryController@move_up');

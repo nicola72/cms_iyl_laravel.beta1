@@ -63,6 +63,11 @@ return [
             'root' => 'file/news'
         ],
 
+        'catalog' => [
+            'driver' => 'local',
+            'root' => 'file/catalog'
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

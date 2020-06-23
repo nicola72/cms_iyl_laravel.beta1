@@ -1,0 +1,69 @@
+@extends('layouts.cms')
+@section('content')
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+
+                    <!-- header del box -->
+                    <div class="ibox-title">
+                        <div class="ibox-tools">
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </div>
+                    </div>
+                    <!-- fine header -->
+
+                    <div class="ibox-content">
+                        <table id="table-iscritti" style="font-size:12px" class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Lingua</th>
+                                <th data-orderable="false">Azioni</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($iscritti as $item)
+                                <tr>
+                                    <td>{{$item->email}}</td>
+
+                                    <td>{{$item->lang}}</td>
+
+                                    <td data-orderable="false">
+
+                                        <!-- pulsante per eliminare -->
+                                        <a class="azioni-table azione-red elimina pl-1"  href="{{url('/cms/newsletter_subscribers/destroy',[$item->id])}}" title="elimina">
+                                            <i class="fa fa-trash fa-2x"></i>
+                                        </a>
+                                        <!-- -->
+
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('js_script')
+    <script>
+        $(document).ready(function ()
+        {
+            $('#table-iscritti').DataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {extend: 'csv'},
+                ],
+                responsive: true,
+                pageLength: 100,
+                language:{ "url": "/cms_assets/js/plugins/dataTables/dataTable.ita.lang.json" }
+            });
+
+        });
+
+    </script>
+@stop

@@ -65,6 +65,10 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/sliders/images/{id}', 'Cms\SlidersController@images');
         Route::get('/sliders', 'Cms\SlidersController@index')->name('cms.sliders');
 
+        Route::get('/newsletter_subscribers/destroy/{id}', 'Cms\NewsletterSubscribersController@destroy');
+        Route::resource('/newsletter_subscribers','Cms\NewsletterSubscribersController');
+        Route::get('/newsletter_subscribers', 'Cms\NewsletterSubscribersController@index')->name('cms.iscritti_newsletter');
+
         Route::get('/review/switch_visibility','Cms\ReviewController@switch_visibility');
         Route::resource('/review','Cms\ReviewController');
         Route::get('/review/destroy/{id}', 'Cms\ReviewController@destroy');

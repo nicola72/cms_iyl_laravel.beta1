@@ -78,6 +78,9 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/order/order/{id}','Cms\OrderController@order');
         Route::get('/order/pdf/{id}','Cms\OrderController@pdf');
 
+        Route::get('/ital_order','Cms\ItalOrderController@index')->name('cms.italfama_ordini');
+        Route::get('/ital_order/order/{id}','Cms\ItalOrderController@order');
+
         Route::post('/catalog/upload_pdf', 'Cms\CatalogController@upload_pdf');
         Route::get('/catalog/pdf/{id}', 'Cms\CatalogController@pdf');
         Route::post('/catalog/upload_images', 'Cms\CatalogController@upload_images');

@@ -10,25 +10,16 @@ class ItalOrder extends Model
 
     protected $fillable = [
         'user_id',
-        'spese_spedizione',
-        'spese_conf_regalo',
-        'spese_contrassegno',
         'sconto',
-        'modalita_pagamento',
-        'stato_pagamento',
-        'idtranspag',
         'imponibile',
         'iva',
-        'sconto_iva',
         'importo',
-        'data_nascita',
-        'luogo_nascita',
         'locale'
     ];
 
     public function orderDetails()
     {
-        return $this->hasMany('App\Model\OrderDetail');
+        return $this->hasMany('App\Model\ItalOrderDetail','order_id');
     }
 
     public function orderShipping()
@@ -38,6 +29,6 @@ class ItalOrder extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Model\Website\User');
+        return $this->belongsTo('App\Model\Website\ItalUser');
     }
 }

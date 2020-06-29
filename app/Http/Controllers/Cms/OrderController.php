@@ -14,13 +14,6 @@ class OrderController extends Controller
     {
         $orders = Order::all();
 
-        foreach($orders as $order)
-        {
-            if($order->user_id)
-            {
-
-            }
-        }
         $params = [
             'title_page' => 'Ordini',
             'orders' => $orders,
@@ -50,6 +43,7 @@ class OrderController extends Controller
         ];
 
         $pdf = \PDF::loadView('cms.order.order_pdf', $params);
-        return $pdf->stream('invoice.pdf');
+        return $pdf->download('ordine_'.$order->id.'.pdf');
+
     }
 }

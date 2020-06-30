@@ -80,6 +80,7 @@ Route::group(['prefix' => 'cms'], function ()
 
         Route::get('/ital_order','Cms\ItalOrderController@index')->name('cms.italfama_ordini');
         Route::get('/ital_order/order/{id}','Cms\ItalOrderController@order');
+        Route::get('/ital_order/pdf/{id}','Cms\ItalOrderController@pdf');
 
         Route::post('/catalog/upload_pdf', 'Cms\CatalogController@upload_pdf');
         Route::get('/catalog/pdf/{id}', 'Cms\CatalogController@pdf');

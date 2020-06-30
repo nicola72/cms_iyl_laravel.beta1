@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="robots" content="noindex" />
     <title>Chess Store</title>
-    <link href="https://www.chess-store.it/assets/css/pdf.css" rel="stylesheet">
+    <link href="https://www.italfama.it/assets/css/pdf.css" rel="stylesheet">
     <style>
 
 
@@ -19,7 +19,7 @@
 <table id="tb_wrapper" style="width:100%" cellpadding="2" cellspacing="2">
     <tr>
         <td style="text-align: center">
-            <img src="https://www.chess-store.it/_ext/img/logo/scacchi_online_1.jpg" alt="" />
+            <img src="https://www.italfama.it/img/logo.png" alt="" />
         </td>
     </tr>
     <tr>
@@ -91,14 +91,6 @@
                             </tr>
                             <tr>
                                 <td style="text-align: right;border-bottom:1px solid #ddd;padding-bottom: 6px;padding-top: 6px;">
-                                    <h4>Sconto IVA</h4>
-                                </td>
-                                <td style="text-align: right;border-bottom:1px solid #ddd;padding-bottom: 6px;padding-top: 6px;">
-                                    <h4>@money($order->sconto_iva)</h4>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: right;border-bottom:1px solid #ddd;padding-bottom: 6px;padding-top: 6px;">
                                     <h3>Totale:</h3>
                                 </td>
                                 <td style="text-align: right;border-bottom:1px solid #ddd;padding-bottom: 6px;padding-top: 6px;">
@@ -116,73 +108,10 @@
             <table cellpadding="2" cellspacing="2" style="font-size:12px;width:100%">
                 <tr>
                     <td>
-                        <table cellpadding="2" cellspacing="2" style="font-size:12px;">
-                            <tr>
-                                <td><b>Spese spedizione</b>: @money($order->spese_spedizione)</td>
-                            </tr>
-                            <tr>
-                                <td><b>Spese conf.regalo</b>: @money($order->spese_conf_regalo)</td>
-                            </tr>
-                            <tr>
-                                <td><b>Spese pagamento</b>: @money($order->spese_contrassegno)</td>
-                            </tr>
-                            <tr>
-                                <td><b>Sconto</b>: @money($order->sconto)<br></td>
-                            </tr>
-                            <tr>
-                                <td><b>Modalità pagamento</b>: {{$order->modalita_pagamento}}</td>
-                            </tr>
-                            <tr>
-                                <td><b>Pagato</b>: {{($order->stato_pagamento == 1) ? 'si':'no'}}</td>
-                            </tr>
-                            <tr>
-                                <td><b>Nr Trans.</b>: {{$order->idtranspag}}</td>
-                            </tr>
-                        </table>
+
                     </td>
                     <td>
-                        <table width="100%" cellspacing="2" cellpadding="2">
-                            <tr>
-                                <th>Indirizzo Spedizione</th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <td>Nome:</td>
-                                <td>{{$order->orderShipping->nome}}</td>
-                            </tr>
-                            <tr>
-                                <td>Cognome:</td>
-                                <td>{{$order->orderShipping->cognome}}</td>
-                            </tr>
-                            <tr>
-                                <td>Email:</td>
-                                <td>{{$order->orderShipping->email}}</td>
-                            </tr>
-                            <tr>
-                                <td>Telefono:</td>
-                                <td>{{$order->orderShipping->telefono}}</td>
-                            </tr>
-                            <tr>
-                                <td>Indirizzo:</td>
-                                <td>{{$order->orderShipping->indirizzo}}</td>
-                            </tr>
-                            <tr>
-                                <td>Cap:</td>
-                                <td>{{$order->orderShipping->cap}}</td>
-                            </tr>
-                            <tr>
-                                <td>Città:</td>
-                                <td>{{$order->orderShipping->citta}}</td>
-                            </tr>
-                            <tr>
-                                <td>Provincia:</td>
-                                <td>{{$order->orderShipping->provincia}}</td>
-                            </tr>
-                            <tr>
-                                <td>Nazione:</td>
-                                <td>{{$order->orderShipping->nazione}}</td>
-                            </tr>
-                        </table>
+
                     </td>
                 </tr>
             </table>

@@ -41,10 +41,7 @@ class ItalOrderController extends Controller
             'order' => $order
         ];
 
-        //$pdf = \PDF::loadView('cms.ital_order.order_pdf', $params);
-        //return $pdf->stream('invoice.pdf');
-
         $pdf = \PDF::loadView('cms.ital_order.order_pdf', $params);
-        return $pdf->download('ordine_'.$order->id.'.pdf');
+        return $pdf->stream('ordine_'.$order->id.'.pdf');
     }
 }

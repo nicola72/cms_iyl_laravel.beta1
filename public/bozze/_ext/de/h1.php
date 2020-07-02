@@ -1,0 +1,4 @@
+<?php if ($page_name=='home_de') { ?>Schachbrett kaufen  -Chess Store Marsili's company  schachbrett holz kaufen made in Italy online<?php } ?>
+<?php if ($page_name=='scacchi_classici_de') { ?>Schachspiel kaufen -Chess Store Marsili's company  schach holz kaufen made in Italy online<?php } ?>
+<?php if ($page_name=='scacchi_extralusso_de') { ?>Hochwertiges schachspiel -Chess Store Marsili's company schachspiel hochwertig kaufen made in Italy online<?php } ?>
+<?php if ($page_name=='statue_bronzate_de') { ?>Bronzefiguren kaufen -Chess Store Marsili's company  bronze figur kaufen made in Italy online<?php } ?>

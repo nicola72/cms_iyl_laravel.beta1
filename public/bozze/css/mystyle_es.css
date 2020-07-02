@@ -1,0 +1,29 @@
+body{
+	font-size: 150%;
+}
+
+.footerLink{
+	font-size: 12px;
+}
+
+.p-seo{
+	line-height: 2;
+}
+
+.h3-seo{
+	margin-bottom: 0 !important;
+    font-weight: inherit!important;
+    font-size: inherit !important;
+    display: inline !important;
+    color: inherit !important;
+    text-transform: inherit!important; 
+}
+
+@media (min-width:769px){
+	.flex-rule{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: row;
+	}
+}

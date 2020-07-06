@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<?php echo'<pre>';print_r(session()->all());echo'</pre>';?>
+<?php //echo'<pre>';print_r(session()->all());echo'</pre>';?>
 <html lang="{{App::getLocale()}}">
     <head>
         <title>{{$seo->title ?? 'Chess Store'}}</title>
@@ -48,16 +48,20 @@
     <body>
         <div class="main-wrapper">
 
-        @include('layouts.website_header')
+            <div class="header clearfix">
+                @include('layouts.website_top_header')
+                @include('layouts.website_header')
+            </div>
+        </div>
         @include('layouts.website_flash-message')
 
         @yield('content')
-            <div class="h2-wrapper">
-                <h2 class="h2 hidden-xs">
-                    {{$seo->h2 ?? ''}}
-                </h2>
-            </div>
+        <div class="h2-wrapper">
+            <h2 class="h2 hidden-xs">
+                {{$seo->h2 ?? ''}}
+            </h2>
         </div>
+
         @include('layouts.website_section')
         @include('layouts.website_footer')
         <!-- MODALE -->

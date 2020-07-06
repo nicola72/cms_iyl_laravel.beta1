@@ -1,7 +1,8 @@
 <?php
 return[
     'titolo_homepage' => 'THE CHESS STORE IN FLORENCE<br>FOR EXTRA UE SHIPPINGS THE ITALIAN VAT WILL BE AUTOMATICALLY DEDUCED DURING THE PURCHASE',
-    'cerca' => 'SEARCH',
+    'negozio_di_scacchi_firenze' => 'THE CHESS STORE IN FLORENCE',
+    'cerca' => 'Search',
     'registrazione' => 'Registration',
     'logout' => 'logout',
     'mio_account' => 'my account',
@@ -97,5 +98,5 @@ return[
     'torna_al_carrello' => 'Back to Cart',
     'procedi_col_pagamento' => 'Proceed with the payment',
     'set_correlati' => 'Suggested combination',
-
+    'novita_in_vetrina' => 'News item',
 ];

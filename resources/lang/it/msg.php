@@ -1,7 +1,8 @@
 <?php
 return[
     'titolo_homepage' => 'IL NEGOZIO DI SCACCHI A FIRENZE',
-    'cerca' => 'CERCA',
+    'negozio_di_scacchi_firenze' => 'IL NEGOZIO DI SCACCHI A FIRENZE',
+    'cerca' => 'Cerca',
     'registrazione' => 'Registrazione',
     'logout' => 'logout',
     'mio_account' => 'mio account',
@@ -97,5 +98,5 @@ return[
     'torna_al_carrello' => 'Torna al Carrello',
     'procedi_col_pagamento' => 'Procedi col pagamento',
     'set_correlati' => 'Set Correlati',
-
+    'novita_in_vetrina' => 'Novità in vetrina',
 ];

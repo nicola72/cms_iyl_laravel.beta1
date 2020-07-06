@@ -40,15 +40,21 @@ class PageController extends Controller
         $locale = $domain->locale;
         \App::setLocale($locale);
 
+        //prendo il seo quello flaggato come homepage e con la lingua stabilita sopra
         $seo = Seo::where('locale',$locale)->where('homepage',1)->first();
+
+        //le slider che vengono da pannello
         $slider = Slider::where('visibile',1)->first();
+
+
         $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
         $prodotti_novita = Product::where('visibile',1)->where('availability_id','!=',2)->where('novita',1)->get();
         $abbinamenti_novita = Pairing::where('visibile',1)->where('novita',1)->get();
         $prodotti_offerta = Product::where('visibile',1)->where('availability_id','!=',2)->where('offerta',1)->get();
         $abbinamenti_offerta = Pairing::where('visibile',1)->where('offerta',1)->get();
-        $popup = Newsitem::where('visibile',1)->where('popup',1)->first();
 
+        //la news che compare nella popup, nel pannello è quella flaggata come popup
+        $popup = Newsitem::where('visibile',1)->where('popup',1)->first();
 
 
         $params = [

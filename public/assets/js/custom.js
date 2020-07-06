@@ -9,7 +9,7 @@ jQuery(document).ready(function () {
     jQuery('.fullscreenbanner').revolution({
         delay: 5000,
         startwidth: 1170,
-        startheight: 500,
+        startheight: 620,
         fullWidth: "on",
         fullScreen: "off",
         hideCaptionAtLimit: "",
@@ -28,9 +28,9 @@ jQuery(document).ready(function () {
         autoplayTimeout: 2000,
         autoplayHoverPause: true,
         nav: true,
-        moveSlides: 4,
+        moveSlides: 3,
         dots: false,
-        responsive: {320: {items: 1}, 768: {items: 3}, 992: {items: 4}}
+        responsive: {320: {items: 2}, 768: {items: 6}, 992: {items: 6}}
     });
     var owl = $('.owl-carousel.partnersLogoSlider');
     owl.owlCarousel({

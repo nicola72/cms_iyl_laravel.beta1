@@ -1,230 +1,82 @@
 @extends('layouts.website')
 @section('content')
-    <div class="container">
-        <div class="row" style="margin-left: 0; padding-left: 0;">
-            <div class="col-md-12" style="margin-left: 0; padding-left: 0;">
-                <div class="col-md-6"
-                     style="margin-left: 0; padding-left: 0; font-size: 130%; margin-top: 20px;">
-                </div>
-            </div>
+    <div class="col-md-12" style="margin:0; padding:0; background-color:#e4e0dc;">
+        <div class="col-md-2 hidden-xs hidden-sm" style="background-color:#e4e0dc; padding:20px 0;">
+            <!-- MENU' DESKTOP -->
+            @include('layouts.website_menu_desktop')
+            <!-- FINE MENU' DESKTOP -->
+        </div>
+        <div class="col-md-10" style="margin:0; padding:0;">
+            <!-- SLIDER -->
+            @include('website.page.partials.slider')
+            <!-- FINE SLIDER -->
         </div>
     </div>
 
-    <!-- SLIDER -->
-    @if($slider)
-        @include('website.page.partials.slider')
-    @endif
-    <!-- FINE SLIDER -->
+    <div class="clearfix"></div>
 
-    <section style="background-color:#fcfcfc;">
-        <div class="container">
+    <section class="mainContent  productsContent">
+        <div class="container-fluid" style="margin-bottom:40px;">
             <div class="row">
-                <div class="col-md-12 text-center" style="font-size:180%; padding-top:30px; line-height:1.5em; font-weight:bold;">
+                <div class="col-md-12 text-center" style="font-size:200%; padding-top:30px; padding-bottom:30px;line-height:1.5em; font-weight:bold; color:#840025; background-color:#d2d0ce; ">
                     @lang('msg.home_1')
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="mainContent clearfix productsContent">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
-
-                <!-- COLONNA A SINISTRA -->
-                <div class="col-md-3 col-sm-12 col-xs-12 sideBar ">
-
-                    <!-- menu prodotti -->
-                    @include('layouts.website_menu_prodotti')
-                    <!-- fine menu prodotti -->
-
-                    <!-- box facebook -->
-                    @include('layouts.website_box_facebook')
-                    <!-- -->
-
-                </div>
-                <!-- FINE COLONNA SINISTRA -->
-
-                <!-- PAGINA -->
-                <div class="col-md-9 col-sm-12 col-xs-12">
-
-                    <!-- NOVITA' -->
-                    @if($prodotti_novita || $abbinamenti_novita)
-                        <div class="col-xs-12">
-                            <div class="page-header">
-                                <h3 class="fjalla" style="color: #840025;">	NOVITA' IN VETRINA</h3>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="owl-carousel featuredProductsSlider">
-                                @if($prodotti_novita)
-                                    @foreach($prodotti_novita as $product)
-                                        <div class="slide">
-                                            <div class="productImage clearfix">
-                                                <a href="{{$product->url()}}">
-                                                    <img src="{{$website_config['cs_small_dir'].$product->cover()}}" alt="{{$seo->alt ?? ''}}">
-                                                </a>
-                                            </div>
-                                            <div class="productCaption clearfix">
-                                                <a href="{{$product->url()}}">
-                                                    <div class="titolo_prodotto">
-                                                        {{$product->{'nome_'.app()->getLocale()} }}
-                                                    </div>
-                                                </a>
-                                                <div class="fjalla prezzo">
-                                                    @if($product->is_scontato())
-                                                        <span class="prezzo_pieno">@money($product->prezzo)  &euro;</span>
-                                                        &nbsp;&nbsp;
-                                                        <span>@money($product->prezzo_scontato)</span>
-                                                    @else
-                                                        <span>@money($product->prezzo)</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-
-                                @if($abbinamenti_novita)
-                                    @foreach($abbinamenti_novita as $pairing)
-                                        <div class="slide">
-                                            <div class="productImage clearfix">
-                                                <a href="{{$pairing->url()}}">
-                                                    <img src="{{$website_config['cs_small_dir'].$pairing->cover()}}" alt="{{$seo->alt ?? ''}}">
-                                                </a>
-                                            </div>
-                                            <div class="productCaption clearfix">
-                                                <a href="{{$pairing->url()}}">
-                                                    <div class="titolo_prodotto">
-                                                        {{$pairing->{'nome_'.app()->getLocale()} }}
-                                                    </div>
-                                                </a>
-                                                <div class="fjalla prezzo">
-                                                    @if($pairing->product1->prezzo_scontato != '0.00' && $pairing->product2->prezzo_scontato != '0.00')
-                                                        <span class="FullProdPrice">
-                                                            @money($pairing->product1->prezzo + $pairing->product2->prezzo)
-                                                        </span>
-                                                        @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita())
-                                                    @else
-                                                        @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita())
-                                                    @endif
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    @endif
-                    <!-- FINE NOVITA' -->
+                <div class="col-md-12 col-sm-12 col-xs-12">
 
                     <!-- OFFERTE -->
-                    @if($prodotti_offerta || $abbinamenti_offerta)
-                        <div class="col-xs-12" style="padding-top:20px;">
-                            <div class="page-header">
-                                <h3 class="fjalla" style="color: #840025;">
-                                    <img src="/img/offerte.png" alt="" style="vertical-align:middle;" class="hidden-xs"/>
-                                    @lang('msg.offerte_settimana')
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="owl-carousel featuredProductsSlider">
-                                @if($prodotti_offerta)
-                                    @foreach($prodotti_offerta as $product)
-                                        <div class="slide">
-                                            <div class="productImage clearfix">
-                                                <a href="{{$product->url()}}">
-                                                    <img src="{{$website_config['cs_small_dir'].$product->cover()}}" alt="{{$seo->alt ?? ''}}">
-                                                </a>
-                                            </div>
-                                            <div class="productCaption clearfix">
-                                                <a href="{{$product->url()}}">
-                                                    <div class="titolo_prodotto">
-                                                        {{$product->{'nome_'.app()->getLocale()} }}
-                                                    </div>
-                                                </a>
-                                                <div class="fjalla prezzo">
-                                                    @if($product->is_scontato())
-                                                        <span class="prezzo_pieno">@money($product->prezzo)  &euro;</span>
-                                                        &nbsp;&nbsp;
-                                                        <span>@money($product->prezzo_scontato)</span>
-                                                    @else
-                                                        <span>@money($product->prezzo)</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-
-                                @if($abbinamenti_offerta)
-                                    @foreach($abbinamenti_offerta as $pairing)
-                                        <div class="slide">
-                                            <div class="productImage clearfix">
-                                                <a href="{{$pairing->url()}}">
-                                                    <img src="{{$website_config['cs_small_dir'].$pairing->cover()}}" alt="{{$seo->alt ?? ''}}">
-                                                </a>
-                                            </div>
-                                            <div class="productCaption clearfix">
-                                                <a href="{{$pairing->url()}}">
-                                                    <div class="titolo_prodotto">
-                                                        {{$pairing->{'nome_'.app()->getLocale()} }}
-                                                    </div>
-                                                </a>
-                                                <div class="fjalla prezzo">
-                                                    @if($pairing->product1->prezzo_scontato != '0.00' || $pairing->product2->prezzo_scontato != '0.00')
-                                                        <span class="FullProdPrice">
-                                                            @money($pairing->product1->prezzo + $pairing->product2->prezzo)
-                                                        </span>
-                                                        @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita())
-                                                    @else
-                                                        @money($pairing->product1->prezzo_vendita() + $pairing->product2->prezzo_vendita())
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    @endif
+                    @include('website.page.partials.home_offerte')
                     <!-- FINE OFFERTE -->
 
-                    <div class="col-md-12 col-sm-12 col-xs-12 text-center home_box hidden-md hidden-lg hidden-xs hidden-sm"  style="border-top: 1px dotted #666;">
-                        <img src="img/set_1.jpg" alt="" class="img-responsive">
-                        @lang('msg.home_2')
-                    </div>
+                    <!-- NOVITA' -->
+                    @include('website.page.partials.home_novita')
+                    <!-- FINE NOVITA' -->
 
-                    @if(app()->getLocale() == 'it')
-                    <div class="col-sm-12 col-xs-12 text-center home_box  hidden-md hidden-lg">
-                        <div class="imageWrapper">
-                            <img src="/img/shipping.jpg" alt="{{$seo->alt ?? ''}}" class="img-responsive" style="display: block; margin: 0 auto;">
-                            @lang('msg.spedizione_gratis')
-                        </div>
-                    </div>
-                    @endif
+                    <div class="clearfix"></div>
 
-                    <div class="col-md-12 text-center" style="margin:0; padding:0; border-top:1px dotted #850728; padding-top:15px;">
-                        <p style="font-size:150%; color:#850728; padding-bottom:10px; font-weight:bold;">
+                    <div class="col-md-12  text-center mossa-giusta">
+                        <p class="mossa-giusta-p">
+                            <img src="/img/scacco.png" alt="{{ $seo->alt ?? '' }}" style="vertical-align:middle; max-height:40px;" />
+                            <br/>
+                            FAI LA MOSSA GIUSTA..REGALA UN SET SCACCHI!!
+                        </p>
+
+                        <img src="/img/pacco-regalo-copia.jpg" class="img-responsive img-center" alt="{{ $seo->alt ?? '' }}" style="margin-bottom: 20px; width:80%"/>
+
+                        <p class="mossa-giusta mossa-giusta-p-1">
+                            <img src="/img/gift.png" alt="{{ $seo->alt ?? '' }}" style="vertical-align:middle; max-height:40px;" />
+                            <br/>
                             @lang('msg.pacchetto_regalo_msg')
                         </p>
-                        <img src="/img/scacchi_online_5.jpg" class="img-responsive" alt="{{$seo->alt ?? ''}}" style="margin-bottom: 20px;" />
-
-                    </div>
-                    <div class="col-md-6" style="margin: 30px 0 0 0; padding: 0 2px 0 0;">
-                        <img src="/img/scacchi_online_7.jpg" class="img-responsive" alt="{{$seo->alt ?? ''}}" style="margin-bottom: 20px;" />
                     </div>
 
-                    <div class="col-md-6"  style="margin: 30px 0 0 0; padding: 0 0 0 2px;">
-                        <img src="/img/scacchi_online_6.jpg" class="img-responsive" alt="{{$seo->alt ?? ''}}" style="margin-bottom: 20px;" />
+                    <div class="col-md-10 col-md-offset-1">
+                        <div class="col-md-4" style="margin: 30px 0 0 0; padding: 0 2px 0 0;">
+                            <img src="/img/artigianale.jpg" class="img-responsive" alt="{{ $seo->alt ?? '' }}" style="margin-bottom: 20px;"/>
+                        </div>
+
+
+                        <div class="col-md-4" style="margin: 30px 0 0 0; padding: 0 0 0 2px;">
+                            <img src="/img/dealer1.jpg" class="img-responsive" alt="{{ $seo->alt ?? '' }}" style="margin-bottom: 20px;"/>
+                        </div>
+
+
+                        <div class="col-md-4" style="margin: 30px 0 0 0; padding: 0 2px 0 0;">
+                            <img src="/img/fabbrica.jpg" class="img-responsive" alt="{{ $seo->alt ?? '' }}" style="margin-bottom: 20px;"/>
+                        </div>
+
+
                     </div>
                 </div>
-                <!-- -->
-
             </div>
         </div>
     </section>
+
+
+
 
     <!-- POPUP NEWS -->
     @if($popup)

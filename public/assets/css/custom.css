@@ -87,6 +87,115 @@ body, html{height:100%;}
     font-size:16px;
     color:#000;
 }
+.payoff {line-height:1.1em; font-size:20px; margin-top:5px;}
+
+.nav-top a {
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.fjalla{
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.color-white{
+    color:#fff !important;
+}
+
+.color-black{
+    color:#000 !important;
+}
+
+.desk-menu{
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
+
+.navbar {
+    border-radius: 0px !important;
+}
+
+.navbar-toggle {
+    float: left !important;
+    margin-left: 30px;
+}
+
+.display-block {
+    display: block;
+    float: none !important;
+    border-bottom: 1px solid #fff;
+    width: 100%;
+}
+
+.mainContent{
+    padding-top:0px;
+}
+
+.titolo-offerte {
+    text-align: center;
+    color: #840025;
+    font-size: 28px;
+}
+
+.mossa-giusta {
+    margin: 0 auto;
+    padding: 0;
+    padding-top: 0px;
+    border-top: 1px dotted #850728;
+    padding-top: 30px;
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.mossa-giusta-p {
+    font-size: 200%;
+    color: #850728;
+    padding-bottom: 10px;
+    font-weight: bold;
+    line-height: 1.6em;
+    background-color: #d2d0ce;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.mossa-giusta-p-1 {
+    font-size: 200%;
+    color: #850728;
+    padding-bottom: 10px;
+    font-weight: bold;
+    line-height: 1.6em;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #850728;
+}
+
+@media (max-width: 768px){
+    .payoff {
+        line-height: 1.1em;
+        font-size: 14px;
+        margin: 0;
+        margin-top: 5px;
+    }
+
+    .search-mobile {
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 969px) {
+    .navbar-nav > li > a {
+        color: #fff !important;
+    }
+    .titolo-menu a {
+        color: #fff !important;
+        text-transform: uppercase !important;
+        padding: 5px 0 !important;
+    }
+}
+
+
 @media (max-width:991px){}
 @media (max-width:767px){}
 @media screen and (max-width:1450px){}

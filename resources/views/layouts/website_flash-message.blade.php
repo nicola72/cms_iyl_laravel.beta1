@@ -1,4 +1,5 @@
-<div class="container">
+@if(Session::get('error') || Session::get('success') || Session::get('warning') || Session::get('info'))
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             @if ($message = Session::get('success'))
@@ -42,3 +43,4 @@
         </div>
     </div>
 </div>
+@endif

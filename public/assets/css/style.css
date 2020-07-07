@@ -666,7 +666,7 @@ body.bodyColor.container{padding:0;}
 }
 @media (min-width:768px){.singleProduct .media .productSlider{width:100%;padding:0 0 30px 0;}
 }
-@media (min-width:992px){.singleProduct .media .productSlider{width:489px;padding:0 30px 0 0;}
+@media (min-width:992px){.singleProduct .media .productSlider{width:100%;padding:0 30px 0 0;}
 }
 .singleProduct .media .productSlider #carousel{margin-bottom:20px;}
 .singleProduct .media .productSlider #carousel .item img{width:100%;}

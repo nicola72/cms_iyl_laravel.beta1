@@ -1,4 +1,4 @@
-<div class="col-sm-4">
+<div class="col-sm-4 col-lg-3">
     <div class="productBox">
         <div class="productImage clearfix">
             <a href="{{ $product->url() }}">

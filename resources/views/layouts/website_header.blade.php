@@ -18,7 +18,7 @@
 
             <!-- LOGO -->
             <a href="/" style="display:block;">
-                <img src="/img/logo2.jpg" alt="{{$seo->alt ?? ''}}"  style="display:block; margin-bottom:2px; width:100%; max-width:240px; margin:0 auto;"   class="img-responsive"/>
+                <img src="/img/logo3.jpg" alt="{{$seo->alt ?? ''}}"  style="display:block; margin-bottom:2px; width:100%; max-width:240px; margin:0 auto;"   class="img-responsive"/>
             </a>
             <!-- fine LOGO -->
 

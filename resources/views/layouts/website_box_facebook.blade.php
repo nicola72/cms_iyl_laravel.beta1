@@ -1,4 +1,4 @@
-<div class="col-sm-12 hidden-xs hidden-sm">
+<div class="col-sm-12 hidden-xs hidden-sm" style="padding-top:40px;">
     <div class="fb-page"
          data-href="https://www.facebook.com/Marsilis-Company-316915328512344/"
          data-small-header="false" data-adapt-container-width="true"

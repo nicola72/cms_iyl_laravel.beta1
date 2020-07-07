@@ -17,8 +17,9 @@
     <!-- -->
 
     @foreach($macrocategorie as $macro)
+        @if($macro->id != 22)
         <li class=" dropdown display-block">
-            <a href="{{$macro->url()}}" class="dropdown-toggle fjalla color-black text-uppercase desk-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <a href="{{$macro->url()}}" class="dropdown-toggle fjalla color-black text-uppercase desk-menu" role="button" aria-haspopup="true" aria-expanded="false">
                 {{$macro->{'nome_'.app()->getLocale()} }}
             </a>
             <ul class="dropdown-menu dropdown-menu-left" style="top: 10px;left: 180px;">
@@ -31,5 +32,6 @@
                 @endforeach
             </ul>
         </li>
+        @endif
     @endforeach
 </ul>

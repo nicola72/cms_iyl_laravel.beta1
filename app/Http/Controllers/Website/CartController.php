@@ -68,11 +68,14 @@ class CartController extends Controller
         $province = Province::all()->sortBy('provincia');
         $countries = Country::all()->sortBy('nome_'.\App::getLocale());
 
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
         $params = [
             'carts' => $carts,
             'form_name' => 'form_carrello',
             'user' => $user,
             'user_details' => $user_details,
+            'macrocategorie' => $macrocategorie,
             'province' => $province,
             'countries' => $countries,
             'importo_carrello' => $importo_carrello,
@@ -309,15 +312,9 @@ class CartController extends Controller
 
     public function addpairing(Request $request)
     {
-        if(!\Auth::check())
-        {
-            return ['result' => 0,'msg' => trans('msg.devi_effetture_il_login_prima')];
-        }
-
         $id = $request->id;
 
         $pairing = Pairing::find($id);
-
 
         $product1 = $pairing->product1;
         $product2 = $pairing->product2;
@@ -334,7 +331,15 @@ class CartController extends Controller
         foreach($prodotti_da_inserire as $product)
         {
             //controllo che il prodotto non sia già nel carrello
-            $cart = Cart::where('product_id',$product->id)->where('user_id',\Auth::user()->id)->first();
+            if(\Auth::user())
+            {
+                $cart = Cart::where('product_id',$product->id)->where('user_id',\Auth::user()->id)->first();
+            }
+            else
+            {
+                $cart = Cart::where('product_id',$product->id)->where('session_id',session()->getId())->first();
+            }
+
 
             //se già nel carrello
             if($cart)
@@ -346,8 +351,11 @@ class CartController extends Controller
                 }
 
                 try{
-
                     $cart->qta = $cart->qta + 1;
+                    if(\Auth::user())
+                    {
+                        $cart->user_id = \Auth::user()->id;
+                    }
                     $cart->save();
                 }
                 catch(\Exception $e){
@@ -370,7 +378,10 @@ class CartController extends Controller
                     $cart->product_id = $product->id;
                     $cart->session_id = session()->getId();
                     $cart->qta = $qta;
-                    $cart->user_id = \Auth::user()->id;
+                    if(\Auth::user())
+                    {
+                        $cart->user_id = \Auth::user()->id;
+                    }
                     $cart->save();
                 }
                 catch(\Exception $e){

@@ -56,7 +56,8 @@
         @include('layouts.website_flash-message')
 
         @yield('content')
-        <div class="h2-wrapper">
+        <div class="clearfix"></div>
+        <div class="h2-wrapper" style="background-color:#f0f0f0;">
             <h2 class="h2 hidden-xs">
                 {{$seo->h2 ?? ''}}
             </h2>

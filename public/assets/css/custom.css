@@ -4,7 +4,7 @@
 a.dettagli{position:relative;}
 body, html{height:100%;}
 .galleria-item{position:relative;}
-.h2{max-width:960px;font-size:11px;margin:auto;text-align:right;padding-bottom:10px;padding-top:10px;text-transform:none;color:#000;}
+.h2{font-size:11px;margin:auto;text-align:right;padding-bottom:10px;padding-top:10px;text-transform:none;color:#000;}
 .modal-body{background-color:#840025;color:#fff;font-size:16px;}
 .modalpopup-body{color:#313131;font-size:20px;padding:30px 20px;}
 .modalpopup-body p{font-size:18px;line-height:28px;}
@@ -31,7 +31,7 @@ body, html{height:100%;}
 .productImage{height:180px !important;}
 .productImage img{}
 .prodDescrizione{height:36px;overflow:hidden;}
-.productBox{border:1px solid #f0f0f0;border-radius:5px;padding:5px;}
+.productBox{border:1px solid #f0f0f0;border-radius:5px;padding:5px;margin-bottom:20px;}
 .customer-service{color:#840025;}
 .titolo_prodotto{height:37px;overflow:hidden;}
 .FullProdPrice{text-decoration:line-through;display:inline-block;padding-right:8px;color:#8e8e8e;}
@@ -168,6 +168,26 @@ body, html{height:100%;}
     padding-top: 10px;
     padding-bottom: 10px;
     border: 1px solid #850728;
+}
+
+.header-page{
+    background-color:#d2d0ce;
+    padding-top:20px;
+}
+
+.header-page .breadcrumb{
+    background-color: transparent;
+    color:#000;
+    border-radius: 0px;
+}
+
+.header-page .breadcrumb a{
+    color:#000;
+    text-transform: lowercase;
+}
+
+.page-catalogo-content{
+    padding:20px 10px;
 }
 
 @media (max-width: 768px){

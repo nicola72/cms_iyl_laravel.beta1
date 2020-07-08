@@ -19,6 +19,23 @@ function show_others(url)
     });
 }
 
+function show_others_for_scroll(url)
+{
+    $.ajax({
+        type: "GET",
+        url: url,
+        dataType: "html",
+        success: function (data)
+        {
+            $('#product_list').append(data);
+        },
+        error: function ()
+        {
+            alert("Si è verificato un errore! Riprova!");
+        }
+    });
+}
+
 function ordina(value)
 {
     $('#order').val(value);

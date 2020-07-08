@@ -277,10 +277,7 @@ class PageController extends Controller
         $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
 
         //il template della vista in base a se è Ajax o no
-        //NO SCROLL
-        //$view = ($request->ajax()) ? 'website.page.partials.other_products' : 'website.page.product_list';
-        //PER SCROLL
-        $view = ($request->ajax()) ? 'website.page.partials.other_products_on_scroll' : 'website.page.product_list';
+        $view = ($request->ajax()) ? 'website.page.partials.other_products' : 'website.page.product_list';
 
         //parametro per ORDINAMENTO prodotti  (dalla url o dalla sessione se ajax)
         //false se non settato
@@ -298,8 +295,7 @@ class PageController extends Controller
         $this->setParamsInSession($request, $ordinamento, $filtro, $page, $model);
 
         //se settata nella sessione la page la inseriamo nel paginatore (SERVE per il torna indietro del browser)
-        //nel caso del caricamento on scroll non la setto
-        //$this->updatePaginator($request,$page);
+        $this->updatePaginator($request,$page);
 
         $styles = Style::all();
         $chess_materials = Material::where('per','scacchi')->get();

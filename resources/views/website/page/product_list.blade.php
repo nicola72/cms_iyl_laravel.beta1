@@ -68,7 +68,7 @@
                             <!-- ABBINAMENTI -->
                             @if($pairings)
                                 <!-- PAGINATORE -->
-                                {{$pairings->links('website.pagination.default')}}
+                                {{$pairings->links('website.pagination.on_scroll')}}
                                 <!-- -->
 
                                 @foreach($pairings as $pairing)
@@ -76,7 +76,7 @@
                                 @endforeach
 
                                 <!-- PAGINATORE -->
-                                {{$pairings->links('website.pagination.default')}}
+                                {{$pairings->links('website.pagination.on_scroll')}}
                                 <!-- -->
                             @endif
                             <!-- FINE ABBINAMENTI -->
@@ -84,7 +84,7 @@
                             <!-- PRODOTTI SINGOLI -->
                             @if($products)
                                 <!-- PAGINATORE -->
-                                {{$products->links('website.pagination.default')}}
+                                {{$products->links('website.pagination.on_scroll')}}
                                 <!-- -->
 
                                 @foreach($products as $product)
@@ -92,7 +92,7 @@
                                 @endforeach
 
                                 <!-- PAGINATORE -->
-                                {{$products->links('website.pagination.default')}}
+                                {{$products->links('website.pagination.on_scroll')}}
                                 <!-- -->
                             @endif
                             <!-- FINE PRODOTTI SINGOLI -->

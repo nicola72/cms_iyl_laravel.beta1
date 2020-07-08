@@ -6,9 +6,11 @@
 
             <!-- box spese consegna gratuite -->
             @if(app()->getLocale() == 'it')
-                <img src="/img/gratis.jpg" alt="Scacchi online"  style="margin-bottom:2px; max-width:50px; float:left; margin-right:5px;" class="img-responsive">
+                <img src="/img/gratis.jpg" alt="{{ $seo->alt ?? '' }}"  style="margin-bottom:2px; max-width:50px; float:left; margin-right:5px;" class="img-responsive">
                 CONSEGNA GRATUITA<br/>IN 24/48H LAVORATIVE<br/>IN TUTTA ITALIA<br/>
                 <span class="gratis-small">per ordini superiori a 49€</span>
+            @elseif(app()->getLocale() == 'en')
+                <img src="/img/chess_shipping.jpg" alt="{{ $seo->alt ?? '' }}"  style="margin-bottom:2px;max-width:140px;float:left; margin-right:5px;" class="img-responsive">
             @endif
             <!-- box fine spese consegna gratuite -->
 
@@ -23,11 +25,12 @@
             <!-- fine LOGO -->
 
             <!-- scritta sotto il logo -->
-            <p class="negozio scritta  text-center payoff" style="color:#eee;">
-                @lang('msg.negozio_di_scacchi_firenze')
-            </p>
-            @if(app()->getLocale() == 'en')
-                <p class="color-white fjalla text-center hidden-sm hidden-xs">
+            @if(app()->getLocale() == 'it')
+                <p class="negozio scritta  text-center payoff" style="color:#eee;">
+                    @lang('msg.negozio_di_scacchi_firenze')
+                </p>
+            @elseif(app()->getLocale() == 'en')
+                <p class="negozio scritta  text-center payoff" style="color:#eee;">
                     FOR EXTRA UE SHIPPINGS THE ITALIAN VAT WILL BE AUTOMATICALLY DEDUCED DURING THE PURCHASE
                 </p>
             @endif

@@ -1,6 +1,6 @@
 @if(Session::get('error') || Session::get('success') || Session::get('warning') || Session::get('info'))
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" style="padding-top:15px;">
         <div class="col-md-12">
             @if ($message = Session::get('success'))
                 <div class="alert alert-success alert-block">
@@ -32,15 +32,23 @@
                     <strong>{{ $message }}</strong>
                 </div>
             @endif
-
-
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                    Please check the form below for errors
-                </div>
-            @endif
         </div>
     </div>
 </div>
+@endif
+@if ($errors->any())
+    <div class="container-fluid">
+        <div class="row" style="padding-top:15px;">
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 @endif

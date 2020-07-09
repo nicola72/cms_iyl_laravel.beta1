@@ -13,7 +13,7 @@
         </div>
     </section>
 
-    @if(!$carts)
+    @if(count($carts) == 0)
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -30,8 +30,9 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-
                 <br />
+
+                <!-- ELENCO PRODOTTI NEL CARRELLO -->
                 <table id="carrello_tbl" class="table">
                     <tr>
                         <th>&nbsp;</th>
@@ -42,7 +43,6 @@
                         <th>@lang('msg.elimina')</th>
                     </tr>
                     @foreach($carts as $cart)
-
                     <tr>
                         <td>
                             <a href="{{ $website_config['cs_big_dir'].$cart->product->cover() }}" class="item-img galleria-item">
@@ -72,10 +72,14 @@
                     </tr>
                     @endforeach
                 </table>
+                <!-- FINE PRODOTTI CARRELLO -->
+
             </div>
         </div>
         <div class="row">
             <div class="col-md-8">
+
+                <!-- RISCATTO COUPON se non è già presente nella sessione -->
                 @if(!session()->has('coupon'))
                 <div class="row">
                     <div class="col-md-5" style="line-height: 40px;font-size:120%; font-weight:bold;">@lang('msg.hai_un_coupon_sconto')</div>
@@ -89,6 +93,8 @@
                     </div>
                 </div>
                 @endif
+                <!-- FINE RISCATTO COUPON -->
+
             </div>
 
         </div>
@@ -102,12 +108,16 @@
                 </div>
             </div>
         @else
+
+            <!-- FORM DATI SPEDIZIONE -->
             <div class="row" style="padding-top:30px;">
                 <div class="col-md-12">
                     <h3>@lang('msg.dettagli_per_spedizione_e_pagamento')</h3>
                     @include('website.form.form_carrello')
                 </div>
             </div>
+            <!-- FINE FORM DATI SPEDIZIONE -->
+
         @endif
         </div>
     @endif

@@ -30,7 +30,7 @@ jQuery(document).ready(function () {
         nav: true,
         moveSlides: 3,
         dots: false,
-        responsive: {320: {items: 2}, 768: {items: 6}, 992: {items: 6}}
+        responsive: {320: {items: 2}, 768: {items: 4}, 1200: {items: 6}}
     });
     var owl = $('.owl-carousel.partnersLogoSlider');
     owl.owlCarousel({

@@ -889,7 +889,7 @@ class PageController extends Controller
                 $products = $model->products()
                     ->where('visibile',1)
                     ->where('availability_id','!=',2)
-                    ->orderBy($nome,'ASC')
+                    ->orderBy('products.'.$nome,'ASC')
                     ->paginate($per_page);
                 break;
             default:

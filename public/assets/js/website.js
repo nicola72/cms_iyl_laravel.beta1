@@ -102,6 +102,32 @@ function dropProvincia() {
     return;
 }
 
+
+function couponRedeem(url) {
+    var coupon = $("input#coupon").val();
+    if (coupon == '') {
+        return;
+    }
+    $.ajax({
+        url: url,
+        type: "get",
+        data: {'coupon': coupon },
+        dataType: "json",
+        success: function (data)
+        {
+            if(data.result === 1)
+            {
+                alert(data.msg);
+                location.reload();
+            }
+            else
+            {
+                alert(data.msg);
+            }
+        }
+    });
+}
+
 /*
 
 
@@ -234,22 +260,4 @@ function addAbbinamentoToCart(id_abbinamento, lang, is_accessorio) {
         }
     });
 }
-
-function couponRedeem(lang) {
-    var coupon = $("input#coupon").val();
-    if (coupon == '') {
-        return;
-    }
-    $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=couponRedeem&coupon=" + coupon + "&lang=" + lang,
-        type: "get",
-        dataType: "json",
-        success: function (data) {
-            $(".modal-title").html('COUPON');
-            $("#ajax-test").html(data.msg);
-            $('#myModal').fadeIn();
-            return;
-        }
-    });
-}*/
+*/

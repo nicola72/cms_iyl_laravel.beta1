@@ -8,7 +8,7 @@
                 <!-- CHECkBOX CONFEZIONE REGALO -->
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="regalo" id="regalo"/>
+                        <input type="checkbox" name="conf_regalo" id="conf_regalo"/>
                         <span class="conf-reg" style="font-size:130%;font-weight:bold">@lang('msg.confezione_regalo')</span>
                     </label>
                 </div>

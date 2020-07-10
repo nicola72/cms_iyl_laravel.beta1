@@ -87,7 +87,7 @@
                         <input class="form-control" type="text" name="coupon" id="coupon" style="margin:3px 15px 0 15px;">
                     </div>
                     <div class="col-md-3" style="line-height: 40px;">
-                        <a class="fjalla btn btn-default" style="" href="javascript:void(0);" onclick="couponRedeem('{{app()->getLocale()}}');">
+                        <a class="fjalla btn btn-default" style="" href="javascript:void(0);" onclick="couponRedeem('{{url(app()->getLocale().'/cart/redeem_coupon')}}');">
                             @lang('msg.riscattalo_ora')
                         </a>
                     </div>

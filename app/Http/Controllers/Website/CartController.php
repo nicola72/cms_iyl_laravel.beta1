@@ -5,6 +5,7 @@ use App\Mail\Contact;
 use App\Model\Cart;
 use App\Model\Category;
 use App\Model\Country;
+use App\Model\Coupon;
 use App\Model\Domain;
 use App\Model\File;
 use App\Model\Macrocategory;
@@ -22,6 +23,7 @@ use App\Model\Style;
 use App\Model\Website\UserDetail;
 use App\Service\EsenzioneIva;
 use App\Service\SpeseSpedizione;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Model\Url;
 use App\Http\Controllers\Controller;
@@ -112,6 +114,58 @@ class CartController extends Controller
             'citta_nascita'=> 'required',
             'pagamento'    => 'required'
         ]);
+
+        //raccolgo i DATI FORM
+        $nome          = $request->post('nome');
+        $cognome       = $request->post('cognome');
+        $email         = $request->post('email');
+        $indirizzo     = $request->post('indirizzo');
+        $citta         = $request->post('citta');
+        $prov          = $request->post('prov',null);
+        $cap           = $request->post('cap');
+        $tel           = $request->post('tel');
+        $data_nascita  = $request->post('data_nascita');
+        $citta_nascita = $request->post('citta_nascita');
+        $id_nazione    = $request->post('nazione');
+        $pagamento     = $request->post('pagamento');
+
+        //ALTRI DATI
+        $peso_carrello   = \Session::get('preso_carrello');
+        $nazione         = Country::find($id_nazione);
+        $esenzione_iva   = EsenzioneIva::get($nazione);
+        $spese_pagamento = ($pagamento == 'contrassegno') ? 9 : 0;
+        $spese_conf_reg  = array_key_exists('conf_regalo', $request->all()) ? 5 : 0;
+
+        //DATI CARRELLO (IMPORTO E QTA')
+        $carts = $this->getCarts();
+        $importo = 0;
+        $tot_qta = 0;
+        foreach($carts as $cart)
+        {
+            $importo+= ($cart->product->prezzo_vendita() * $cart->qta);
+            $tot_qta+= $cart->qta;
+        }
+
+        // SPESE SPEDIZIONE
+        $spese_spedizione = SpeseSpedizione::get($nazione, $peso_carrello, $importo);
+
+        //IMPONIBILE CARRELLO
+        $imponibile = round(($importo / 1.22), 2);
+
+        //IVA CARRELLO
+        $iva = $importo - $imponibile;
+
+        //SE ESENTE IVA LA TOLGO DALL'IMPORTO DEL CARRELLO
+        $sconto_iva = 0;
+        if($esenzione_iva == "1")
+        {
+            $sconto_iva = $iva;
+            $importo = $importo - $iva;
+        }
+
+        //SCONTO COUPON
+        $sconto_coupon = $this->getSontoCoupon($importo);
+
 
         //creo l'array DATI ORDINE
         $ordine = [];
@@ -285,7 +339,12 @@ class CartController extends Controller
             if(\Auth::check())
             {
                 $order->user_id = \Auth::user()->id;
+
             }
+            $order->spese_spedizione = Session::get('ordine')['spese_spedizione'];
+            $order->spese_conf_regalo = Session::get('ordine')['spesa_conf_regalo'];
+            $order->spese_contrassegno = Session::get('ordine')['spese_pagamento'];
+            $order->sconto = Session::get('ordine')['ammontare_sconto'];
 
             $order->sconto = $sconto_importo;
             $order->imponibile = $importo_totale;
@@ -520,6 +579,66 @@ class CartController extends Controller
         return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello')];
     }
 
+    public function redeem_coupon(Request $request)
+    {
+        $codice = $request->coupon;
+        $coupon = Coupon::where('codice',$codice)->first();
+
+        if(!$coupon)
+        {
+            return ['result' => 0,'msg'=> trans('msg.coupon_non_trovato')];
+        }
+
+        //verifico se è scaduto
+        if($coupon->valido_fino_a != '')
+        {
+            $oggi = Carbon::now('Europe/Rome');
+            $fino_a = Carbon::parse($coupon->valido_fino_a);
+
+            if($oggi->greaterThan($fino_a))
+            {
+                return ['result' => 0,'msg'=> trans('msg.coupon_scaduto')];
+            }
+        }
+
+        //verifi se non è ancora attivo
+        if($coupon->valido_da != '')
+        {
+            $oggi = Carbon::now('Europe/Rome');
+            $da = Carbon::parse($coupon->valido_da);
+            if($da->greaterThan($oggi))
+            {
+                return ['result' => 0,'msg'=> trans('msg.coupon_non_attivo')];
+            }
+        }
+
+        //se è per singolo utente controllo che sia l'utente giusto
+        if($coupon->user_id != 0)
+        {
+            //se loggato
+            if(\Auth::user())
+            {
+                //user_id diverso da quello del coupon esco
+                if(\Auth::user()->id != $coupon->user->id)
+                {
+                    return ['result' => 0,'msg'=> trans('msg.coupon_inesistente')];
+                }
+                //coupon già ustato
+                elseif($coupon->utilizzato == 1)
+                {
+                    return ['result' => 0,'msg'=> trans('msg.coupon_gia_usato')];
+                }
+            }
+            //non loggato quindi esco
+            else
+            {
+                return ['result' => 0,'msg'=> trans('msg.coupon_inesistente')];
+            }
+        }
+
+        return ['result' => 1, 'msg' => trans('msg.coupon_inserito')];
+    }
+
     private function getCarts()
     {
         if(\Auth::check())
@@ -532,6 +651,24 @@ class CartController extends Controller
             $carts = Cart::where('session_id',session()->getId())->get();
         }
         return $carts;
+    }
+
+    private function getSontoCoupon($importo)
+    {
+        $sconto_coupon = 0;
+        if(Session::get('coupon'))
+        {
+            $coupon = Session::get('coupon');
+            if($coupon['tipo_sconto'] == 'fisso')
+            {
+                $sconto_coupon = $coupon['ammontare_sconto'];
+            }
+            else
+            {
+                $sconto_coupon = ($importo * $coupon['ammontare_sconto']) / 100;
+            }
+        }
+        return $sconto_coupon;
     }
 
 

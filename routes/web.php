@@ -69,6 +69,10 @@ Route::group(['prefix' => 'cms'], function ()
         Route::resource('/newsletter_subscribers','Cms\NewsletterSubscribersController');
         Route::get('/newsletter_subscribers', 'Cms\NewsletterSubscribersController@index')->name('cms.iscritti_newsletter');
 
+        Route::resource('/coupons','Cms\CouponsController');
+        Route::get('/coupons/destroy/{id}', 'Cms\CouponsController@destroy');
+        Route::get('/coupons', 'Cms\CouponsController@index')->name('cms.coupons');
+
         Route::get('/review/switch_visibility','Cms\ReviewController@switch_visibility');
         Route::resource('/review','Cms\ReviewController');
         Route::get('/review/destroy/{id}', 'Cms\ReviewController@destroy');
@@ -215,6 +219,7 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::get('/password/reset','Website\Auth\ForgotPasswordController@showLinkRequestForm')->name('website.password.request');
 
     Route::get('/cart','Website\CartController@index');
+    Route::get('/cart/redeem_coupon', 'Website\CartController@redeem_coupon');
     Route::get('/cart/addproduct/{id}','Website\CartController@addproduct');
     Route::get('/cart/addpairing/{id}','Website\CartController@addpairing');
     Route::get('/cart/update','Website\CartController@update');

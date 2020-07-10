@@ -99,4 +99,10 @@ return[
     'procedi_col_pagamento' => 'Procedi col pagamento',
     'set_correlati' => 'Set Correlati',
     'novita_in_vetrina' => 'Novità in vetrina',
+    'coupon_non_trovato' => 'Errore! Coupon inesistente',
+    'coupon_scaduto' => 'Coupon scaduto',
+    'coupon_inserito' => 'Coupon inserito con successo!',
+    'coupon_non_attivo' => 'Coupon non valido oggi',
+    'coupon_inesistente' => 'Coupon inesistente',
+    'coupon_gia_usato' => 'Coupon già usato',
 ];

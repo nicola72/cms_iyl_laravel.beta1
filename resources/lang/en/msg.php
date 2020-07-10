@@ -99,4 +99,10 @@ return[
     'procedi_col_pagamento' => 'Proceed with the payment',
     'set_correlati' => 'Suggested combination',
     'novita_in_vetrina' => 'News item',
+    'coupon_non_trovato' => 'Error! Coupon not found',
+    'coupon_scaduto' => 'Coupon expired',
+    'coupon_inserito' => 'Coupon successfully placed!',
+    'coupon_non_attivo' => 'Coupon not valid today',
+    'coupon_inesistente' => 'Coupon does not exist',
+    'coupon_gia_usato' => 'Coupon already used',
 ];

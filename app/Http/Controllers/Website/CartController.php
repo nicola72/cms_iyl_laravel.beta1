@@ -12,6 +12,8 @@ use App\Model\Macrocategory;
 use App\Model\Material;
 use App\Model\Newsitem;
 use App\Model\Order;
+use App\Model\OrderDetail;
+use App\Model\OrderShipping;
 use App\Model\Page;
 use App\Model\Pairing;
 use App\Model\Product;
@@ -116,102 +118,91 @@ class CartController extends Controller
         ]);
 
         //raccolgo i DATI FORM
-        $nome          = $request->post('nome');
-        $cognome       = $request->post('cognome');
-        $email         = $request->post('email');
-        $indirizzo     = $request->post('indirizzo');
-        $citta         = $request->post('citta');
-        $prov          = $request->post('prov',null);
-        $cap           = $request->post('cap');
-        $tel           = $request->post('tel');
-        $data_nascita  = $request->post('data_nascita');
-        $citta_nascita = $request->post('citta_nascita');
-        $id_nazione    = $request->post('nazione');
-        $pagamento     = $request->post('pagamento');
+        $nome           = $request->post('nome');
+        $cognome        = $request->post('cognome');
+        $email          = $request->post('email');
+        $indirizzo      = $request->post('indirizzo');
+        $citta          = $request->post('citta');
+        $prov           = $request->post('prov',null);
+        $cap            = $request->post('cap');
+        $tel            = $request->post('tel');
+        $data_nascita   = $request->post('data_nascita');
+        $citta_nascita  = $request->post('citta_nascita');
+        $id_nazione     = $request->post('nazione');
+        $tipo_pagamento = $request->post('pagamento');
 
         //ALTRI DATI
         $peso_carrello   = \Session::get('preso_carrello');
         $nazione         = Country::find($id_nazione);
-        $esenzione_iva   = EsenzioneIva::get($nazione);
-        $spese_pagamento = ($pagamento == 'contrassegno') ? 9 : 0;
+        $esente_iva      = EsenzioneIva::get($nazione);
+        $spese_pagamento = ($tipo_pagamento == 'contrassegno') ? 9 : 0;
         $spese_conf_reg  = array_key_exists('conf_regalo', $request->all()) ? 5 : 0;
 
         //DATI CARRELLO (IMPORTO E QTA')
         $carts = $this->getCarts();
-        $importo = 0;
+        $lordo = 0;
         $tot_qta = 0;
         foreach($carts as $cart)
         {
-            $importo+= ($cart->product->prezzo_vendita() * $cart->qta);
+            $lordo+= ($cart->product->prezzo_vendita() * $cart->qta);
             $tot_qta+= $cart->qta;
         }
 
         // SPESE SPEDIZIONE
-        $spese_spedizione = SpeseSpedizione::get($nazione, $peso_carrello, $importo);
+        $spese_spedizione = SpeseSpedizione::get($nazione, $peso_carrello, $lordo);
 
         //IMPONIBILE CARRELLO
-        $imponibile = round(($importo / 1.22), 2);
+        $imponibile = round(($lordo / 1.22), 2);
 
         //IVA CARRELLO
-        $iva = $importo - $imponibile;
+        $iva = $lordo - $imponibile;
 
         //SE ESENTE IVA LA TOLGO DALL'IMPORTO DEL CARRELLO
-        $sconto_iva = 0;
-        if($esenzione_iva == "1")
+        if($esente_iva == "1")
         {
             $sconto_iva = $iva;
-            $importo = $importo - $iva;
+            $importo = $lordo - $iva;
+        }
+        else
+        {
+            $sconto_iva = 0;
+            $importo = $lordo;
         }
 
         //SCONTO COUPON
         $sconto_coupon = $this->getSontoCoupon($importo);
 
+        $totale = $importo - $sconto_coupon + $spese_spedizione + $spese_pagamento + $spese_conf_reg;
+        $totale = ($totale < 0) ? 0 : $totale;
 
-        //creo l'array DATI ORDINE
+        //ARRAY ORDINE da inserire nella SESSIONE
         $ordine = [];
+        $ordine['nome']             = $nome;
+        $ordine['cognome']          = $cognome;
+        $ordine['email']            = $email;
+        $ordine['indirizzo']        = $indirizzo;
+        $ordine['citta']            = $citta;
+        $ordine['prov']             = $prov;
+        $ordine['cap']              = $cap;
+        $ordine['tel']              = $tel;
+        $ordine['data_nascita']     = $data_nascita;
+        $ordine['citta_nascita']    = $citta_nascita;
+        $ordine['nazione']          = $nazione;
+        $ordine['tipo_pagamento']   = $tipo_pagamento;
+        $ordine['esente_iva']       = $esente_iva;
+        $ordine['spese_pagamento']  = $spese_pagamento;
+        $ordine['spese_conf_reg']   = $spese_conf_reg;
+        $ordine['spese_spedizione'] = $spese_spedizione;
+        $ordine['imponibile']       = $imponibile;
+        $ordine['lordo']            = $lordo;
+        $ordine['iva']              = $iva;
+        $ordine['sconto_iva']       = $sconto_iva;
+        $ordine['importo']          = $importo; //è uguale a $lordo o $lordo-$iva in base alla nazione
+        $ordine['sconto_coupon']    = $sconto_coupon;
+        $ordine['totale']           = $totale;
 
-        $ordine['nome']          = $request->post('nome');
-        $ordine['cognome']       = $request->post('cognome');
-        $ordine['email']         = $request->post('email');
-        $ordine['indirizzo']     = $request->post('indirizzo');
-        $ordine['citta']         = $request->post('citta');
-        $ordine['prov']          = $request->post('prov',null);
-        $ordine['cap']           = $request->post('cap');
-        $ordine['tel']           = $request->post('tel');
-        $ordine['data_nascita']  = $request->post('data_nascita');
-        $ordine['citta_nascita'] = $request->post('citta_nascita');
-
-
-        $country_id = $request->post('nazione');
-        $ordine['nazione'] = $country_id;
-
-        $country = Country::find($country_id);
-
-        $pagamento = $request->post('pagamento');
-        $ordine['pagamento'] = $pagamento;
-
-        $peso_carrello = \Session::get('preso_carrello');
-
-        $esenzione_iva = EsenzioneIva::get($country);
-        $ordine['esenzione_iva'] = $esenzione_iva;
-
-        $spese_pagamento = ($pagamento == 'contrassegno') ? 9 : 0;
-        $ordine['spese_pagamento'] = $spese_pagamento;
-
-        $confezione_regalo = array_key_exists('regalo', $request->all()) ? 1 : 0;
-        $ordine['confezione_regalo'] = $confezione_regalo;
-
-        $carts = $this->getCarts();
-
-        $importo_carrello = 0;
-        $importo_prodotti = 0;
-        $tot_qta = 0;
-        foreach($carts as $cart)
-        {
-            $importo_carrello+= ($cart->product->prezzo_vendita() * $cart->qta);
-            $importo_prodotti+= ($cart->product->prezzo_vendita() * $cart->qta);
-            $tot_qta+= $cart->qta;
-        }
+        //inserisco tutti i dati nella sessione
+        \Session::put('ordine',$ordine);
 
         if(\Auth::check())
         {
@@ -224,81 +215,27 @@ class CartController extends Controller
             $user_details = false;
         }
 
-        // SPESE SPEDIZIONE
-        $spese_spedizione = SpeseSpedizione::get($country, $peso_carrello,$importo_carrello);
-        $ordine['spese_spedizione'] = $spese_spedizione;
-
-        // IMPONIBILE E IMPONIBILE PIù IVA
-        $imponibile_carrello = round(($importo_carrello / 1.22), 2);
-        $ordine['imponibile'] = $imponibile_carrello;
-        $ordine['imponibile_piu_iva'] = $importo_carrello;
-
-        // IVA DEL CARRELLO
-        $iva_carrello = $importo_carrello - $imponibile_carrello;
-        $ordine['iva_carrello'] = $iva_carrello;
-
-        //SPESA PER CONF.REGALO
-        $spesa_conf_regalo = 0;
-        if($confezione_regalo)
-        {
-            $spesa_conf_regalo = 5;
-        }
-        $ordine['spesa_conf_regalo'] = $spesa_conf_regalo;
-
-        //SE ESENTE IVA LA TOLGO DALL'IMPORTO DEL CARRELLO
-        $tax_refund = 0;
-        if($esenzione_iva == "1")
-        {
-            $tax_refund = $iva_carrello;
-        }
-        $importo_carrello = $importo_carrello - $tax_refund;
-        $ordine['tax_refund'] = $tax_refund;
-
-        $ordine['importo_carrello'] = $importo_carrello;
-
-        //COUPON
-        $sconto_coupon = 0;
-        if(Session::get('coupon'))
-        {
-            $coupon = Session::get('coupon');
-            if($coupon['tipo_sconto'] == 'fisso')
-            {
-                $sconto_coupon = $coupon['ammontare_sconto'];
-            }
-            else
-            {
-                $sconto_coupon = ($importo_carrello * $coupon['ammontare_sconto']) / 100;
-            }
-        }
-        $ordine['sconto_coupon'] = $sconto_coupon;
-
-        $totale_carrello = $importo_carrello - $sconto_coupon + $spese_spedizione + $spese_pagamento + $spesa_conf_regalo;
-        $totale_carrello = ($totale_carrello < 0) ? 0 : $totale_carrello;
-
-        //inserisco tutti i dati nella sessione
-        \Session::put('ordine',$ordine);
-
         $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
 
         $params = [
-            'carts' => $carts,
-            'user' => $user,
-            'country' => $country,
-            'macrocategorie' => $macrocategorie,
-            'user_details' => $user_details,
-            'importo_carrello' => $importo_carrello,
-            'importo_prodotti' => $importo_prodotti,
-            'spese_spedizione' => $spese_spedizione,
-            'sconto_coupon' => $sconto_coupon,
-            'pagamento' => $pagamento,
-            'spese_conf_regalo' => $spesa_conf_regalo,
-            'spese_pagamento' => $spese_pagamento,
-            'esente_iva' => $esenzione_iva,
-            'tax_refund' => $tax_refund,
-            'imponibile' => $imponibile_carrello,
-            'totale_carrello' => $totale_carrello,
-            'iva_carrello' => $iva_carrello,
-            'tot_qta' => $tot_qta
+            'carts'             => $carts,
+            'user'              => $user,
+            'nazione'           => $nazione,
+            'macrocategorie'    => $macrocategorie,
+            'user_details'      => $user_details,
+            'importo'           => $importo,
+            'lordo'             => $lordo,
+            'spese_spedizione'  => $spese_spedizione,
+            'sconto_coupon'     => $sconto_coupon,
+            'tipo_pagamento'    => $tipo_pagamento,
+            'spese_conf_regalo' => $spese_conf_reg,
+            'spese_pagamento'   => $spese_pagamento,
+            'esente_iva'        => $esente_iva,
+            'sconto_iva'        => $sconto_iva,
+            'imponibile'        => $imponibile,
+            'totale'            => $totale,
+            'iva'               => $iva,
+            'tot_qta'           => $tot_qta
         ];
 
         return view('website.cart.riepilogo_ordine',$params);
@@ -306,29 +243,54 @@ class CartController extends Controller
 
     public function submit()
     {
+        $sconto_coupon     = Session::get('ordine')['sconto_coupon'];
+        $spese_conf_reg    = Session::get('ordine')['spese_conf_reg'];
+        $spese_spedizione  = Session::get('ordine')['spese_spedizione'];
+        $spese_pagamento   = Session::get('ordine')['spese_pagamento'];
+        $esente_iva        = Session::get('ordine')['esente_iva'];
+        $tipo_pagamento    = Session::get('ordine')['tipo_pagamento'];
+        $data_nascita      = Session::get('ordine')['data_nascita'];
+        $luogo_nascita     = Session::get('ordine')['citta_nascita'];
+        $nome              = Session::get('ordine')['nome'];
+        $cognome           = Session::get('ordine')['cognome'];
+        $email             = Session::get('ordine')['email'];
+        $indirizzo         = Session::get('ordine')['indirizzo'];
+        $citta             = Session::get('ordine')['citta'];
+        $prov              = Session::get('ordine')['prov'];
+        $tel               = Session::get('ordine')['tel'];
+        $cap               = Session::get('ordine')['cap'];
+        $nazione           = Session::get('ordine')['nazione'];
+
+        //DATI CARRELLO (IMPORTO E QTA')
         $carts = $this->getCarts();
-
-        $sconto_coupon = Session::get('ordine')['sconto_coupon'];
-        $spesa_conf_regalo = Session::get('ordine')['spesa_conf_regalo'];
-
-        $importo_carrello = 0;
-        $importo_prodotti = 0;
+        $lordo = 0;
         $tot_qta = 0;
         foreach($carts as $cart)
         {
-            $importo_carrello+= ($cart->product->prezzo_vendita() * $cart->qta);
-            $importo_prodotti+= ($cart->product->prezzo_vendita() * $cart->qta);
+            $lordo+= ($cart->product->prezzo_vendita() * $cart->qta);
             $tot_qta+= $cart->qta;
         }
 
-        $imponibile_carrello = round(($importo_carrello / 1.22), 2);
-        $iva_carrello = $importo_carrello - $imponibile_carrello;
+        //IMPONIBILE CARRELLO
+        $imponibile = round(($lordo / 1.22), 2);
 
-        if(Session::get('ordine')['esenzione_iva'] == 1)
+        //IVA CARRELLO
+        $iva = $lordo - $imponibile;
+
+        //SE ESENTE IVA LA TOLGO DALL'IMPORTO DEL CARRELLO
+        if($esente_iva == "1")
         {
-            $importo_carrello = $importo_carrello - $iva_carrello;
-            $iva_carrello = 0;
+            $sconto_iva = $iva;
+            $importo    = $lordo - $iva;
         }
+        else
+        {
+            $sconto_iva = 0;
+            $importo    = $lordo;
+        }
+
+        $totale = $importo - $sconto_coupon + $spese_spedizione + $spese_pagamento + $spese_conf_reg;
+        $totale = ($totale < 0) ? 0 : $totale;
 
         $config = \Config::get('website_config');
 
@@ -341,30 +303,48 @@ class CartController extends Controller
                 $order->user_id = \Auth::user()->id;
 
             }
-            $order->spese_spedizione = Session::get('ordine')['spese_spedizione'];
-            $order->spese_conf_regalo = Session::get('ordine')['spesa_conf_regalo'];
-            $order->spese_contrassegno = Session::get('ordine')['spese_pagamento'];
-            $order->sconto = Session::get('ordine')['ammontare_sconto'];
-
-            $order->sconto = $sconto_importo;
-            $order->imponibile = $importo_totale;
-            $order->iva = $iva;
-            $order->importo = $importo_totale + $iva;
+            $order->spese_spedizione   = $spese_spedizione;
+            $order->spese_conf_regalo  = $spese_conf_reg;
+            $order->spese_contrassegno = $spese_pagamento;
+            $order->sconto             = $sconto_coupon;
+            $order->modalita_pagamento = $tipo_pagamento;
+            $order->imponibile         = $imponibile;
+            $order->iva                = $iva;
+            $order->sconto_iva         = $sconto_iva;
+            $order->importo            = $importo;
+            $order->data_nascita       = Carbon::createFromFormat('d-m-Y', $data_nascita)->format('Y-m-d');
+            $order->luogo_nascita      = $luogo_nascita;
+            $order->locale             = app()->getLocale();
 
             $order->save();
 
+            //inserisco i vari prodotti in DETTAGLI ORDINE
             foreach($carts as $cart)
             {
-                $orderDetail = new ItalOrderDetail();
+                $orderDetail = new OrderDetail();
                 $orderDetail->order_id = $order->id;
                 $orderDetail->product_id = $cart->product_id;
                 $orderDetail->codice = $cart->product->codice;
                 $orderDetail->nome_prodotto = $cart->product->{'nome_'.\App::getLocale()};
                 $orderDetail->qta = $cart->qta;
-                $orderDetail->prezzo = $cart->product->prezzo_netto(\Auth::user());
-                $orderDetail->totale = $cart->product->prezzo_netto(\Auth::user()) * $cart->qta;
+                $orderDetail->prezzo = $cart->product->prezzo_vendita();
+                $orderDetail->totale = $cart->product->prezzo_vendita() * $cart->qta;
                 $orderDetail->save();
             }
+
+            //inserisco l'INDIRIZZO DI SPEDIZIONE
+            $orderShipping = new OrderShipping();
+            $orderShipping->order_id = $order->id;
+            $orderShipping->nome = $nome;
+            $orderShipping->cognome = $cognome;
+            $orderShipping->email = $email;
+            $orderShipping->telefono = $tel;
+            $orderShipping->indirizzo = $indirizzo;
+            $orderShipping->cap = $cap;
+            $orderShipping->citta = $citta;
+            $orderShipping->provincia = $prov;
+            $orderShipping->nazione = $nazione->nome_it;
+            $orderShipping->save();
         }
         catch(\Exception $e){
 
@@ -636,6 +616,9 @@ class CartController extends Controller
             }
         }
 
+        //inserisco il coupon nella SESSIONE
+        \Session::put('coupon',$coupon);
+
         return ['result' => 1, 'msg' => trans('msg.coupon_inserito')];
     }
 
@@ -659,13 +642,13 @@ class CartController extends Controller
         if(Session::get('coupon'))
         {
             $coupon = Session::get('coupon');
-            if($coupon['tipo_sconto'] == 'fisso')
+            if($coupon->tipo_sconto == 'fisso')
             {
-                $sconto_coupon = $coupon['ammontare_sconto'];
+                $sconto_coupon = $coupon->sconto;
             }
             else
             {
-                $sconto_coupon = ($importo * $coupon['ammontare_sconto']) / 100;
+                $sconto_coupon = ($importo * $coupon->sconto) / 100;
             }
         }
         return $sconto_coupon;

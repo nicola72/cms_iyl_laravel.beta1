@@ -56,17 +56,17 @@
                 <table id="resume_tbl" class="table">
                     <tr>
                         <td class="right">@lang('msg.totale_prodotti')</td>
-                        <td class="text-right">@money($importo_prodotti)</td>
+                        <td class="text-right">@money($lordo)</td>
                     </tr>
                     @if($esente_iva)
                     <tr>
                         <td>@lang('msg.rimborso_iva')</td>
-                        <td class="text-right">@money($tax_refund)</td>
+                        <td class="text-right">@money($sconto_iva)</td>
                     </tr>
                     @endif
                     <tr>
                         <td>@lang('msg.importo_carrello')</td>
-                        <td class="text-right">@money($importo_carrello)</td>
+                        <td class="text-right">@money($importo)</td>
                     </tr>
                     <tr>
                         <td>@lang('msg.spese_spedizione')</td>
@@ -84,7 +84,7 @@
                         <td class="text-right">@money($sconto_coupon)</td>
                     </tr>
                     @endif
-                    @if($pagamento == 'contrassegno')
+                    @if($tipo_pagamento == 'contrassegno')
                     <tr>
                         <td>Costo per pagamento in contrassegno</td>
                         <td class="text-right">@money($spese_pagamento)</td>
@@ -92,7 +92,7 @@
                     @endif
                     <tr>
                         <td style="font-weight:bold;font-size:120%">@lang('msg.totale')</td>
-                        <td class="text-right" style="font-weight:bold;font-size:120%">@money($totale_carrello)</td>
+                        <td class="text-right" style="font-weight:bold;font-size:120%">@money($totale)</td>
                     </tr>
                 </table>
             </div>
@@ -103,52 +103,52 @@
                 <table id="resume_user_tbl" class="table">
                     <tr>
                         <td>@lang('msg.nome')</td>
-                        <td>{{session('spedizione')['nome']}}</td>
+                        <td>{{session('ordine')['nome']}}</td>
 
                     </tr>
                     <tr>
                         <td>@lang('msg.cognome')</td>
-                        <td>{{session('spedizione')['cognome']}}</td>
+                        <td>{{session('ordine')['cognome']}}</td>
                     </tr>
                     <tr>
                         <td>Email</td>
-                        <td>{{session('spedizione')['email']}}</td>
+                        <td>{{session('ordine')['email']}}</td>
                     </tr>
                     <tr>
                         <td>@lang('msg.telefono')</td>
-                        <td>{{session('spedizione')['tel']}}</td>
+                        <td>{{session('ordine')['tel']}}</td>
                     </tr>
                     <tr>
                         <td>@lang('msg.indirizzo_di_consegna')</td>
-                        <td>{{session('spedizione')['indirizzo']}}</td>
+                        <td>{{session('ordine')['indirizzo']}}</td>
 
                     </tr>
                     <tr>
                         <td>@lang('msg.cap')</td>
-                        <td>{{session('spedizione')['cap']}}</td>
+                        <td>{{session('ordine')['cap']}}</td>
                     </tr>
                     <tr>
                         <td>@lang('msg.citta')</td>
-                        <td>{{session('spedizione')['citta']}}</td>
+                        <td>{{session('ordine')['citta']}}</td>
 
                     </tr>
                     <tr>
-                        @if($country->id == '101')
+                        @if($nazione->id == '101')
                             <td>Provincia</td>
-                            <td>{{session('spedizione')['prov']}}</td>
+                            <td>{{session('ordine')['prov']}}</td>
                         @endif
                     </tr>
                     <tr>
                         <td>@lang('msg.nazione')</td>
-                        <td>{{$country->{'nome_'.app()->getLocale()} }}</td>
+                        <td>{{$nazione->{'nome_'.app()->getLocale()} }}</td>
                     </tr>
 
                     <tr>
                         <td>@lang('msg.pagamento')</td>
                         <td>
-                            @if(session('spedizione')['pagamento'] == 'bonifico')
+                            @if(session('ordine')['tipo_pagamento'] == 'bonifico')
                                 @lang('msg.bonifico')
-                            @elseif(session('spedizione')['pagamento'] == 'paypal')
+                            @elseif(session('ordine')['tipo_pagamento'] == 'paypal')
                                 @lang('msg.carta_di_credito')
                             @else
                                 contrassegno
@@ -158,12 +158,12 @@
 
                     <tr>
                         <td>@lang('msg.data_nascita')</td>
-                        <td>{{session('spedizione')['data_nascita']}}</td>
+                        <td>{{session('ordine')['data_nascita']}}</td>
                     </tr>
 
                     <tr>
                         <td>@lang('msg.luogo_nascita')</td>
-                        <td>{{session('spedizione')['citta_nascita']}}</td>
+                        <td>{{session('ordine')['citta_nascita']}}</td>
                     </tr>
                 </table>
                 <br />

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Website;
 
 use App\Mail\Contact;
+use App\Mail\NotifyOrder;
 use App\Model\Cart;
 use App\Model\Category;
 use App\Model\Country;
@@ -92,6 +93,7 @@ class CartController extends Controller
             'countries' => $countries,
             'importo_carrello' => $importo_carrello,
             'peso_carrello' => $peso_carrello,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
         ];
 
         return view('website.cart.index',$params);
@@ -261,6 +263,7 @@ class CartController extends Controller
         $cap               = Session::get('ordine')['cap'];
         $nazione           = Session::get('ordine')['nazione'];
 
+
         //DATI CARRELLO (IMPORTO E QTA')
         $carts = $this->getCarts();
         $lordo = 0;
@@ -303,16 +306,21 @@ class CartController extends Controller
                 $order->user_id = \Auth::user()->id;
 
             }
+            else
+            {
+                $order->user_id = 0;
+            }
             $order->spese_spedizione   = $spese_spedizione;
             $order->spese_conf_regalo  = $spese_conf_reg;
             $order->spese_contrassegno = $spese_pagamento;
             $order->sconto             = $sconto_coupon;
             $order->modalita_pagamento = $tipo_pagamento;
+            $order->stato_pagamento    = 0;
             $order->imponibile         = $imponibile;
             $order->iva                = $iva;
             $order->sconto_iva         = $sconto_iva;
             $order->importo            = $importo;
-            $order->data_nascita       = Carbon::createFromFormat('d-m-Y', $data_nascita)->format('Y-m-d');
+            $order->data_nascita       = Carbon::createFromFormat('d/m/Y', $data_nascita)->format('Y-m-d');
             $order->luogo_nascita      = $luogo_nascita;
             $order->locale             = app()->getLocale();
 
@@ -345,26 +353,223 @@ class CartController extends Controller
             $orderShipping->provincia = $prov;
             $orderShipping->nazione = $nazione->nome_it;
             $orderShipping->save();
+
+            //eventualmente segno come utilizzato il Coupon
+            if($sconto_coupon != 0)
+            {
+                $coupon = Session::get('coupon');
+                if($coupon && $coupon->user_id != 0)
+                {
+                    $coupon = Coupon::where('user_id',$coupon->user_id)->where('codice',$coupon->codice)->first();
+                    if($coupon)
+                    {
+                        $coupon->utilizzato = 1;
+                        $coupon->data_utilizzo = Carbon::now('Europe/Rome');
+                        $coupon->save();
+
+                    }
+                }
+            }
+
         }
         catch(\Exception $e){
 
             if($config['in_sviluppo'])
             {
-                return back()->with('error',$e->getMessage());
+                Session::flash('error',$e->getMessage());
+                return redirect(url(app()->getLocale().'/cart'));
             }
-            return back()->with('error',trans('msg.errore_evasione_ordine'));
+            Session::flash('error',trans('msg.errore_evasione_ordine'));
+            return redirect(url(app()->getLocale().'/cart'));
         }
 
-        //Pagamento PAYPAL
-        if(Session::get('ordine')['pagamento'] == 'paypal')
+        //PAYPAL
+        if(Session::get('ordine')['tipo_pagamento'] == 'paypal')
         {
-            //1) Inserimento nella table tb_ordini
+            //Svuoto il carrello
+            foreach ($carts as $cart)
+            {
+                $cart->delete();
+            }
 
+            //Cancello tutte le variabili di sessione legate al carrello
+            Session::forget('ordine');
+
+            if($config['in_sviluppo'])
+            {
+                $email_business = 'paypal@inyourlife.info';
+                $url_paypal = 'https://sandbox.paypal.com/cgi-bin/webscr';
+            }
+            else
+            {
+                $email_business = $config['email_paypal'];
+                $url_paypal = 'https://www.paypal.com/cgi-bin/webscr';
+            }
+
+            //creo l'array dei dati per la query string di paypal
+            $data = [];
+            $data['cmd']           = '_xclick';
+            $data['no_note']       = 0;
+            $data['lc']            = 'IT';
+            $data['custom']        = $order->id;
+            $data['business']      = $email_business;
+            $data['item_name']     = "Ordine Numero " . $order->id;
+            $data['amount']        = $order->importo;
+            $data['rm']            = 2;
+            $data['currency_code'] = 'EUR';
+            $data['first_name']    = $order->orderShipping->nome;
+            $data['last_name']     = $order->orderShipping->cognome;
+            $data['payer_email']   = $order->orderShipping->email;
+            $data['return']        = url(app()->getLocale().'/cart/checkout_result',['id'=>encrypt($order->id)]);
+            $data['cancel_return'] = url(app()->getLocale().'/cart/paypal_error',['id'=>encrypt($order->id)]);
+            $data['notify_url']    = url(app()->getLocale().'/cart/paypal_notify');//mettere questa url nelle eccezioni del middleware VerifyCsrfToken
+
+            $queryString = http_build_query($data);
+
+            $url = $url_paypal . "?" . $queryString;
+            return redirect()->to($url);
+
+        }
+        //BONIFICO E CONTRASSEGNO
+        else
+        {
+            //invio email al cliente
+            $to = $order->orderShipping->email;
+            $mail = new \App\Mail\Order($order);
+
+            try{
+                \Mail::to($to)->send($mail);
+            }
+            catch(\Exception $e)
+            {
+                \Log::error($e->getMessage());
+                Session::flash('error',trans('msg.impossibile_inviare_email_evasione'));
+
+            }
+
+            //invio email a chess-store
+            $to = ($config['in_sviluppo']) ? $config['email_debug'] : $config['email'];
+            $mail = new NotifyOrder($order);
+            try{
+                \Mail::to($to)->send($mail);
+            }
+            catch(\Exception $e)
+            {
+                \Log::error($e->getMessage());
+            }
+
+
+            //Svuoto il carrello
+            foreach ($carts as $cart)
+            {
+                $cart->delete();
+            }
+
+            //Cancello tutte le variabili di sessione legate al carrello
+            Session::forget('ordine');
+
+            //REINDIRIZZAMENTOALLA PAGINA DI CONFERMA
+            return redirect(url(app()->getLocale().'/cart/checkout_result',['id'=>encrypt($order->id)]));
+
+        }
+    }
+
+    public function paypal_notify(Request $request)
+    {
+        //verifico che la transazione sia andata a buon fine
+        if($this->verifica_transazione())
+        {
+            $id_ordine = $request->post('custom');
+            $id_transazione = $request->post('txn_id');
+
+            //aggiorno l'ordine nel db con l'id di transazione paypal e stato pagamento su 1
+            try{
+                $order = Order::find($id_ordine);
+                $order->stato_pagamento = 1;
+                $order->idtranspag = $id_transazione;
+                $order->save();
+            }
+            catch(\Exception $e){
+
+                \Log::error('fallita notifica paypal impossibile aggiornare l\'ordine '.$e->getMessage() );
+                return;
+            }
+
+            //invio email al cliente
+            $to = $order->orderShipping->email;
+            $mail = new \App\Mail\Order($order);
+
+            try{
+                \Mail::to($to)->send($mail);
+            }
+            catch(\Exception $e)
+            {
+                \Log::error($e->getMessage());
+                Session::flash('error',trans('msg.impossibile_inviare_email_evasione'));
+
+            }
+
+            //invio email a chess-store
+            $config = \Config::get('website_config');
+            $to = ($config['in_sviluppo']) ? $config['email_debug'] : $config['email'];
+            $mail = new NotifyOrder($order);
+            try{
+                \Mail::to($to)->send($mail);
+            }
+            catch(\Exception $e)
+            {
+                \Log::error($e->getMessage());
+            }
         }
         else
         {
-
+            \Log::error('fallito verifica transazione paypal ' );
         }
+
+        return;
+    }
+
+    public function paypal_error()
+    {
+        //le macro servono per il menu
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'macrocategorie' => $macrocategorie,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+
+        return view('website.cart.paypal_error',$params);
+    }
+
+    public function checkout_result(Request $request)
+    {
+        $error = false;
+        $id = $request->id;
+        if(!$id)
+        {
+            return redirect('/');
+        }
+        $order_id = decrypt($id);
+        $order = Order::find($order_id);
+        if(!$order)
+        {
+            Session::flash('error',trans('msg.ordine_non_trovato'));
+            $error = true;
+        }
+
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'order' => $order,
+            'error' => $error,
+            'carts' => $this->getCarts(),
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.cart.checkout_result',$params);
     }
 
     public function update(Request $request)
@@ -654,5 +859,62 @@ class CartController extends Controller
         return $sconto_coupon;
     }
 
+    protected function verifica_transazione()
+    {
+        $req = 'cmd=_notify-validate';
+        foreach ($_POST as $key => $value)
+        {
+            $value = urlencode(stripslashes($value));
+            $value = preg_replace('/(.*[^%^0^D])(%0A)(.*)/i', '${1}%0D%0A${3}', $value); // IPN fix
+            $req .= "&$key=$value";
+        }
+
+        $config = \Config::get('website_config');
+
+        //ATTENZIONE la chiamata curl in sandbox non funziona in quanto da errore https, quindi in fase di sviluppo evitare la verifica curl
+        if($config['in_sviluppo'])
+        {
+            $url_paypal = 'https://sandbox.paypal.com/cgi-bin/webscr';
+        }
+        else
+        {
+            $url_paypal = 'https://www.paypal.com/cgi-bin/webscr';
+        }
+
+        $ch = curl_init($url_paypal);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 6);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+        $res = curl_exec($ch);
+
+        if (!$res)
+        {
+            $errstr = curl_error($ch);
+            curl_close($ch);
+            \Log::error('fallita verifica transazione paypal '.$errstr );
+            return false;
+        }
+
+        $info = curl_getinfo($ch);
+
+        // Check the http response
+        $httpCode = $info['http_code'];
+        if ($httpCode != 200)
+        {
+            \Log::error('fallita verifica transazione paypal PayPal responded with http cod '.$httpCode );
+            return false;
+        }
+
+        curl_close($ch);
+
+        return true;
+    }
 
 }

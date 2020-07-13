@@ -12,14 +12,14 @@
                 <div class="row header-page">
                     <div class="col-xs-6">
                         <div class="page-title">
-                            <h2 class="fjalla">Login</h2>
+                            <h2 class="fjalla">@lang('msg.recupera_password')</h2>
                         </div>
                     </div>
 
                     <div class="col-xs-6">
                         <ol class="breadcrumb pull-right">
                             <li><a href="/">Home</a></li>
-                            <li><a href="#" id="name_category">Login</a></li>
+                            <li><a href="#" id="name_category">@lang('msg.recupera_password')</a></li>
                         </ol>
                     </div>
                 </div>
@@ -27,33 +27,12 @@
 
                 <div class="row" style="padding-top:40px;padding-bottom:40px;">
 
-                    <!-- FORM LOGIN -->
+                    <!-- FORM RECUPERA PASSWORD -->
                     <div class="col-md-6">
                         <div class="row" style="padding-left:10px;padding-right:10px;">
                             <div class="col-md-12">
-                                <div class="page-header">
-                                    <h3  class="fjalla" style="color:#840025;">@lang('msg.sei_gia_iscritto')</h3>
-                                </div>
-                                @include('website.form.form_login')
+                                @include('website.form.form_rec_password')
                                 <br />
-                                <p>
-                                    <a style="font-size:120%; font-weight:bold; color:#840025" href="{{url(app()->getLocale().'/retriew_password')}}">
-                                        @lang('msg.recupera_password')
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- -->
-
-                    <!-- FORM REGISTRAZIONE -->
-                    <div class="col-md-6">
-                        <div class="row" style="padding-left:10px;padding-right:10px;">
-                            <div class="col-md-12">
-                                <div class="page-header">
-                                    <h3  class="fjalla" style="color:#840025;">@lang('msg.crea_un_account')</h3>
-                                </div>
-                                @include('website.form.form_registrazione')
                             </div>
                         </div>
                     </div>

@@ -176,9 +176,10 @@
                 </a>
             </div>
             <div class="col-md-6 text-right">
-                <form method="post" action="{{url(app()->getLocale().'/cart/submit')}}" id="checkoutForm">
+                <form id="checkoutForm" method="post" action="{{url(app()->getLocale().'/cart/submit')}}" >
                     {{ csrf_field() }}
-                    <input type="button" class="btn btn-default" onclick="$('#checkoutForm').submit();" value="@lang('msg.procedi_col_pagamento')">
+                    <input type="hidden" name="lang" id="lang" value="{{app()->getLocale()}}" />
+                    <input type="submit" class="btn btn-default" value="@lang('msg.procedi_col_pagamento')">
                 </form>
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Website\Auth;
 
+use App\Model\Cart;
 use App\Model\Domain;
 use App\Model\Macrocategory;
 use App\Model\Page;
@@ -45,6 +46,7 @@ class LoginController extends Controller
 
         $params = [
             'macrocategorie' => $macrocategorie,
+            'carts' => Cart::where('session_id',session()->getId())->get(),
             'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
             'form_login' => 'form_login',
             'form_registrazione' => 'form_registrazione',

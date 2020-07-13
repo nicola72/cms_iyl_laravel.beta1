@@ -26,12 +26,12 @@
                 ignore: [],
                 event: 'blur',
                 rules: {
-                username:{ required: true },
-                pass:{ required: true},
+                email:{ required: true },
+                password:{ required: true},
             },
                 messages: {
-                username:{ required: "@lang('msg.obbligatorio')" },
-                pass:{ required: "@lang('msg.obbligatorio')" },
+                email:{ required: "@lang('msg.obbligatorio')" },
+                password:{ required: "@lang('msg.obbligatorio')" },
 
             },
             submitHandler: function(form)
@@ -51,7 +51,7 @@
                             location.assign(data.url);
                         }
 
-                        $('#login_msg').html(data.msg);
+                        //$('#login_msg').html(data.msg);
 
                     },
                     error: function(data)

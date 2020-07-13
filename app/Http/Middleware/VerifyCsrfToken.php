@@ -19,6 +19,9 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        'it/cart/paypal_notify',
+        'en/cart/paypal_notify',
+        'it/clear_cookies',
+        'en/clear_cookies'
     ];
 }

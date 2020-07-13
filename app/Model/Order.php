@@ -8,6 +8,8 @@ class Order extends Model
     //decommentare per fare sincronizzazione
     //public $timestamps = false;
 
+    protected $dates = ['data_nascita'];
+
     protected $fillable = [
         'id',
         'user_id',

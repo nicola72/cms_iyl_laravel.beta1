@@ -214,9 +214,9 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::get('/login', 'Website\Auth\LoginController@showLoginAndRegisterForm')->name('website.login');
     Route::post('/login','Website\Auth\LoginController@login')->name('website.login');
     Route::get('/logout', 'Website\Auth\LoginController@logout')->name('website.logout');
-    Route::get('/register','Website\Auth\RegisterController@showRegistrationForm')->name('website.register');
     Route::post('/register','Website\Auth\RegisterController@register');
-    Route::get('/password/reset','Website\Auth\ForgotPasswordController@showLinkRequestForm')->name('website.password.request');
+    Route::get('/retriew_password','Website\Auth\RegisterController@showRetriewPasswordForm');
+    Route::post('/retriew_password','Website\Auth\RegisterController@retriew_password');
 
     Route::get('/cart','Website\CartController@index');
     Route::get('/cart/redeem_coupon', 'Website\CartController@redeem_coupon');
@@ -226,7 +226,11 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::get('/cart/destroy/{id}','Website\CartController@destroy');
     Route::post('/cart/resume','Website\CartController@resume')->name('riepilogo_ordine');
     Route::post('/cart/submit','Website\CartController@submit');
+    Route::get('/cart/checkout_result/{id}','Website\CartController@checkout_result');
+    Route::post('/cart/paypal_notify','Website\CartController@paypal_notify');
+    Route::get('/cart/paypal_error','Website\CartController@paypal_error');
 
+    Route::post('/clear_cookies', 'Website\PageController@clear_cookies');
     Route::post('/invia_formcontatti','Website\PageController@invia_formcontatti')->name('invia_formcontatti');
     Route::get('/{slug}','Website\PageController@page');
 

@@ -128,6 +128,35 @@ function couponRedeem(url) {
     });
 }
 
+function addToWishList(url) {
+    $.ajax({
+        url: url,
+        dataType: "json",
+        type: "get",
+        success: function (data) {
+            $(".modal-alert-title").html('WISHLIST');
+            $("#modal-alert-msg").html(data.msg);
+            $('#alert_modal').fadeIn();
+            return;
+        }
+    });
+}
+
+function addAbbinamentoToWishList(id_abbinamento, lang) {
+    $.ajax({
+        url: "/_ext/ajax/ajax_site.php",
+        data: "action=addAbbinamentoToWishList&id_abbinamento=" + id_abbinamento + "&lang=" + lang,
+        dataType: "json",
+        type: "get",
+        success: function (data) {
+            $(".modal-title").html('WISHLIST');
+            $("#ajax-test").html(data.msg);
+            $('#myModal').fadeIn();
+            return;
+        }
+    });
+}
+
 /*
 
 
@@ -173,35 +202,7 @@ function deleteItemFromCart(id_carrello, lang) {
     });
 }
 
-function addToWishList(id_prodotto, lang) {
-    $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=addToWishList&id_prodotto=" + id_prodotto + "&lang=" + lang,
-        dataType: "json",
-        type: "get",
-        success: function (data) {
-            $(".modal-title").html('WISHLIST');
-            $("#ajax-test").html(data.msg);
-            $('#myModal').fadeIn();
-            return;
-        }
-    });
-}
 
-function addAbbinamentoToWishList(id_abbinamento, lang) {
-    $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=addAbbinamentoToWishList&id_abbinamento=" + id_abbinamento + "&lang=" + lang,
-        dataType: "json",
-        type: "get",
-        success: function (data) {
-            $(".modal-title").html('WISHLIST');
-            $("#ajax-test").html(data.msg);
-            $('#myModal').fadeIn();
-            return;
-        }
-    });
-}
 
 function deleteFromWishList(id_prodotto, lang) {
     $.ajax({

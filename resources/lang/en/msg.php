@@ -7,6 +7,8 @@ return[
     'logout' => 'logout',
     'mio_account' => 'my account',
     'miei_ordini' => 'my orders',
+    'cookie_banner_msg_1' => 'This site uses cookies to improve the browsing experience (read ',
+    'cookie_banner_msg_2' => 'If you continue browsing, you agree to use our cookies ',
     'carrello' => 'Cart',
     'carrello_1' => 'Products in your shopping cart',
     'carrello_2' => 'No products in your shopping cart',

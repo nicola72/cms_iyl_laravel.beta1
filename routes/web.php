@@ -230,6 +230,7 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::post('/cart/paypal_notify','Website\CartController@paypal_notify');
     Route::get('/cart/paypal_error','Website\CartController@paypal_error');
 
+    Route::get('/wishlist/addproduct/{id}','Website\PageController@wishlist_addproduct');
     Route::post('/clear_cookies', 'Website\PageController@clear_cookies');
     Route::post('/invia_formcontatti','Website\PageController@invia_formcontatti')->name('invia_formcontatti');
     Route::get('/{slug}','Website\PageController@page');

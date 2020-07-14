@@ -612,6 +612,18 @@ class PageController extends Controller
         return view('website.page.recensioni',$params);
     }
 
+    protected function wishlist()
+    {
+        echo 'ciao';
+        exit();
+    }
+
+    protected function wishlist_addproduct(Request $request)
+    {
+        echo 'ciao';
+        exit();
+    }
+
     public function invia_formcontatti(Request $request)
     {
         $data = $request->post();

@@ -65,6 +65,15 @@
 
         @include('layouts.website_section')
         @include('layouts.website_footer')
+
+        <!-- MODALE PER ALERT JAVASCRIPT -->
+        @include('layouts.website_alert-message')
+        <!-- FINE MODALE -->
+
+        <!-- BANNER COOKIES -->
+        @include('layouts.website_cookie_banner')
+        <!-- -->
+
         <!-- MODALE -->
         <div id="myModal" class="modal fade" role="dialog"></div>
         <!-- FINE MODALE -->

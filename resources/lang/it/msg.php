@@ -7,6 +7,8 @@ return[
     'logout' => 'logout',
     'mio_account' => 'mio account',
     'miei_ordini' => 'i miei ordini',
+    'cookie_banner_msg_1' => 'Questo sito utilizza cookies per migliorare l\'esperienza di navigazione (vedi ',
+    'cookie_banner_msg_2' => 'Continuando la navigazione, accetti l\'utilizzo dei cookies ',
     'carrello' => 'Carrello',
     'carrello_1' => 'Prodotti nel tuo carrello',
     'carrello_2' => 'Non ci sono prodotti nel tuo carrello',

@@ -11,16 +11,7 @@
             <div class="col-md-4" style="margin-bottom: 30px;">
                 <div class="newsletter clearfix">
                     <h4>@lang('msg.iscriviti_alla_newsletter')</h4>
-                    <form id="newsletter_form" method="get" action="" onsubmit="addToNewsletter('{{app()->getLocale()}}')">
-                        <div class="input-group">
-
-                            <input name="news_email" id="news_email" type="text" class="form-control"	placeholder="inserisci la tua email" aria-describedby="basic-addon2">
-                            <a href="javascript:void(0)" class="input-group-addon" id="basic-addon2" onclick="addToNewsletter('{{app()->getLocale()}}')">
-                                @lang('msg.invia') <i class="fa fa-arrow-circle-right"></i>
-                            </a>
-
-                        </div>
-                    </form>
+                    @include('website.form.form_isc_newsletter')
                 </div>
             </div>
         </div>

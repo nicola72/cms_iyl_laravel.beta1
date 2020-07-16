@@ -53,6 +53,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'cms.isauth' => \App\Http\Middleware\Cms\IsAuth::class,
         'cms.isipauth' => \App\Http\Middleware\Cms\IsIpAuth::class,
+        'cms.guest' => \App\Http\Middleware\Cms\RedirectIfAuthenticated::class,
         'website.isauth' => \App\Http\Middleware\Website\IsAuth::class,
         'setlocale' => \App\Http\Middleware\Website\SetLocale::class,
 

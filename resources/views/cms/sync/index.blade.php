@@ -83,7 +83,7 @@
                                 <em>Di tutte le immagini crea le thumb big e small</em>
                                 <br>
                                 <a href="{{url('cms/sync/create_thumbs')}}" class="btn btn-w-m btn-primary">
-                                    Crea le thumb
+                                    Crea le thumb Prodotti
                                 </a>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                                 <em>Crea le watermark italfama delle immagini da configurare nella funzione</em>
                                 <br>
                                 <a href="{{url('cms/sync/create_watermarks')}}" class="btn btn-w-m btn-primary">
-                                    Crea le watermark Italfama
+                                    Crea le watermark Italfama Prodotti
                                 </a>
                             </div>
                         </div>
@@ -101,7 +101,35 @@
                                 <em>Crea le watermark chess delle immagini da configurare nella funzione</em>
                                 <br>
                                 <a href="{{url('cms/sync/create_watermarks_ital')}}" class="btn btn-w-m btn-primary">
-                                    Crea le watermark Chess
+                                    Crea le watermark Chess Prodotti
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Di tutte le immagini crea le thumb big e small</em>
+                                <br>
+                                <a href="{{url('cms/sync/create_thumbs_abbinamenti')}}" class="btn btn-w-m btn-primary">
+                                    Crea le thumb Abbinamenti
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Crea le watermark italfama delle immagini da configurare nella funzione</em>
+                                <br>
+                                <a href="{{url('cms/sync/create_watermarks_abbinamenti')}}" class="btn btn-w-m btn-primary">
+                                    Crea le watermark Italfama Abbinamenti
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="col-md-12">
+                                <em>Crea le watermark chess delle immagini da configurare nella funzione</em>
+                                <br>
+                                <a href="{{url('cms/sync/create_watermarks_ital_abbinamenti')}}" class="btn btn-w-m btn-primary">
+                                    Crea le watermark Chess Abbinamenti
                                 </a>
                             </div>
                         </div>

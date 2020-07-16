@@ -127,4 +127,12 @@ return[
     'conferma_registrazione' => 'Confirmation from www.chess-store.org',
     'email_non_registrata' => 'Error! This email is not registered.',
     'ricevera_un_email_con_la_password' => 'Success! You will shortly receive an email with your password!',
+    'per_poter_usufruire_della_wishlist_devi_effettuare_il_login' => 'To take advantage of this functionality of the site you need to log',
+    'nessun_prodotto_in_wishlist' => 'No products in your wishlist',
+    'impossibile_eseguire_operazione' => 'Error! Unable to perform the operation',
+    'aggiunto_alla_lista_dei_desideri' => 'Product was successfully added to your whislist!',
+    'prodotto_gia_presente_nella_lista_dei_desideri' => 'Product already on the wish list',
+    'prodotto_eliminato_dalla_tua_lista_desideri' => 'Success! Product removed from the wish list',
+    'questa_email_risulta_essere_gia_iscritta' => 'This email is already registered.',
+    'iscrizione_avvenuta_con_successo' => 'Registration successful',
 ];

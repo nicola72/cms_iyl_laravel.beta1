@@ -838,6 +838,16 @@ class CartController extends Controller
         {
             $carts = Cart::where('session_id',session()->getId())->get();
         }
+
+        //rimuovo i prodotti che eventualmente non esistono più
+        foreach($carts as $key=>$cart)
+        {
+            if(!$cart->product)
+            {
+                $cart->delete();
+                $carts->forget($key);
+            }
+        }
         return $carts;
     }
 

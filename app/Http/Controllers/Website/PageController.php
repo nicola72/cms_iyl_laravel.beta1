@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website;
 
 use App\Mail\Contact;
+use App\Mail\RetriewPassword;
 use App\Model\Cart;
 use App\Model\Category;
 use App\Model\Domain;
@@ -10,6 +11,7 @@ use App\Model\File;
 use App\Model\Macrocategory;
 use App\Model\Material;
 use App\Model\Newsitem;
+use App\Model\NewsletterSubscriber;
 use App\Model\Page;
 use App\Model\Pairing;
 use App\Model\Product;
@@ -17,6 +19,8 @@ use App\Model\Review;
 use App\Model\Seo;
 use App\Model\Slider;
 use App\Model\Style;
+use App\Model\Website\UserDetail;
+use App\Model\Wish;
 use Illuminate\Http\Request;
 use App\Model\Url;
 use App\Http\Controllers\Controller;
@@ -612,16 +616,205 @@ class PageController extends Controller
         return view('website.page.recensioni',$params);
     }
 
-    protected function wishlist()
+    protected function wishlist(Request $request,$url)
     {
-        echo 'ciao';
-        exit();
+        //l'utente deve essere loggato altrimenti vedrà un messaggio di alert
+        if(\Auth::check())
+        {
+            $user = \Auth::getUser();
+            $wishes = Wish::where('user_id',$user->id)->get();
+        }
+        else
+        {
+            $wishes = false;
+        }
+
+        $seo = $url->seo;
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $products = [];
+        if(count($wishes) > 0)
+        {
+            foreach($wishes as $wish)
+            {
+                if($wish->product)
+                {
+                    $products[] = $wish->product;
+                }
+            }
+        }
+
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'wishes' => $wishes,
+            'products' => $products,
+            'macrocategorie' => $macrocategorie,
+            'titolo' => 'Wishlist',
+            'is_wishlist' => true, //serve per far comparire i pulsanti rimuovi dalla wishlist e aggiungi al carrello nel box prodotto
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.page.wishlist',$params);
+    }
+
+    protected function wishlist_addpairing(Request $request)
+    {
+        $pairing_id = $request->id;
+
+        //se non è loggato esco
+        if(!\Auth::check())
+        {
+            return ['result' => 0, 'msg' => trans('msg.per_poter_usufruire_della_wishlist_devi_effettuare_il_login')];
+        }
+
+        $user = \Auth::getUser();
+
+        $pairing = Pairing::find($pairing_id);
+        if(!$pairing)
+        {
+            return ['result' => 0, 'msg' => trans('msg.prodotto_non_piu_disponibile')];
+        }
+
+        $product1 = $pairing->product1;
+        $product2 = $pairing->product2;
+
+        //controllo che non sia già presente nella lista dei desideri il prodotto 1
+        $old_wish1 = Wish::where('user_id',$user->id)->where('product_id',$product1->id)->first();
+        //controllo che non sia già presente nella lista dei desideri il prodotto 2
+        $old_wish2 = Wish::where('user_id',$user->id)->where('product_id',$product2->id)->first();
+
+        //se sono già presenti entrambi
+        if($old_wish1 && $old_wish2)
+        {
+            return ['result' => 0, 'msg' => trans('msg.prodotto_gia_presente_nella_lista_dei_desideri')];
+        }
+
+        //se non è già presente il prodotto 1 lo inserisco
+        if(!$old_wish1)
+        {
+            try{
+                $wish = new Wish();
+                $wish->product_id = $product1->id;
+                $wish->user_id = $user->id;
+                $wish->save();
+            }
+            catch(\Exception $e)
+            {
+                \Log::error($e->getMessage());
+                return ['result' => 0, 'msg' => trans('msg.impossibile_eseguire_operazione')];
+
+            }
+        }
+
+        //se non è già presente il prodotto 2 lo inserisco
+        if(!$old_wish2)
+        {
+            try{
+                $wish = new Wish();
+                $wish->product_id = $product2->id;
+                $wish->user_id = $user->id;
+                $wish->save();
+            }
+            catch(\Exception $e)
+            {
+                \Log::error($e->getMessage());
+                return ['result' => 0, 'msg' => trans('msg.impossibile_eseguire_operazione')];
+
+            }
+        }
+
+        return ['result' => 1, 'msg' => trans('msg.aggiunto_alla_lista_dei_desideri')];
+
+
     }
 
     protected function wishlist_addproduct(Request $request)
     {
-        echo 'ciao';
-        exit();
+        $product_id = $request->id;
+
+        //se non è loggato esco
+        if(!\Auth::check())
+        {
+            return ['result' => 0, 'msg' => trans('msg.per_poter_usufruire_della_wishlist_devi_effettuare_il_login')];
+        }
+
+        $user = \Auth::getUser();
+
+        $product = Product::find($product_id);
+        if(!$product)
+        {
+            return ['result' => 0, 'msg' => trans('msg.prodotto_non_piu_disponibile')];
+        }
+
+        //controllo che non sia già presente nella lista dei desideri
+        $old_wish = Wish::where('user_id',$user->id)->where('product_id',$product->id)->first();
+        if($old_wish)
+        {
+            return ['result' => 0, 'msg' => trans('msg.prodotto_gia_presente_nella_lista_dei_desideri')];
+        }
+
+        try{
+            $wish = new Wish();
+            $wish->product_id = $product->id;
+            $wish->user_id = $user->id;
+            $wish->save();
+
+            return ['result' => 1, 'msg' => trans('msg.aggiunto_alla_lista_dei_desideri')];
+        }
+        catch(\Exception $e)
+        {
+            \Log::error($e->getMessage());
+            return ['result' => 0, 'msg' => trans('msg.impossibile_eseguire_operazione')];
+
+        }
+    }
+
+    protected function wishlist_delete(Request $request)
+    {
+        //se non è loggato esco
+        if(!\Auth::check())
+        {
+            return ['result' => 0, 'msg' => trans('msg.per_poter_usufruire_della_wishlist_devi_effettuare_il_login')];
+        }
+
+        $product_id = $request->id;
+        $wish = Wish::where('user_id',\Auth::user()->id)->where('product_id',$product_id)->first();
+
+        $wish->delete();
+
+        return ['result' => 0, 'msg' => trans('msg.prodotto_eliminato_dalla_tua_lista_desideri')];
+    }
+
+    public function add_to_newsletter(Request $request)
+    {
+        $request->validate([
+            'news_email'    => 'required|email'
+        ]);
+
+        $email = $request->news_email;
+
+        //vedo se già iscritto
+        $old_email = NewsletterSubscriber::where('email',$email)->first();
+        if($old_email)
+        {
+            return back()->with('error',trans('msg.questa_email_risulta_essere_gia_iscritta'));
+        }
+
+        try{
+            $iscriber = new NewsletterSubscriber();
+            $iscriber->email = $email;
+            $iscriber->lang = \App::getLocale();
+            $iscriber->save();
+        }
+        catch(\Exception $e)
+        {
+            return back()->with('error',trans('msg.errore'));
+        }
+
+        return back()->with('success',trans('msg.iscrizione_avvenuta_con_successo'));
+
     }
 
     public function invia_formcontatti(Request $request)
@@ -925,6 +1118,16 @@ class PageController extends Controller
         else
         {
             $carts = Cart::where('session_id',session()->getId())->get();
+        }
+
+        //rimuovo i prodotti che eventualmente non esistono più
+        foreach($carts as $key=>$cart)
+        {
+            if(!$cart->product)
+            {
+                $cart->delete();
+                $carts->forget($key);
+            }
         }
         return $carts;
     }

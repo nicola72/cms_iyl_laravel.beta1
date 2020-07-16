@@ -136,51 +136,33 @@ function addToWishList(url) {
         success: function (data) {
             $(".modal-alert-title").html('WISHLIST');
             $("#modal-alert-msg").html(data.msg);
-            $('#alert_modal').fadeIn();
+            $('#alert_modal').modal();
             return;
         }
     });
 }
 
-function addAbbinamentoToWishList(id_abbinamento, lang) {
+function deleteFromWishList(url) {
+
     $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=addAbbinamentoToWishList&id_abbinamento=" + id_abbinamento + "&lang=" + lang,
+        url: url,
         dataType: "json",
         type: "get",
         success: function (data) {
-            $(".modal-title").html('WISHLIST');
-            $("#ajax-test").html(data.msg);
-            $('#myModal').fadeIn();
+            $(".modal-alert-title").html('WISHLIST');
+            $("#modal-alert-msg").html(data.msg);
+            $('#alert_modal').modal();
+            location.reload();
             return;
         }
     });
-}
 
+}
 /*
 
 
 
-function addToNewsletter(lang) {
-    var email = $("input[name='news_email']").val();
-    $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=addToNewsletter&email=" + email + "&lang=" + lang,
-        dataType: "json",
-        type: "get",
-        success: function (data) {
-            if (data.msg != 'success') {
-                $(".modal-title").html('');
-                $("#ajax-test").html(data.msg);
-                $('#myModal').fadeIn();
-                return;
-            } else {
-                location.reload();
-                return;
-            }
-        }
-    });
-}
+
 
 function deleteItemFromCart(id_carrello, lang) {
     $.ajax({
@@ -204,18 +186,7 @@ function deleteItemFromCart(id_carrello, lang) {
 
 
 
-function deleteFromWishList(id_prodotto, lang) {
-    $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=deleteFromWishList&id_prodotto=" + id_prodotto + "&lang=" + lang,
-        dataType: "json",
-        type: "get",
-        success: function (data) {
-            location.reload();
-            return;
-        }
-    });
-}
+
 
 function addToCart(id_prodotto, lang, is_accessorio) {
     if (typeof (is_accessorio) === 'undefined') is_accessorio = 'false';

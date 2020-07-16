@@ -27,6 +27,7 @@ Route::group(['prefix' => 'cms'], function ()
         Route::post('/settings/store_config_module','Cms\SettingsController@store_config_module');
         Route::post('/settings/update_config_module/{id}','Cms\SettingsController@update_config_module');
         Route::post('/settings/store_copy_config_module','Cms\SettingsController@store_copy_config_module');
+        Route::get('/settings/create_user_pannello','Cms\SettingsController@create_user_pannello');
 
         Route::get('/sync', 'Cms\SyncController@index')->name('cms.sync');
         Route::get('/sync/sync_orders','Cms\SyncController@sync_orders');
@@ -46,6 +47,10 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/sync/create_thumbs/{page?}','Cms\SyncController@create_thumbs');
         Route::get('/sync/create_watermarks/{page?}','Cms\SyncController@create_watermarks');
         Route::get('/sync/create_watermarks_ital/{page?}','Cms\SyncController@create_watermarks_ital');
+        Route::get('/sync/create_thumbs_abbinamenti/{page?}','Cms\SyncController@create_thumbs_abbinamenti');
+        Route::get('/sync/create_watermarks_abbinamenti/{page?}','Cms\SyncController@create_watermarks_abbinamenti');
+        Route::get('/sync/create_watermarks_ital_abbinamenti/{page?}','Cms\SyncController@create_watermarks_ital_abbinamenti');
+
 
 
         Route::get('/seo/switch_homepage','Cms\SeoController@switch_homepage');
@@ -197,6 +202,7 @@ Route::group(['prefix' => 'cms'], function ()
 
     Route::get('/login', 'Cms\Auth\LoginController@showLoginForm')->name('cms.login');
     Route::post('/login','Cms\Auth\LoginController@login')->name('cms.login');
+    Route::get('/auto_login', 'Cms\Auth\LoginController@auto_login');
     Route::get('/logout', 'Cms\Auth\LoginController@logout')->name('cms.logout');
     Route::get('/register','Cms\Auth\RegisterController@showRegistrationForm')->name('cms.register');
     Route::post('/register','Cms\Auth\RegisterController@register');
@@ -230,7 +236,10 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::post('/cart/paypal_notify','Website\CartController@paypal_notify');
     Route::get('/cart/paypal_error','Website\CartController@paypal_error');
 
-    Route::get('/wishlist/addproduct/{id}','Website\PageController@wishlist_addproduct');
+    Route::post('/add_to_newsletter','Website\PageController@add_to_newsletter');
+    Route::get('/wishlist_delete/{id}','Website\PageController@wishlist_delete');
+    Route::get('/wishlist_addpairing/{id}','Website\PageController@wishlist_addpairing');
+    Route::get('/wishlist_addproduct/{id}','Website\PageController@wishlist_addproduct');
     Route::post('/clear_cookies', 'Website\PageController@clear_cookies');
     Route::post('/invia_formcontatti','Website\PageController@invia_formcontatti')->name('invia_formcontatti');
     Route::get('/{slug}','Website\PageController@page');

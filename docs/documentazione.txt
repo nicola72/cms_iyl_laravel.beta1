@@ -1,0 +1,23 @@
+PANNELLO:
+
+    PASSWORD UTENTI :
+        Si trovano per il cms nella tabella cms_clearpassword, per il sito nella tabella clearpassword
+
+    CREARE NUOVO UTENTE:
+        Per creare un nuovo utente amministratore andare nella pagina login e da li poi cliccare su crea account, il link funziona solo per IP autorizzati,
+        questi si trovano nel file config.cms.php.
+        Qui può essere creato un utente amministratore o editore
+
+    SINCRONIZZAZIONE:
+        copiare le seguenti tabelle dal vecchio db al nuovo:
+            tb_abbinamenti
+            tb_categorie
+            tb_categorie_principali
+            tb_clear_pwd
+            tb_prodotti
+            tb_spedizione_ordini
+            tb_users
+            tb_user_details
+            tb_ordini
+            tb_dettaglio_ordini
+            tb_guestbook

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Cms;
 
+use App\Model\Cms\CmsClearpassword;
 use App\Model\Cms\RoleCms;
+use App\Model\Cms\UserCms;
 use App\Model\Module;
 use App\Model\ModuleConfig;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use PhpParser\Node\Expr\AssignOp\Mod;
+use Illuminate\Support\Facades\Hash;
 
 class SettingsController extends Controller
 {
@@ -267,6 +270,37 @@ class SettingsController extends Controller
             return ['result' => 0,'msg' => $e->getMessage()];
         }
         return ['result' => 1,'msg' => 'Elemento aggiornato con successo!'];
+
+    }
+
+    public function create_user_pannello()
+    {
+        $config = \Config::get('website_config');
+        $username = $config['username'];
+        $password = substr(encrypt($username),0,8);
+        $nome = $config['azienda'];
+        $role_id = 2;
+
+        $user_gia_presente = UserCms::where('email',$username)->first();
+        if($user_gia_presente)
+        {
+            return back()->with('error','Utente già presente');
+        }
+
+        $user = UserCms::create([
+            'role_id'  => $role_id,
+            'name'     => $nome,
+            'email'    => $username,
+            'password' => Hash::make($password),
+        ]);
+
+        //inserisco la password in chiaro
+        $clear_pwd = new CmsClearpassword();
+        $clear_pwd->user_id = $user->id;
+        $clear_pwd->password = $password;
+        $clear_pwd->save();
+
+        return back()->with('success','Utente creato con successo');
 
     }
 }

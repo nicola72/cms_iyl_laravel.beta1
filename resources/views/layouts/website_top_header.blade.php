@@ -89,6 +89,7 @@
                                 <li>@lang('msg.carrello_1')</li>
 
                                 @foreach($carts as $cart)
+                                    @if($cart->product)
                                     <li>
                                         <div class="media" style="padding:6px 16px;color:#fff">
                                             <img class="media-left media-object foto_carrello" src="{{ $website_config['cs_small_dir'].$cart->product->cover() }}" alt="">
@@ -102,6 +103,7 @@
                                             </div>
                                         </div>
                                     </li>
+                                    @endif
                                 @endforeach
                             @else
                                 <li>@lang('msg.carrello_2')</li>

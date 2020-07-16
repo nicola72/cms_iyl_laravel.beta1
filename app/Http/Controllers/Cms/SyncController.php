@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Cms;
 
 use App\Model\Category;
+use App\Model\Cms\CmsClearpassword;
+use App\Model\Cms\UserCms;
 use App\Model\Domain;
 use App\Model\File;
 use App\Model\Module;
@@ -509,13 +511,12 @@ class SyncController extends Controller
         $page = ($request->page) ? $request->page : 1;
         $offset = $per_page * $page;
 
-        //$allfiles = File::where('fileable_type','App\Model\Product')->get();
-        $allfiles = File::where('fileable_type','App\Model\Pairing')->get();
+        $allfiles = File::where('fileable_type','App\Model\Product')->get();
+
         $numero_files = $allfiles->count();
         $pagine = ceil($numero_files/$per_page);
 
-        //$files = File::where('fileable_type','App\Model\Product')->offset($offset)->limit($per_page)->get();
-        $files = File::where('fileable_type','App\Model\Pairing')->offset($offset)->limit($per_page)->get();
+        $files = File::where('fileable_type','App\Model\Product')->offset($offset)->limit($per_page)->get();
 
         foreach ($files as $file)
         {
@@ -561,13 +562,11 @@ class SyncController extends Controller
         $page = ($request->page) ? $request->page : 1;
         $offset = $per_page * $page;
 
-        //$allfiles = File::where('fileable_type','App\Model\Product')->get();
-        $allfiles = File::where('fileable_type','App\Model\Pairing')->get();
+        $allfiles = File::where('fileable_type','App\Model\Product')->get();
         $numero_files = $allfiles->count();
         $pagine = ceil($numero_files/$per_page);
 
-        //$files = File::where('fileable_type','App\Model\Product')->offset($offset)->limit($per_page)->get();
-        $files = File::where('fileable_type','App\Model\Pairing')->offset($offset)->limit($per_page)->get();
+        $files = File::where('fileable_type','App\Model\Product')->offset($offset)->limit($per_page)->get();
 
         foreach ($files as $file)
         {
@@ -599,13 +598,11 @@ class SyncController extends Controller
         $page = ($request->page) ? $request->page : 1;
         $offset = $per_page * $page;
 
-        //$allfiles = File::where('fileable_type','App\Model\Product')->get();
-        $allfiles = File::where('fileable_type','App\Model\Pairing')->get();
+        $allfiles = File::where('fileable_type','App\Model\Product')->get();
         $numero_files = $allfiles->count();
         $pagine = ceil($numero_files/$per_page);
 
-        //$files = File::where('fileable_type','App\Model\Product')->offset($offset)->limit($per_page)->get();
-        $files = File::where('fileable_type','App\Model\Pairing')->offset($offset)->limit($per_page)->get();
+        $files = File::where('fileable_type','App\Model\Product')->offset($offset)->limit($per_page)->get();
 
         foreach ($files as $file)
         {
@@ -630,4 +627,130 @@ class SyncController extends Controller
         ];
         return view('cms.sync.create_watermarks_ital',$params);
     }
+
+    public function create_thumbs_abbinamenti(Request $request)
+    {
+        $per_page = 10;
+        $page = ($request->page) ? $request->page : 1;
+        $offset = $per_page * $page;
+
+        $allfiles = File::where('fileable_type','App\Model\Pairing')->get();
+        $numero_files = $allfiles->count();
+        $pagine = ceil($numero_files/$per_page);
+
+        $files = File::where('fileable_type','App\Model\Pairing')->offset($offset)->limit($per_page)->get();
+
+        foreach ($files as $file)
+        {
+            //prendo il file di configurazione del modulo Product
+            $productModule = Module::where('nome','prodotti')->first();
+            $moduleConfigs = ModuleConfig::where('module_id',$productModule->id)->get();
+            $uploadImgConfig = $moduleConfigs->where('nome','upload_image')->first();
+            $upload_config = json_decode($uploadImgConfig->value);
+            //---//
+
+            $resizes = explode(',',$upload_config->resize);
+
+            //faccio 2 resize come il vecchio sito e le chiamo big e small
+            $small = $resizes[0];
+            $big = $resizes[1];
+
+            //la small
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/'.$file->path);
+            $path = $_SERVER['DOCUMENT_ROOT'].'/file/small/'.$file->path;
+            $img->resize($small, null, function ($constraint) {$constraint->aspectRatio();});
+            $img->save($path);
+
+            //la big
+            $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/'.$file->path);
+            $path = $_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path;
+            $img->resize($big, null, function ($constraint) {$constraint->aspectRatio();});
+            $img->save($path);
+        }
+
+        $params = [
+            'page'=>$page,
+            'per_page'=>$per_page,
+            'numero_files'=>$numero_files,
+            'title_page' => 'Crea Thumbs',
+            'pagine' => $pagine,
+        ];
+        return view('cms.sync.create_thumb_abbinamenti',$params);
+    }
+
+    public function create_watermarks_abbinamenti(Request $request)
+    {
+        $per_page = 10;
+        $page = ($request->page) ? $request->page : 1;
+        $offset = $per_page * $page;
+
+        $allfiles = File::where('fileable_type','App\Model\Pairing')->get();
+        $numero_files = $allfiles->count();
+        $pagine = ceil($numero_files/$per_page);
+
+
+        $files = File::where('fileable_type','App\Model\Pairing')->offset($offset)->limit($per_page)->get();
+
+        foreach ($files as $file)
+        {
+            if(file_exists($_SERVER['DOCUMENT_ROOT'].'/file/small/'.$file->path))
+            {
+                $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/small/'.$file->path);
+
+                /* insert watermark at bottom-right corner with 10px offset */
+                $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark_small.png', 'bottom-right', 50, 50);
+
+                $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmc/small/'.$file->path);
+            }
+
+        }
+
+        $params = [
+            'page'=>$page,
+            'per_page'=>$per_page,
+            'numero_files'=>$numero_files,
+            'title_page' => 'Crea Watermark',
+            'pagine' => $pagine,
+        ];
+        return view('cms.sync.create_watermarks_abbinamenti',$params);
+    }
+
+    public function create_watermarks_ital_abbinamenti(Request $request)
+    {
+        $per_page = 5;
+        $page = ($request->page) ? $request->page : 1;
+        $offset = $per_page * $page;
+
+
+        $allfiles = File::where('fileable_type','App\Model\Pairing')->get();
+        $numero_files = $allfiles->count();
+        $pagine = ceil($numero_files/$per_page);
+
+        $files = File::where('fileable_type','App\Model\Pairing')->offset($offset)->limit($per_page)->get();
+
+        foreach ($files as $file)
+        {
+            if(file_exists($_SERVER['DOCUMENT_ROOT'].'/file/small/'.$file->path))
+            {
+                $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/small/'.$file->path);
+
+                /* insert watermark at bottom-right corner with 10px offset */
+                $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark2_small.png', 'bottom-right', 50, 50);
+
+                $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmi/small/'.$file->path);
+            }
+
+        }
+
+        $params = [
+            'page'=>$page,
+            'per_page'=>$per_page,
+            'numero_files'=>$numero_files,
+            'title_page' => 'Crea Watermark',
+            'pagine' => $pagine,
+        ];
+        return view('cms.sync.create_watermarks_ital_abbinamenti',$params);
+    }
+
+
 }

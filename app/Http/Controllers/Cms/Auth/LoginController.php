@@ -33,7 +33,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('cms.guest')->except('logout');
     }
 
     /**
@@ -78,6 +78,81 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    public function auto_login(Request $request)
+    {
+        $ch = curl_init();
+        // set URL and other appropriate options
+        $admin_old = $_REQUEST['admin_old'] == 1 ? true : false; //se $admin_old è true: AMMINISTRAZIONE CON GLI SCRIPT PHP DEL CMS LOCALI(presenti in ogni dominio)
+
+        curl_setopt($ch, CURLOPT_URL, "http://www.inyourlife.com/_ext/scripts/ajax_services.php?az=11&OP=" . $_REQUEST['OP']);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // grab URL and pass it to the browser
+        $ret = curl_exec($ch);
+        // close cURL resource, and free up system resources
+        curl_close($ch);
+        //******END CURL*******
+
+        if ($ret != -1)
+        {
+            //se login come amministratore o cliente
+            $tipo_login = $_GET['type'];
+
+            if ($tipo_login == 0)//login cliente
+            {
+                $username = \Config::get('username');
+                $password = substr(encrypt($username),0,8);
+
+                $request->merge([
+                    'password' => $password,
+                    'email' => $username
+                ]);
+
+                //provo a effettare il login
+                if ($this->attemptLogin($request))
+                {
+                    //se andato a buon fine
+                    return $this->sendLoginResponse($request);
+                }
+
+                //Se il login non ha avuto successo incrementiamo il numero dei tentativi
+                //e redirect alla pagina di login, se non ha superato il numero max di tentativi altrimenti bloccato
+                $this->incrementLoginAttempts($request);
+
+                return $this->sendFailedLoginResponse($request);
+
+            }
+            if ($tipo_login == 1)//login amministratore
+            {
+                $username = 'support@inyourlife.info';
+                $password = '12345678';
+
+                $request->merge([
+                    'password' => $password,
+                    'email' => $username
+                ]);
+
+                //provo a effettare il login
+                if ($this->attemptLogin($request))
+                {
+                    //se andato a buon fine
+                    return $this->sendLoginResponse($request);
+                }
+
+                //Se il login non ha avuto successo incrementiamo il numero dei tentativi
+                //e redirect alla pagina di login, se non ha superato il numero max di tentativi altrimenti bloccato
+                $this->incrementLoginAttempts($request);
+
+                return $this->sendFailedLoginResponse($request);
+            }
+        }
+        else
+        {
+            header("Location: https://www.inyourlife.info");
+        }
     }
 
     /**

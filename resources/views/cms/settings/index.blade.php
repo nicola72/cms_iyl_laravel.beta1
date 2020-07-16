@@ -12,6 +12,10 @@
                         <a href="javascript:void(0)" onclick="get_modal('{{url('cms/settings/create_module')}}')" class="btn btn-w-m btn-primary">Aggiungi</a>
                         <!-- fine pulsante nuovo -->
 
+                        <!-- Per CREARE UTENTE COLLEGATO AL PANNELLO IYL -->
+                        <a href="{{url('cms/settings/create_user_pannello')}}" class="btn btn-w-m btn-primary">Crea Utente Pannello IYL</a>
+                        <!-- fine pulsante nuovo -->
+
 
                         <div class="ibox-tools">
                             <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>

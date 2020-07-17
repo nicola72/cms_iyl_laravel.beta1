@@ -95,6 +95,7 @@ class PageController extends Controller
                 exit();
             }
 
+            //stabilisco di che tipo è la url se per una pagina statica o per una categoria prodotto o ecc...
             switch ($url->urlable_type) {
                 case 'App\Model\Page':
                     return $this->simplePage($request,$url);
@@ -112,15 +113,12 @@ class PageController extends Controller
                     return $this->pairingPage($request,$url);
                     break;
                 default:
-                    return view('website.errors.404');
+                    return $this->page_404();
             }
         }
         else
         {
-            $params = [
-                'carts' => $this->getCarts(),
-            ];
-            return view('website.errors.404',$params);
+            return $this->page_404();
         }
     }
 
@@ -166,16 +164,26 @@ class PageController extends Controller
         //altrimenti cerco il seo generico per le categorie
         if(!$seo)
         {
-            $seo = Seo::where('bind_to','App\Model\Macrocategory')->where('locale',\App::getLocale())->first();
-            $segnaposto = $macrocategory->{'nome_'.\App::getLocale()};
-            $seo->title = str_replace("%s",$segnaposto ,$seo->title);
-            $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
-            $seo->description = str_replace("%s",$segnaposto ,$seo->description);
-            $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
-            $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+            $seo = $this->getSeoGenerico('App\Model\Macrocategory', $macrocategory->{'nome_'.\App::getLocale()});
         }
 
         return $this->catalogo($request,$macrocategory,$macrocategory,$seo);
+    }
+
+    //ATTENZIONE questa è l'url EMERGENZA categoria viene chiamata solo nel caso la categoria non abbia la url impostata nel db
+    protected function category(Request $request)
+    {
+        $category = Category::find($request->id);
+        if(!$category)
+        {
+            $this->page_404();
+        }
+
+        $macrocategory = Macrocategory::find($category->macrocategory_id);
+
+        $seo = $this->getSeoGenerico('App\Model\Category', $category->{'nome_'.\App::getLocale()});
+
+        return $this->catalogo($request,$macrocategory,$category,$seo);
     }
 
     protected function categoryPage(Request $request,$url)
@@ -187,13 +195,7 @@ class PageController extends Controller
         //altrimenti cerco il seo generico per le categorie
         if(!$seo)
         {
-            $seo = Seo::where('bind_to','App\Model\Category')->where('locale',\App::getLocale())->first();
-            $segnaposto = $category->{'nome_'.\App::getLocale()};
-            $seo->title = str_replace("%s",$segnaposto ,$seo->title);
-            $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
-            $seo->description = str_replace("%s",$segnaposto ,$seo->description);
-            $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
-            $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+            $seo = $this->getSeoGenerico('App\Model\Category', $category->{'nome_'.\App::getLocale()});
         }
 
         return $this->catalogo($request,$macrocategory,$category,$seo);
@@ -206,13 +208,7 @@ class PageController extends Controller
         //altrimenti cerco il seo generico per i prodotti
         if(!$seo)
         {
-            $seo = Seo::where('bind_to','App\Model\Product')->where('locale',\App::getLocale())->first();
-            $segnaposto = $product->{'nome_'.\App::getLocale()};
-            $seo->title = str_replace("%s",$segnaposto ,$seo->title);
-            $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
-            $seo->description = str_replace("%s",$segnaposto ,$seo->description);
-            $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
-            $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+            $seo = $this->getSeoGenerico('App\Model\Product',$product->{'nome_'.\App::getLocale()});
         }
 
         //le macrocategorie per il menu nella colonna a sinistra
@@ -239,13 +235,7 @@ class PageController extends Controller
         //altrimenti cerco il seo generico per gli abbinamenti
         if(!$seo)
         {
-            $seo = Seo::where('bind_to','App\Model\Pairing')->where('locale',\App::getLocale())->first();
-            $segnaposto = $pairing->{'nome_'.\App::getLocale()};
-            $seo->title = str_replace("%s",$segnaposto ,$seo->title);
-            $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
-            $seo->description = str_replace("%s",$segnaposto ,$seo->description);
-            $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
-            $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+            $seo = $this->getSeoGenerico('App\Model\Pairing', $pairing->{'nome_'.\App::getLocale()});
         }
 
         //le macrocategorie per il menu nella colonna a sinistra
@@ -1187,5 +1177,16 @@ class PageController extends Controller
             }
         }
         return $carts;
+    }
+
+    private function getSeoGenerico($model_type,$segnaposto)
+    {
+        $seo = Seo::where('bind_to',$model_type)->where('locale',\App::getLocale())->first();
+        $seo->title = str_replace("%s",$segnaposto ,$seo->title);
+        $seo->h1 = str_replace("%s",$segnaposto ,$seo->h1);
+        $seo->description = str_replace("%s",$segnaposto ,$seo->description);
+        $seo->h2 = str_replace("%s",$segnaposto ,$seo->h2);
+        $seo->alt = str_replace("%s",$segnaposto ,$seo->alt);
+        return $seo;
     }
 }

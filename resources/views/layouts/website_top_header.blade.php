@@ -72,7 +72,11 @@
                     <li class="hidden-md hidden-sm hidden-lg">
                         <a href="{{$pages->where('nome','carrello')->first()->url()}}">
                             <i class="fa fa-shopping-cart"></i>
-                            <span class="carrello_nr">{{$carts->count()}}</span>
+                            @if(isset($carts) && $carts->count() > 0)
+                            <span class="carrello_nr">
+                                {{$carts->count()}}
+                            </span>
+                            @endif
                         </a>
                     </li>
                     <!-- fine CARRELLO MOBILE -->
@@ -81,11 +85,15 @@
                     <li class="dropdown hidden-xs" >
                         <a href="{{$pages->where('nome','carrello')->first()->url()}}" class="dropdown-toggle" data-toggle="dropdown disabled">
                             <i class="fa fa-shopping-cart"></i>
-                            <span class="carrello_nr">{{$carts->count()}}</span>
+                            @if(isset($carts) && $carts->count() > 0)
+                            <span class="carrello_nr">
+                                {{$carts->count()}}
+                            </span>
+                            @endif
                         </a>
                         <ul id="cart-menu" class="dropdown-menu dropdown-menu-right">
 
-                            @if($carts->count() > 0)
+                            @if(isset($carts) && $carts->count() > 0)
                                 <li>@lang('msg.carrello_1')</li>
 
                                 @foreach($carts as $cart)

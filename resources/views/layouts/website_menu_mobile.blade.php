@@ -28,26 +28,28 @@
                 </a>
                 <ul class="dropdown-menu row hidden-md hidden-lg" style="width:100%; margin-top:10px; padding:5px 3px; height:auto;  background-color:#000;">
                     <li class="col-sm-3 col-xs-12">
-                    @foreach($macrocategorie as $key=>$macro)
-                        <ul class="list-unstyled">
-                            <li class="titolo-menu" style="margin:0; padding:0;">
-                                <a href="#" class="fjalla" data-toggle="collapse" data-target="#collapse_{{$key}}" aria-expanded="false" aria-controls="collapse_{{$key}}" style="padding:5px 0 !important">
-                                    <i class="fa fa-plus-square"></i>
-                                    &nbsp;&nbsp;{{$macro->{'nome_'.app()->getLocale()} }}
-                                </a>
-                            </li>
-                            <div class="collapse" id="collapse_{{$key}}">
-                                <li><hr style="margin:10px 0"></li>
-                                @foreach($macro->categories as $category)
-                                <li>
-                                    <a href="{{$category->url()}}" class="voci-menu fjalla color-white">
-                                        {{ $category->{'nome_'.app()->getLocale()} }}
+                    @if(isset($macrocategorie))
+                        @foreach($macrocategorie as $key=>$macro)
+                            <ul class="list-unstyled">
+                                <li class="titolo-menu" style="margin:0; padding:0;">
+                                    <a href="#" class="fjalla" data-toggle="collapse" data-target="#collapse_{{$key}}" aria-expanded="false" aria-controls="collapse_{{$key}}" style="padding:5px 0 !important">
+                                        <i class="fa fa-plus-square"></i>
+                                        &nbsp;&nbsp;{{$macro->{'nome_'.app()->getLocale()} }}
                                     </a>
                                 </li>
-                                @endforeach
-                            </div>
-                        </ul>
-                    @endforeach
+                                <div class="collapse" id="collapse_{{$key}}">
+                                    <li><hr style="margin:10px 0"></li>
+                                    @foreach($macro->categories as $category)
+                                    <li>
+                                        <a href="{{$category->url()}}" class="voci-menu fjalla color-white">
+                                            {{ $category->{'nome_'.app()->getLocale()} }}
+                                        </a>
+                                    </li>
+                                    @endforeach
+                                </div>
+                            </ul>
+                        @endforeach
+                    @endif
                     </li>
                 </ul>
             </li>

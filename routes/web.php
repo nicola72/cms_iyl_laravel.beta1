@@ -237,6 +237,8 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::post('/cart/paypal_notify','Website\CartController@paypal_notify');
     Route::get('/cart/paypal_error','Website\CartController@paypal_error');
 
+    Route::get('category/{id}','Website\PageController@category');
+
     Route::post('/add_to_newsletter','Website\PageController@add_to_newsletter');
     Route::get('/wishlist_delete/{id}','Website\PageController@wishlist_delete');
     Route::get('/wishlist_addpairing/{id}','Website\PageController@wishlist_addpairing');

@@ -33,3 +33,9 @@ PANNELLO:
             tb_ordini
             tb_dettaglio_ordini
             tb_guestbook
+
+    MACROCATEGORIE
+        Le macrocategorie sono statiche e si trovano nel pannello alla voce CATEGORIE PRINCIPALI, ha come url per ogni lingua "lang/nome_macro",
+        solo AMMINISTRATORE può crearne una nuova. Qunado se ne crea un nuova vengono in automatico create le url per tutte le lingue presenti.
+
+

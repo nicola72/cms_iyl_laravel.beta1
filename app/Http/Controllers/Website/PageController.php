@@ -142,8 +142,20 @@ class PageController extends Controller
         }
         else
         {
-            return view('website.errors.not_found_method',['method'=>$page->nome]);
+            return $this->page_404();
         }
+    }
+
+    protected function page_404()
+    {
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+        $params = [
+            'carts' => $this->getCarts(),
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.errors.404',$params);
     }
 
     protected function macrocategoryPage(Request $request,$url)
@@ -616,6 +628,51 @@ class PageController extends Controller
         return view('website.page.recensioni',$params);
     }
 
+    protected function modalita_pagamento(Request $request,$url)
+    {
+        $seo = $url->seo;
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.page.modalita_pagamento',$params);
+    }
+
+    protected function modalita_spedizione(Request $request,$url)
+    {
+        $seo = $url->seo;
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.page.modalita_spedizione',$params);
+    }
+
+    protected function informativa(Request $request,$url)
+    {
+        $seo = $url->seo;
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.page.informativa',$params);
+    }
+
     protected function wishlist(Request $request,$url)
     {
         //l'utente deve essere loggato altrimenti vedrà un messaggio di alert
@@ -633,7 +690,7 @@ class PageController extends Controller
         $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
 
         $products = [];
-        if(count($wishes) > 0)
+        if($wishes && count($wishes) > 0)
         {
             foreach($wishes as $wish)
             {

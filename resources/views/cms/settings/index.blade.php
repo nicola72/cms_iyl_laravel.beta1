@@ -16,6 +16,10 @@
                         <a href="{{url('cms/settings/create_user_pannello')}}" class="btn btn-w-m btn-primary">Crea Utente Pannello IYL</a>
                         <!-- fine pulsante nuovo -->
 
+                        <!-- Per CREARE UTENTE AMMINISTRATORE COLLEGATO AL PANNELLO IYL -->
+                        <a href="{{url('cms/settings/create_admin_user_pannello')}}" class="btn btn-w-m btn-primary">Crea Utente Amministratore Pannello IYL</a>
+                        <!-- fine pulsante nuovo -->
+
 
                         <div class="ibox-tools">
                             <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -98,7 +102,7 @@
             });
 
         });
-        
+
         $('.onoffswitch-checkbox').change(function ()
         {
             let stato = $(this).is(':checked') ? "1" : "0";

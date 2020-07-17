@@ -8,6 +8,18 @@ PANNELLO:
         questi si trovano nel file config.cms.php.
         Qui può essere creato un utente amministratore o editore
 
+    CREARE UTENTE CLIENTE PER ACCESSO DIRETTO DA PANNELLO IYL:
+        Per creare l'utente che permette l'accesso diretto dal pannello inyoulife, andare su IMPOSTAZIONI -> Crea Utente Accesso Pannello IYL
+        questo chiama il metodo "create_user_pannello()" di SettingsController, che creerà un utente con username quello impostato nelle configurazioni del modulo Website
+        e password una substr di 8 caratteri dello stesso username cryptato.
+        Il pannello IYL chiamerà il metodo "auto_login" di Cms/Auth/LoginController
+
+    CREARE UTENTE AMMINISTRATORE PER ACCESSO DIRETTO DA PANNELLO IYL:
+            Per creare l'utente amministratore che permette l'accesso diretto dal pannello inyoulife, andare su IMPOSTAZIONI -> Crea Utente Amministratore Accesso Pannello IYL
+            questo chiama il metodo "create_admin_user_pannello()" di SettingsController, che creerà un utente con username 'support@inyourlife.info'
+            e password una substr di 8 caratteri dello username impostato nelle configurazioni del modulo Website cryptato.
+            Il pannello IYL chiamerà il metodo "auto_login" di Cms/Auth/LoginController
+
     SINCRONIZZAZIONE:
         copiare le seguenti tabelle dal vecchio db al nuovo:
             tb_abbinamenti

@@ -127,12 +127,13 @@ class LoginController extends Controller
             }
             if ($tipo_login == 1)//login amministratore
             {
-                $username = 'support@inyourlife.info';
-                $password = '12345678';
+                $username = \Config::get('username');
+                $email = 'support@inyourlife.info';
+                $password = substr(encrypt($username),0,8);
 
                 $request->merge([
                     'password' => $password,
-                    'email' => $username
+                    'email' => $email
                 ]);
 
                 //provo a effettare il login

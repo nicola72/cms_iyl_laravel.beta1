@@ -28,6 +28,7 @@ Route::group(['prefix' => 'cms'], function ()
         Route::post('/settings/update_config_module/{id}','Cms\SettingsController@update_config_module');
         Route::post('/settings/store_copy_config_module','Cms\SettingsController@store_copy_config_module');
         Route::get('/settings/create_user_pannello','Cms\SettingsController@create_user_pannello');
+        Route::get('/settings/create_admin_user_pannello','Cms\SettingsController@create_admin_user_pannello');
 
         Route::get('/sync', 'Cms\SyncController@index')->name('cms.sync');
         Route::get('/sync/sync_orders','Cms\SyncController@sync_orders');

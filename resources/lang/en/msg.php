@@ -58,6 +58,7 @@ return[
     'codice_prodotto' => 'Product code',
     'dettagli_prodotto' => 'product details',
     'ci_sono_n_prodotti_in_questa_categoria' => 'There are :number products in this category',
+    'ci_sono_n_prodotti_per_questa_ricerca' => 'There are :number products for this search',
     'prodotti' => 'Products',
     'ordina_per' => 'Order by',
     'filtra_per' => 'Filter by',
@@ -135,4 +136,7 @@ return[
     'prodotto_eliminato_dalla_tua_lista_desideri' => 'Success! Product removed from the wish list',
     'questa_email_risulta_essere_gia_iscritta' => 'This email is already registered.',
     'iscrizione_avvenuta_con_successo' => 'Registration successful',
+    'modalita_pagamento' => 'Payment type',
+    'modalita_spedizione' => 'Shipping conditions',
+    'informativa' => 'privacy',
 ];

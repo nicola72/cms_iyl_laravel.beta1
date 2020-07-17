@@ -273,6 +273,37 @@ class SettingsController extends Controller
 
     }
 
+    public function create_admin_user_pannello()
+    {
+        $config = \Config::get('website_config');
+        $username = $config['username'];
+        $email = 'support@inyourlife.info';
+        $password = substr(encrypt($username),0,8);
+        $nome = 'Inyourlife';
+        $role_id = 1;
+
+        $user_gia_presente = UserCms::where('email',$email)->first();
+        if($user_gia_presente)
+        {
+            return back()->with('error','Utente già presente');
+        }
+
+        $user = UserCms::create([
+            'role_id'  => $role_id,
+            'name'     => $nome,
+            'email'    => $email,
+            'password' => Hash::make($password),
+        ]);
+
+        //inserisco la password in chiaro
+        $clear_pwd = new CmsClearpassword();
+        $clear_pwd->user_id = $user->id;
+        $clear_pwd->password = $password;
+        $clear_pwd->save();
+
+        return back()->with('success','Utente creato con successo');
+    }
+
     public function create_user_pannello()
     {
         $config = \Config::get('website_config');

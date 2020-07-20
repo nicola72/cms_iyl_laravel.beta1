@@ -78,7 +78,7 @@ class CategoryController extends Controller
                 $url = new Url();
                 $url->domain_id = $domain->id;
                 $url->locale = $lang;
-                $url->slug = Str::slug( $macro->{'nome_'.$lang}.'-'.$macro->id.'-'.$categoria->id, '-');
+                $url->slug = Str::slug( $categoria->{'nome_'.$lang}, '-');
                 $url->urlable_id = $categoria_id;
                 $url->urlable_type = 'App\Model\Category';
                 $url->save();

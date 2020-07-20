@@ -619,7 +619,7 @@ class CartController extends Controller
 
         if(!is_object($product1) || !is_object($product2))
         {
-            return ['result' => 0,'msg' => trans('msg.errore')];
+            return ['result' => 0,'msg' => trans('msg.errore'),'title' => trans('msg.carrello')];
         }
 
         $qta = 1; //la quantità è sempre 1
@@ -645,7 +645,7 @@ class CartController extends Controller
                 //se il prodotto non è disponibile
                 if($product->stock < ($qta + $cart->qta))
                 {
-                    return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile')];
+                    return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile'),'title' => trans('msg.carrello')];
                 }
 
                 try{
@@ -658,7 +658,7 @@ class CartController extends Controller
                 }
                 catch(\Exception $e){
 
-                    return ['result' => 0,'msg' => $e->getMessage()];
+                    return ['result' => 0,'msg' => $e->getMessage(),'title' => trans('msg.carrello')];
                 }
 
             }
@@ -667,7 +667,7 @@ class CartController extends Controller
                 //se il prodotto non è disponibile
                 if($product->stock < $qta)
                 {
-                    return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile')];
+                    return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile'),'title' => trans('msg.carrello')];
                 }
 
                 try{
@@ -684,13 +684,13 @@ class CartController extends Controller
                 }
                 catch(\Exception $e){
 
-                    return ['result' => 0,'msg' => $e->getMessage()];
+                    return ['result' => 0,'msg' => $e->getMessage(),'title' => trans('msg.carrello')];
                 }
 
             }
         }
 
-        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello')];
+        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello'),'title' => trans('msg.carrello')];
     }
 
     public function addproduct(Request $request)
@@ -702,7 +702,7 @@ class CartController extends Controller
         //se il prodotto non esiste esco
         if(!$product)
         {
-            return ['result' => 0,'msg' => trans('msg.prodotto_non_trovato')];
+            return ['result' => 0,'msg' => trans('msg.prodotto_non_trovato'),'title' => trans('msg.carrello')];
         }
 
         $qta = 1; //la quantità è sempre 1
@@ -716,7 +716,7 @@ class CartController extends Controller
             //se il prodotto non è disponibile
             if($product->stock < ($qta + $cart->qta))
             {
-                return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile')];
+                return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile'),'title' => trans('msg.carrello')];
             }
 
             try{
@@ -730,7 +730,7 @@ class CartController extends Controller
             }
             catch(\Exception $e){
 
-                return ['result' => 0,'msg' => $e->getMessage()];
+                return ['result' => 0,'msg' => $e->getMessage(),'title' => trans('msg.carrello')];
             }
 
         }
@@ -756,12 +756,12 @@ class CartController extends Controller
             }
             catch(\Exception $e){
 
-                return ['result' => 0,'msg' => $e->getMessage()];
+                return ['result' => 0,'msg' => $e->getMessage(),'title' => trans('msg.carrello')];
             }
 
         }
 
-        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello')];
+        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello'),'title' => trans('msg.carrello')];
     }
 
     public function redeem_coupon(Request $request)

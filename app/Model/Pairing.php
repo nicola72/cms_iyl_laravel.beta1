@@ -61,7 +61,15 @@ class Pairing extends Model implements Sortable
         $urls = $this->morphMany('App\Model\Url','urlable');
         $url = $urls->where('locale',$locale)->first();
         $website_config = \Config::get('website_config');
-        return $website_config['protocol']."://www.".$url->domain->nome."/".$locale."/".$url->slug;
+
+        if($url)
+        {
+            //url generata in automatico dal pannello presa dalla tabella urls
+            return $website_config['protocol']."://www.".$url->domain->nome."/".$locale."/".$url->slug;
+        }
+        //nel caso non trovi l'url generata dal sistema nel db prendiamo l'url di salvataggio
+        return $website_config['protocol']."://".$_SERVER['HTTP_HOST']."/".$locale."/pairing-details/".$this->id;
+
     }
 
 

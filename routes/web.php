@@ -237,7 +237,9 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::post('/cart/paypal_notify','Website\CartController@paypal_notify');
     Route::get('/cart/paypal_error','Website\CartController@paypal_error');
 
-    Route::get('category/{id}','Website\PageController@category');
+    Route::get('category/{id}','Website\PageController@category'); //url EMERGENZA (nel caso non venga trovata nel db) per categoria
+    Route::get('details/{id}', 'Website\PageController@details'); //url EMERGENZA (nel caso non venga trovata nel db) per scheda prodotto
+    Route::get('pairing-details/{id}', 'Website\PageController@pairing_details'); //url EMERGENZA (nel caso non venga trovata nel db) per scheda abbinamenti
 
     Route::post('/add_to_newsletter','Website\PageController@add_to_newsletter');
     Route::get('/wishlist_delete/{id}','Website\PageController@wishlist_delete');

@@ -1,5 +1,11 @@
 <ul class="nav navbar-nav col-md-12 ">
 
+    <li class="display-block">
+        <a class="fjalla color-black desk-menu text-uppercase" href="{{$pages->where('nome','tutti_prodotti')->first()->url()}}">
+            {{$pages->where('nome','tutti_prodotti')->first()->label()}}
+        </a>
+    </li>
+
     <!-- Accrocchio per far passare le categorie della macro set completi come macro -->
     @foreach($macrocategorie as $macro)
         @if($macro->id == 22)

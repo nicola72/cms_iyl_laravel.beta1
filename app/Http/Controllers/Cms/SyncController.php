@@ -239,11 +239,24 @@ class SyncController extends Controller
             foreach ($langs as $lang)
             {
                 $domain = Domain::where('locale',$lang)->first();
-                try{
+                /*try{
                     $url = new Url();
                     $url->domain_id = $domain->id;
                     $url->locale = $lang;
                     $url->slug = Str::slug( $cat->macrocategory->{'nome_'.$lang}.'-'.$cat->macrocategory->id.'-'.$cat->id, '-');
+                    $url->urlable_id = $cat->id;
+                    $url->urlable_type = 'App\Model\Category';
+                    $url->save();
+                }
+                catch(\Exception $e)
+                {
+                    return back()->with('error',$e->getMessage());
+                }*/
+                try{
+                    $url = new Url();
+                    $url->domain_id = $domain->id;
+                    $url->locale = $lang;
+                    $url->slug = Str::slug( $cat->{'nome_'.$lang}, '-');
                     $url->urlable_id = $cat->id;
                     $url->urlable_type = 'App\Model\Category';
                     $url->save();
@@ -580,6 +593,16 @@ class SyncController extends Controller
                 $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmc/small/'.$file->path);
             }
 
+            if(file_exists($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path))
+            {
+                $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path);
+
+                /* insert watermark at bottom-right corner with 10px offset */
+                $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark.png', 'bottom-right', 50, 50);
+
+                $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmc/big/'.$file->path);
+            }
+
         }
 
         $params = [
@@ -614,6 +637,16 @@ class SyncController extends Controller
                 $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark2_small.png', 'bottom-right', 50, 50);
 
                 $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmi/small/'.$file->path);
+            }
+
+            if(file_exists($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path))
+            {
+                $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path);
+
+                /* insert watermark at bottom-right corner with 10px offset */
+                $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark2.png', 'bottom-right', 50, 50);
+
+                $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmi/big/'.$file->path);
             }
 
         }
@@ -703,6 +736,16 @@ class SyncController extends Controller
                 $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmc/small/'.$file->path);
             }
 
+            if(file_exists($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path))
+            {
+                $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path);
+
+                /* insert watermark at bottom-right corner with 10px offset */
+                $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark.png', 'bottom-right', 50, 50);
+
+                $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmc/big/'.$file->path);
+            }
+
         }
 
         $params = [
@@ -738,6 +781,16 @@ class SyncController extends Controller
                 $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark2_small.png', 'bottom-right', 50, 50);
 
                 $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmi/small/'.$file->path);
+            }
+
+            if(file_exists($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path))
+            {
+                $img = Image::make($_SERVER['DOCUMENT_ROOT'].'/file/big/'.$file->path);
+
+                /* insert watermark at bottom-right corner with 10px offset */
+                $img->insert($_SERVER['DOCUMENT_ROOT'].'/img/watermark2.png', 'bottom-right', 50, 50);
+
+                $img->save($_SERVER['DOCUMENT_ROOT'].'/file/wmi/big/'.$file->path);
             }
 
         }

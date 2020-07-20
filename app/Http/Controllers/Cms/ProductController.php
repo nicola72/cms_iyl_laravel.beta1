@@ -54,6 +54,7 @@ class ProductController extends Controller
     {
         $langs = \Config::get('langs');
         $prezzo_scontato = ($request->prezzo_scontato != '') ? $request->prezzo_scontato : 0;
+        $prezzo_fabbrica = ($request->prezzo_fabbrica != '') ? $request->prezzo_fabbrica : 0;
 
         try{
             $product = new Product();
@@ -62,7 +63,7 @@ class ProductController extends Controller
             $product->codice = $request->codice;
             $product->prezzo = str_replace(',','.',$request->prezzo);
             $product->prezzo_scontato = str_replace(',','.',$prezzo_scontato);
-            $product->prezzo_fabbrica = str_replace(',','.',$request->prezzo_fabbrica);
+            $product->prezzo_fabbrica = str_replace(',','.',$prezzo_fabbrica);
             $product->acquistabile = $request->acquistabile;
             $product->acquistabile_italfama = $request->acquistabile_italfama;
             $product->peso = $request->peso;

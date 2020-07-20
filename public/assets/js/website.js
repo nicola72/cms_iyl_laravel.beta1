@@ -58,8 +58,14 @@ function addToCart(url) {
         {
             if(data.result === 1)
             {
-                alert(data.msg);
-                location.reload();
+                $(".modal-alert-title").html(data.title);
+                $("#modal-alert-msg").html(data.msg);
+                $('#alert_modal').modal();
+
+                $('#alert_modal').on('hidden.bs.modal', function (e) {
+                    location.reload();
+                });
+
             }
             else
             {
@@ -117,12 +123,19 @@ function couponRedeem(url) {
         {
             if(data.result === 1)
             {
-                alert(data.msg);
-                location.reload();
+                $(".modal-alert-title").html('COUPON');
+                $("#modal-alert-msg").html(data.msg);
+                $('#alert_modal').modal();
+
+                $('#alert_modal').on('hidden.bs.modal', function (e) {
+                    location.reload();
+                })
             }
             else
             {
-                alert(data.msg);
+                $(".modal-alert-title").html('COUPON');
+                $("#modal-alert-msg").html(data.msg);
+                $('#alert_modal').modal();
             }
         }
     });

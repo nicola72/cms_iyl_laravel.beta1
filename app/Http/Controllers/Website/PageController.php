@@ -170,25 +170,14 @@ class PageController extends Controller
         return $this->catalogo($request,$macrocategory,$macrocategory,$seo);
     }
 
-    //ATTENZIONE questa è l'url EMERGENZA categoria viene chiamata solo nel caso la categoria non abbia la url impostata nel db
-    protected function category(Request $request)
-    {
-        $category = Category::find($request->id);
-        if(!$category)
-        {
-            $this->page_404();
-        }
-
-        $macrocategory = Macrocategory::find($category->macrocategory_id);
-
-        $seo = $this->getSeoGenerico('App\Model\Category', $category->{'nome_'.\App::getLocale()});
-
-        return $this->catalogo($request,$macrocategory,$category,$seo);
-    }
 
     protected function categoryPage(Request $request,$url)
     {
         $category = Category::find($url->urlable_id);
+        if(!$category)
+        {
+            return $this->page_404();
+        }
         $macrocategory = Macrocategory::find($category->macrocategory_id);
 
         $seo = $url->seo; //se ha un seo specifico
@@ -204,6 +193,11 @@ class PageController extends Controller
     protected function productPage(Request $request,$url)
     {
         $product = Product::find($url->urlable_id);
+        if(!$product)
+        {
+            return $this->page_404();
+        }
+
         $seo = $url->seo; //se ha un seo specifico
         //altrimenti cerco il seo generico per i prodotti
         if(!$seo)
@@ -230,6 +224,10 @@ class PageController extends Controller
     protected function pairingPage(Request $request,$url)
     {
         $pairing = Pairing::find($url->urlable_id);
+        if(!$pairing)
+        {
+            return $this->page_404();
+        }
 
         $seo = $url->seo; //se ha un seo specifico
         //altrimenti cerco il seo generico per gli abbinamenti
@@ -353,6 +351,79 @@ class PageController extends Controller
         ];
 
         return view($view,$params);
+    }
+
+    //ATTENZIONE questa è l'url EMERGENZA categoria viene chiamata solo nel caso la categoria non abbia la url impostata nel db
+    protected function category(Request $request)
+    {
+        $category = Category::find($request->id);
+        if(!$category)
+        {
+            $this->page_404();
+        }
+
+        $macrocategory = Macrocategory::find($category->macrocategory_id);
+
+        $seo = $this->getSeoGenerico('App\Model\Category', $category->{'nome_'.\App::getLocale()});
+
+        return $this->catalogo($request,$macrocategory,$category,$seo);
+    }
+
+    //ATTENZIONE questa è l'url EMERGENZA scheda prodotto viene chiamata solo nel caso la categoria non abbia la url impostata nel db
+    protected function details(Request $request)
+    {
+        $product = Product::find($request->id);
+        if(!$product)
+        {
+            $this->page_404();
+        }
+        $seo = $this->getSeoGenerico('App\Model\Product',$product->{'nome_'.\App::getLocale()});
+
+        //le macrocategorie per il menu nella colonna a sinistra
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'macrocategory' => false,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null,
+            'product' => $product,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+
+        return view('website.page.product',$params);
+    }
+
+    //ATTENZIONE questa è l'url EMERGENZA scheda abbinamento viene chiamata solo nel caso la categoria non abbia la url impostata nel db
+    protected function pairing_details(Request $request)
+    {
+        $pairing = Pairing::find($request->id);
+        if(!$pairing)
+        {
+            $this->page_404();
+        }
+
+        //le macrocategorie per il menu nella colonna a sinistra
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $seo = $this->getSeoGenerico('App\Model\Pairing', $pairing->{'nome_'.\App::getLocale()});
+
+        $pairing_correlati = Pairing::where('product1_id',$pairing->product1_id)->orWhere('product2_id',$pairing->product2_id)->get();
+        $pairing_correlati = $pairing_correlati->where('id','!=',$pairing->id);
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'seo' => $seo,
+            'macrocategory' => false,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null,
+            'pairing' => $pairing,
+            'pairing_correlati' => $pairing_correlati,
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+
+        return view('website.page.pairing',$params);
     }
 
     protected function ricerca(Request $request,$url)
@@ -533,6 +604,7 @@ class PageController extends Controller
 
         $params = [
             'carts' => $this->getCarts(),
+            'seo' => $seo,
             'macrocategory' => false,
             'macrocategorie' => $macrocategorie,
             'macro_request' => null,

@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="Atnic">
 
-    <title>@yield('title', config('app.name', 'INSPINIA'))</title>
+    <title>@yield('title', config('cms.name', 'CMS Chess Store'))</title>
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">

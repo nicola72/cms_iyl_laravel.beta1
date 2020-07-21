@@ -1,0 +1,1 @@
+#1 visualizzazione nella schermata risultato ricerca con colonne vuote

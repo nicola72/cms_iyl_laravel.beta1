@@ -1,7 +1,7 @@
 <!-- SE ABBINAMENTI -->
 @if($pairings)
 
-    @foreach($pairings as $pairing)
+    @foreach($pairings as $key=>$pairing)
         @include('website.page.partials.box_abbinamento')
     @endforeach
 
@@ -11,7 +11,7 @@
 <!-- SE PRODOTTI SINGOLI -->
 @if($products)
 
-    @foreach($products as $product)
+    @foreach($products as $key=>$product)
         @include('website.page.partials.box_prodotto')
     @endforeach
 

@@ -214,6 +214,42 @@ Route::group(['prefix' => 'cms'], function ()
 //ROUTES DEL WEBSITE
 Route::get('/','Website\PageController@index')->name('website.home');
 
+//ROTTE ITALIANE VECCHIE DA FARE REDIRECT 301
+Route::get('scacchi_in_bronzo.php','Website\RedirectController@old_it_category');
+Route::get('scacchi_in_ottone.php','Website\RedirectController@old_it_category');
+Route::get('scacchiere.php','Website\RedirectController@old_it_category');
+Route::get('tavoli_da_scacchi.php','Website\RedirectController@old_it_category');
+Route::get('giochi_dama_firenze.php','Website\RedirectController@old_it_category');
+Route::get('accessori.php','Website\RedirectController@old_it_category');
+Route::get('scacchi_in_metallo.php','Website\RedirectController@old_it_category');
+Route::get('scacchi_da_viaggio.php','Website\RedirectController@old_it_category');
+Route::get('backgammon.php','Website\RedirectController@old_it_category');
+Route::get('statue_per_scacchi.php','Website\RedirectController@old_it_category');
+Route::get('domino.php','Website\RedirectController@old_it_category');
+Route::get('scacchi_in_resina.php','Website\RedirectController@old_it_category');
+Route::get('mappamondi.php','Website\RedirectController@old_it_category');
+
+Route::get('dettaglio.php','Website\RedirectController@old_it_product');
+
+//ROTTE INGLESI VECCHIE DA FARE REDIRECT 301
+Route::group(['prefix' => 'eng'],function(){
+    Route::get('production_brass.php','Website\RedirectController@old_en_category');
+    Route::get('statue_resin_bronze.php','Website\RedirectController@old_en_category');
+    Route::get('production_boards.php','Website\RedirectController@old_en_category');
+    Route::get('production_tables.php','Website\RedirectController@old_en_category');
+    Route::get('production_checkers.php','Website\RedirectController@old_en_category');
+    Route::get('accessori.php','Website\RedirectController@old_en_category');
+    Route::get('production_metal.php','Website\RedirectController@old_en_category');
+    Route::get('travel_set.php','Website\RedirectController@old_en_category');
+    Route::get('production-backgammon.php','Website\RedirectController@old_en_category');
+    Route::get('production_pewter_statues.php','Website\RedirectController@old_en_category');
+    Route::get('domino.php','Website\RedirectController@old_en_category');
+    Route::get('production_statue_resin.php','Website\RedirectController@old_en_category');
+    Route::get('mappamondi.php','Website\RedirectController@old_en_category');
+
+    Route::get('details.php','Website\RedirectController@old_en_product');
+});
+
 Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'middleware' => 'setlocale'],function(){
 
 

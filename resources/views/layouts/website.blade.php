@@ -11,7 +11,7 @@
         <meta name="author" content="Designed by InYourLife- https://www.inyourlife.info" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="function" content="{{ $function ?? '' }}" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="/favicon.png">
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -78,6 +78,8 @@
         <div id="myModal" class="modal fade" role="dialog"></div>
         <!-- FINE MODALE -->
 
+        <div id="preloader_nic" class=""></div>
+
     @section('scripts')
         <script src="/assets/js/jquery-ui/jquery-ui.js"></script>
         <script src="/assets/js/bootstrap.min.js"></script>
@@ -95,6 +97,7 @@
         <script>
             function show_others(url)
             {
+
                 $.ajax({
                     type: "GET",
                     url: url,
@@ -112,6 +115,20 @@
                 });
             }
         </script>
+
+        <!--LA CHAT Start of Tawk.to Script-->
+        <script type="text/javascript">
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            (function(){
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='https://embed.tawk.to/5e71df268d24fc2265884dfa/default';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+            })();
+        </script>
+        <!--End of Tawk.to Script-->
 
     @show
         @yield('js_script')

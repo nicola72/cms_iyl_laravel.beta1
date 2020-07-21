@@ -71,7 +71,7 @@
                                 {{$pairings->links('website.pagination.on_scroll')}}
                                 <!-- -->
 
-                                @foreach($pairings as $pairing)
+                                @foreach($pairings as $key=>$pairing)
                                     @include('website.page.partials.box_abbinamento')
                                 @endforeach
 
@@ -87,7 +87,7 @@
                                 {{$products->links('website.pagination.on_scroll')}}
                                 <!-- -->
 
-                                @foreach($products as $product)
+                                @foreach($products as $key=>$product)
                                     @include('website.page.partials.box_prodotto')
                                 @endforeach
 

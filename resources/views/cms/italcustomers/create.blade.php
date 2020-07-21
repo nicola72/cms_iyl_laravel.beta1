@@ -69,6 +69,31 @@
                                             <option value="3">tipologia 3</option>
                                         </select>
                                     </div>
+                                    <div class="col-md-6">
+                                        <ul>
+                                            <li>
+                                                <b>Tipologia 1:</b><br>
+                                                da 4000,00€ a 8000,00€ sconto 4%<br>
+                                                da 8000,00€ in su sconto 8%<br>
+                                            </li>
+                                            <li>
+                                                <b>Tipologia 2:</b><br>
+                                                da 1500,00€ a 3000,00€ sconto 3%<br>
+                                                da 3000,00€ a 5000,00€ sconto 5%<br>
+                                                da 5000,00€ in su sconto 8%<br>
+
+                                            </li>
+                                            <li>
+                                                <b>Tipologia 3:</b><br>
+                                                da 2500,00€ a  5000,00€ sconto 10%<br>
+                                                da 5000,00€ a  7500,00€ sconto 15%<br>
+                                                da 7500,00€ a 10000,00€ sconto 20%<br>
+                                                da 10000,00€ a 15000,00€ sconto 22%<br>
+                                                da 15000,00€ in su sconto 25%<br>
+
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

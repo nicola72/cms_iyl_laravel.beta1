@@ -12,7 +12,7 @@
                     <div class="col-md-10" style="">
                         <div class="row">
                             <div class="col-md-12" style="padding-right: 0px;">
-                                <img src="/img/negozio_scacchi_online_2a.jpg" alt="{{$seo->alt ?? ''}}" class="img-responsive" />
+                                <img src="/img/negozio_scacchi_online_2b.jpg" alt="{{$seo->alt ?? ''}}" class="img-responsive" />
                             </div>
                         </div>
                     </div>
@@ -22,8 +22,11 @@
         </div>
     </div>
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
+        <div class="row" style="padding-top: 30px;padding-bottom: 30px;">
+            <div class="col-md-4">
+                <img src="/img/negozio_scacchi_online_5.jpg" alt="{{$seo->alt ?? ''}}" class="img-responsive" />
+            </div>
+            <div class="col-md-8">
                 <div class="page-content" style="padding:60px 0;">
                     @if(app()->getLocale() == 'it')
                         <strong>MARSILI'S COMPANY</strong> apre nel marzo 2002 in Borgo San Iacopo, nel cuore di Firenze a soli 100mt da Ponte Vecchio.<br /><br /> <strong>MARSILI'S COMPANY</strong> &egrave; un punto vendita esclusivo specializzato in SCACCHI e SCACCHIERE di ogni genere e dimensione adatti al piccolo e al grande regalo:
@@ -58,6 +61,14 @@
                         </ul>
                     @endif
                 </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 30px;padding-bottom: 30px;">
+            <div class="col-md-6">
+                <img src="/img/negozio_scacchi_online_3.jpg" alt="{{$seo->alt ?? ''}}" class="img-responsive" style="margin-bottom: 10px;" />
+            </div>
+            <div class="col-md-6">
+                <img src="/img/negozio_scacchi_online_4.jpg" alt="{{$seo->alt ?? ''}}" class="img-responsive" style="margin-bottom: 10px;" />
             </div>
         </div>
 

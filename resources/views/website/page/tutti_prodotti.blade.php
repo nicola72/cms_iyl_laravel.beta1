@@ -58,7 +58,7 @@
                                 <!-- PAGINATORE -->
                                 {{$list->links('website.pagination.no_ajax')}}
                                 <!-- -->
-                                @foreach($list as $item)
+                                @foreach($list as $key=>$item)
                                     @if($item['type'] == 'product')
                                         @include('website.page.partials.box_prodotto',['product'=>$item['object']])
                                     @elseif($item['type'] == 'pairing')

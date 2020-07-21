@@ -45,14 +45,19 @@
                     @endif
                 @endif
             </div>
-            <div class="prodDescrizione">
+            <!--<div class="prodDescrizione">
                 <strong>{{ $product->{'desc_'.app()->getLocale()} }}</strong>
             </div>
 
-            <i>@lang('msg.codice_prodotto'): {{ $product->codice }}</i>
+            <i>@lang('msg.codice_prodotto'): {{ $product->codice }}</i>-->
             <a href="{{ $product->url() }}" class="dettagli" >
                 <i class="fa fa-search"></i> @lang('msg.dettagli_prodotto')
             </a>
         </div>
     </div>
 </div>
+@if(($key+1)%4 == 0)
+    <div class="hidden-sm hidden-xs">
+        <div class="clearfix "></div>
+    </div>
+@endif

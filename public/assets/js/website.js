@@ -21,6 +21,7 @@ function show_others(url)
 
 function show_others_for_scroll(url)
 {
+    $('#preloader_nic').css('display','block');
     $.ajax({
         type: "GET",
         url: url,
@@ -28,10 +29,12 @@ function show_others_for_scroll(url)
         success: function (data)
         {
             $('#product_list').append(data);
+            $('#preloader_nic').css('display','none');
         },
         error: function ()
         {
             alert("Si è verificato un errore! Riprova!");
+            $('#preloader_nic').css('display','none');
         }
     });
 }
@@ -171,78 +174,3 @@ function deleteFromWishList(url) {
     });
 
 }
-/*
-
-
-
-
-
-function deleteItemFromCart(id_carrello, lang) {
-    $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=deleteItemFromCart&id_carrello=" + id_carrello + "&lang=" + lang,
-        dataType: "json",
-        type: "get",
-        success: function (data) {
-            if (data.msg != 'success') {
-                $(".modal-title").html('');
-                $("#ajax-test").html(data.msg);
-                $('#myModal').fadeIn();
-                return;
-            } else {
-                location.reload();
-                return;
-            }
-        }
-    });
-}
-
-
-
-
-
-function addToCart(id_prodotto, lang, is_accessorio) {
-    if (typeof (is_accessorio) === 'undefined') is_accessorio = 'false';
-    $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=addToCart&id_prodotto=" + id_prodotto + "&is_accessorio=" + is_accessorio + "&lang=" + lang,
-        dataType: "json",
-        type: "get",
-        success: function (data) {
-            $(".modal-title").html('CART');
-            $("#ajax-test").html(data.msg);
-            if (typeof (data.tot) === 'undefined') {
-                $('#myModal').fadeIn();
-                return;
-            }
-            $('.carrello_nr').html(data.tot);
-            $("#cart-menu").load(location.href + " #cart-menu>*", "");
-            $('#myModal').fadeIn();
-            return;
-        }
-    });
-}
-
-function addAbbinamentoToCart(id_abbinamento, lang, is_accessorio) {
-    if (typeof (is_accessorio) === 'undefined') is_accessorio = 'false';
-    var This = this;
-    $.ajax({
-        url: "/_ext/ajax/ajax_site.php",
-        data: "action=addAbbinamentoToCart&id_abbinamento=" + id_abbinamento + "&is_accessorio=" + is_accessorio + "&lang=" + lang,
-        dataType: "json",
-        type: "get",
-        success: function (data) {
-            $(".modal-title").html('CART');
-            $("#ajax-test").html(data.msg);
-            if (typeof (data.tot) === 'undefined') {
-                $('#myModal').fadeIn();
-                return;
-            }
-            $('.carrello_nr').html(data.tot);
-            $("#cart-menu").load(location.href + " #cart-menu>*", "");
-            $('#myModal').fadeIn();
-            return;
-        }
-    });
-}
-*/

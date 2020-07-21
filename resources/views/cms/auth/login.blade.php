@@ -4,7 +4,7 @@
     <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
             <div><h1 class="logo-name">IYL</h1></div>
-            <h3>Benvenuto nel CMS Inyourlife</h3>
+            <h3>Benvenuto nel CMS Chess Store</h3>
 
             <form class="m-t" role="form" method="POST" action="{{ route('cms.login') }}">
                 {{ csrf_field() }}

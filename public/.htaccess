@@ -5,6 +5,22 @@
 
     RewriteEngine On
 
+    RewriteRule ^eng/who_we_are.php$ https://www.chess-store.org/en/company [R=301,L]
+    RewriteRule ^eng/where_we_are.php$ https://www.chess-store.org/en/where_we_are [R=301,L]
+    RewriteRule ^eng/selling_games.php$ https://www.chess-store.org/en/selling-chess-games [R=301,L]
+    RewriteRule ^eng/reviews-marsili-s-company.php$ https://www.chess-store.org/en/reviews-marsili-s-company [R=301,L]
+    RewriteRule ^eng/login.php$ https://www.chess-store.org/en/login [R=301,L]
+    RewriteRule ^eng/wishlist.php$ https://www.chess-store.org/en/wishlist [R=301,L]
+    RewriteRule ^eng/production_brass.php$ https://www.chess-store.org/en/italian-chess-for-sale [R=301,L]
+
+    RewriteRule ^azienda.php$ https://www.chess-store.it/it/chi-siamo [R=301,L]
+    RewriteRule ^dove_siamo.php$ https://www.chess-store.it/it/dove_siamo [R=301,L]
+    RewriteRule ^vendita_scacchi.php$ https://www.chess-store.it/it/contatti [R=301,L]
+    RewriteRule ^recensioni-marsili-s-company.php$ https://www.chess-store.it/it/recensioni-marsili-s-company [R=301,L]
+    RewriteRule ^login.php$ https://www.chess-store.it/it/login [R=301,L]
+    RewriteRule ^wishlist.php$ https://www.chess-store.it/it/wishlist [R=301,L]
+
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

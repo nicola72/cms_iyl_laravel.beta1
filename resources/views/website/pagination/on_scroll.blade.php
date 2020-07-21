@@ -10,9 +10,9 @@
             {
                 if ($(window).scrollTop() >= ($(document).height() - $(window).height())*0.7){
                     no=2;
+
                     show_others_for_scroll('?page='+page);
                     page = page + 1;
-
                     setTimeout(function(){ no=1; }, 3000);
                 }
             }

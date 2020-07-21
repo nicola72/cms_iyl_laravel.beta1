@@ -139,4 +139,9 @@ return[
     'modalita_pagamento' => 'Modalità pagamento',
     'modalita_spedizione' => 'Modalità di spedizione',
     'informativa' => 'informativa',
+    'vecchia_password' => 'Vecchia password',
+    'nuova_password' => 'Nuova password',
+    'modifica_password' => 'Modifica password',
+    'password_errata' => 'La password non è corretta',
+    'dati_account_modificati_con_successo' => 'I dati del tuo account sono stati modificati con successo!',
 ];

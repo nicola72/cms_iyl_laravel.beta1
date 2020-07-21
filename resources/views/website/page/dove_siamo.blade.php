@@ -10,6 +10,22 @@
                         <!-- FINE MENU' DESKTOP -->
                     </div>
                     <div class="col-md-10" style="background-color: #fff">
+                        <!-- TITOLO PAGINA -->
+                        <div class="row header-page">
+                            <div class="col-xs-6">
+                                <div class="page-title">
+                                    <h2 class="fjalla">@lang('msg.dove_siamo')</h2>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <ol class="breadcrumb pull-right">
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="#" id="name_category">@lang('msg.dove_siamo')</a></li>
+                                </ol>
+                            </div>
+                        </div>
+                        <!-- FINE TITOLO PAGINA -->
                         <div class="row" style="padding-top:60px;padding-bottom:100px;">
                             <div class="col-md-4">
                                 <div class="page-content">

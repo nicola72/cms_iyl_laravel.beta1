@@ -31,7 +31,7 @@
                             <div class="row media">
 
                                 <!-- SLIDER FOTO PRODOTTO -->
-                                <div class="col-sm-8">
+                                <div class="col-md-5">
                                     <div class="media productSlider">
                                         <div id="carousel" class="carousel slide" data-ride="carousel">
                                             <div class="carousel-inner">
@@ -63,7 +63,13 @@
                                 </div>
                                 <!-- FINE SLIDER FOTO PRODOTTO -->
 
-                                <div class="col-sm-4">
+                                <div class="col-md-3">
+                                    <!-- PRODOTTI SINGOLI -->
+                                    @include('website.page.partials.pairing_single_products')
+                                    <!-- FINE PRODOTTI SINGOLI -->
+                                </div>
+
+                                <div class="col-md-4">
                                     <div class="media-body">
 
                                         <!-- nome abbinamento -->
@@ -107,12 +113,13 @@
                                         <br /><br><br>
                                         <!-- -->
 
-                                        <iframe
+                                        <!-- pulsanti SOCIAL -->
+                                        <!--<iframe
                                             src="//www.facebook.com/plugins/share_button.php?href={{request()->fullUrl()}}&amp;layout=button_count&amp;appId=552773188215847"
                                             scrolling="no" frameborder="0" allowtransparency="true"
                                             style="height: 30px;">
 
-                                            <!-- pulsanti SOCIAL -->
+
                                         </iframe>
                                         <div class="clearfix"></div>
                                         <div class="g-plus" data-action="share" style="margin:0px 0 5px 0;"></div>
@@ -121,7 +128,7 @@
 
                                         <script>
                                             !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-                                        </script>
+                                        </script>-->
                                         <!-- -->
 
                                     </div>
@@ -129,9 +136,7 @@
 
                             </div>
 
-                            <!-- PRODOTTI SINGOLI -->
-                            @include('website.page.partials.pairing_single_products')
-                            <!-- FINE PRODOTTI SINGOLI -->
+
 
                             <!-- abbinamenti correlati -->
                             @include('website.page.partials.correlated_pairings')

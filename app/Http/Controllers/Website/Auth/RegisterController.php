@@ -185,4 +185,77 @@ class RegisterController extends Controller
         return ['result' => 1, 'msg'=> trans('msg.ricevera_un_email_con_la_password'),'url'=> url(app()->getLocale().'/login')];
 
     }
+
+    public function change_account(Request $request)
+    {
+        if(!\Auth::check())
+        {
+            return redirect('/');
+        }
+        $auth_user = \Auth::getUser();
+
+        $data = $request->post();
+        $config = \Config::get('website_config');
+        $secret = $config['recaptcha_secret'];
+
+        if(!GoogleRecaptcha::verifyGoogleRecaptcha($data,$secret))
+        {
+            return ['result' => 0, 'msg' => trans('msg.il_codice_di_controllo_errato')];
+        }
+
+        //validazione tramite laravel -- l'errore compare in flash_messages ($errors->any())
+        $request->validate([
+            'email'        => 'required|email:rfc,dns',
+            'nome'         => 'required',
+            'cognome'      => 'required',
+        ]);
+
+        $email   = $request->email;
+        $nome    = $request->nome;
+        $cognome = $request->cognome;
+        $modifica_password = $request->get('mod_pwd',false);
+
+
+        $user = User::find($auth_user->id);
+
+        //se vuole cambiare l'email
+        if($email != $user->email)
+        {
+            //controllo Email Già REGISTRATA
+            $other_user = User::where('email',$email)->first();
+            if($other_user)
+            {
+                return ['result' => 0, 'msg'=> trans('msg.email_gia_registrata')];
+            }
+        }
+
+        $user->name = $nome;
+        $user->surname = $cognome;
+        $user->email = $email;
+
+        //vedo se c'è da modificare la password
+        if($modifica_password)
+        {
+            if($modifica_password == 1)
+            {
+                $vecchia_password = $request->get('password');
+                $nuova_password = $request->get('nuova_password');
+
+                //inserisco la password nuova i chiaro
+                $clearPwd = Clearpassword::where('user_id',$user->id)->first();
+                if($vecchia_password != $clearPwd->password)
+                {
+                    return ['result' => 0, 'msg'=> trans('msg.password_errata')];
+                }
+                $clearPwd->password = $nuova_password;
+                $clearPwd->save();
+
+                //inserisco la password nuova
+                $user->password = Hash::make($nuova_password);
+            }
+        }
+
+        $user->save();
+        return ['result' => 1, 'msg'=> trans('msg.dati_account_modificati_con_successo')];
+    }
 }

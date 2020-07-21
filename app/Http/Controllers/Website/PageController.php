@@ -12,6 +12,7 @@ use App\Model\Macrocategory;
 use App\Model\Material;
 use App\Model\Newsitem;
 use App\Model\NewsletterSubscriber;
+use App\Model\Order;
 use App\Model\Page;
 use App\Model\Pairing;
 use App\Model\Product;
@@ -733,6 +734,48 @@ class PageController extends Controller
             'function' => __FUNCTION__ //visualizzato nei meta tag della header
         ];
         return view('website.page.informativa',$params);
+    }
+
+    protected function account()
+    {
+        if(!\Auth::check())
+        {
+            return redirect('/');
+        }
+        $user = \Auth::getUser();
+        $user_details = UserDetail::where('user_id', $user->id)->first();
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'user' => $user,
+            'user_details' => $user_details,
+            'form_name' => 'form_modifica_account',
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.page.account',$params);
+    }
+
+    protected function orders()
+    {
+        if(!\Auth::check())
+        {
+            return redirect('/');
+        }
+        $user = \Auth::getUser();
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+        $orders = Order::where('user_id',$user->id)->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'orders' => $orders,
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.page.orders',$params);
     }
 
     protected function wishlist(Request $request,$url)

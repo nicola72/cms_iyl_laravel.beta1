@@ -260,6 +260,7 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::post('/register','Website\Auth\RegisterController@register');
     Route::get('/retriew_password','Website\Auth\RegisterController@showRetriewPasswordForm');
     Route::post('/retriew_password','Website\Auth\RegisterController@retriew_password');
+    Route::post('/change_account','Website\Auth\RegisterController@change_account');
 
     Route::get('/cart','Website\CartController@index');
     Route::get('/cart/redeem_coupon', 'Website\CartController@redeem_coupon');
@@ -277,6 +278,8 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::get('details/{id}', 'Website\PageController@details'); //url EMERGENZA (nel caso non venga trovata nel db) per scheda prodotto
     Route::get('pairing-details/{id}', 'Website\PageController@pairing_details'); //url EMERGENZA (nel caso non venga trovata nel db) per scheda abbinamenti
 
+    Route::get('/account','Website\PageController@account');
+    Route::get('/orders','Website\PageController@orders');
     Route::post('/add_to_newsletter','Website\PageController@add_to_newsletter');
     Route::get('/wishlist_delete/{id}','Website\PageController@wishlist_delete');
     Route::get('/wishlist_addpairing/{id}','Website\PageController@wishlist_addpairing');

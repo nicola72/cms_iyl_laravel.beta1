@@ -144,4 +144,8 @@ return[
     'modifica_password' => 'Change password',
     'password_errata' => 'Password is not correct',
     'dati_account_modificati_con_successo' => 'Your account details have changed successfully!',
+    'i_tuoi_ordini' => 'Your orders',
+    'nessun_ordine' => 'You have not placed any orders to date',
+    'dettagli' => 'Details',
+    'totale_finale' => 'Final Total',
 ];

@@ -101,7 +101,7 @@
                                         <!-- pulsante CARRELLO -->
                                         <div class="btn-area">
                                             <a href="javascript:void(0)" onclick="addToCart('{{ url(app()->getLocale().'/cart/addpairing',$pairing->id) }}')" class="btn btn-primary btn-block">
-                                                + carrello <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                + @lang('msg.carrello') <i class="fa fa-angle-right" aria-hidden="true"></i>
                                             </a>
                                         </div>
                                         <!-- -->

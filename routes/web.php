@@ -87,6 +87,7 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/order','Cms\OrderController@index')->name('cms.ordini');
         Route::get('/order/order/{id}','Cms\OrderController@order');
         Route::get('/order/pdf/{id}','Cms\OrderController@pdf');
+        Route::get('/order/order_print/{id}','Cms\OrderController@order_print');
 
         Route::get('/ital_order','Cms\ItalOrderController@index')->name('cms.italfama_ordini');
         Route::get('/ital_order/order/{id}','Cms\ItalOrderController@order');
@@ -262,7 +263,7 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::post('/retriew_password','Website\Auth\RegisterController@retriew_password');
     Route::post('/change_account','Website\Auth\RegisterController@change_account');
 
-    Route::get('/cart','Website\CartController@index');
+    Route::get('/cart','Website\CartController@index')->name('website.cart');
     Route::get('/cart/redeem_coupon', 'Website\CartController@redeem_coupon');
     Route::get('/cart/addproduct/{id}','Website\CartController@addproduct');
     Route::get('/cart/addpairing/{id}','Website\CartController@addpairing');
@@ -272,12 +273,14 @@ Route::group(['prefix' => '{locale}','where' => ['locale' => '[a-zA-Z]{2}'],'mid
     Route::post('/cart/submit','Website\CartController@submit');
     Route::get('/cart/checkout_result/{id}','Website\CartController@checkout_result');
     Route::post('/cart/paypal_notify','Website\CartController@paypal_notify');
-    Route::get('/cart/paypal_error','Website\CartController@paypal_error');
+    Route::get('/cart/paypal_error/{id}','Website\CartController@paypal_error');
 
     Route::get('category/{id}','Website\PageController@category'); //url EMERGENZA (nel caso non venga trovata nel db) per categoria
     Route::get('details/{id}', 'Website\PageController@details'); //url EMERGENZA (nel caso non venga trovata nel db) per scheda prodotto
     Route::get('pairing-details/{id}', 'Website\PageController@pairing_details'); //url EMERGENZA (nel caso non venga trovata nel db) per scheda abbinamenti
 
+    Route::post('/clear_cookies','Website\PageController@clear_cookies');
+    Route::get('/cookies_policy','Website\PageController@cookies_policy');
     Route::get('/account','Website\PageController@account');
     Route::get('/orders','Website\PageController@orders');
     Route::post('/add_to_newsletter','Website\PageController@add_to_newsletter');

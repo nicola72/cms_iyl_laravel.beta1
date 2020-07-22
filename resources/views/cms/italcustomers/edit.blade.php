@@ -46,7 +46,7 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label>Sconto*</label>
-                                        <input type="number" name="sconto" id="sconto" value="{{$customer->sconto}}" class="form-control mb-2" />
+                                        <input type="number" min="0" name="sconto" id="sconto" value="{{$customer->sconto}}" class="form-control mb-2" />
                                     </div>
                                     <div class="col-md-3">
                                         <label>Tipo Sconto*</label>

@@ -397,8 +397,10 @@ class CartController extends Controller
 
             if($config['in_sviluppo'])
             {
-                $email_business = 'paypal@inyourlife.info';
-                $url_paypal = 'https://sandbox.paypal.com/cgi-bin/webscr';
+                //$email_business = 'paypal@inyourlife.info';
+                //$url_paypal = 'https://sandbox.paypal.com/cgi-bin/webscr';
+                $email_business = $config['email_paypal'];
+                $url_paypal = 'https://www.paypal.com/cgi-bin/webscr';
             }
             else
             {
@@ -410,23 +412,27 @@ class CartController extends Controller
             $data = [];
             $data['cmd']           = '_xclick';
             $data['no_note']       = 0;
-            $data['lc']            = 'IT';
+            $data['lc']            = strtoupper(\App::getLocale());
             $data['custom']        = $order->id;
             $data['business']      = $email_business;
             $data['item_name']     = "Ordine Numero " . $order->id;
-            $data['amount']        = $order->importo;
+            $data['amount']        = $totale;
             $data['rm']            = 2;
             $data['currency_code'] = 'EUR';
-            $data['first_name']    = $order->orderShipping->nome;
-            $data['last_name']     = $order->orderShipping->cognome;
-            $data['payer_email']   = $order->orderShipping->email;
+            //$data['first_name']    = $order->orderShipping->nome;
+            //$data['last_name']     = $order->orderShipping->cognome;
+            //$data['payer_email']   = $order->orderShipping->email;
             $data['return']        = url(app()->getLocale().'/cart/checkout_result',['id'=>encrypt($order->id)]);
             $data['cancel_return'] = url(app()->getLocale().'/cart/paypal_error',['id'=>encrypt($order->id)]);
+            //$data['return']        = url(app()->getLocale().'/cart/checkout_result',['id'=>encrypt($order->id)]);
+            //$data['cancel_return'] = url(app()->getLocale().'/cart/paypal_error',['id'=>encrypt($order->id)]);
             $data['notify_url']    = url(app()->getLocale().'/cart/paypal_notify');//mettere questa url nelle eccezioni del middleware VerifyCsrfToken
 
             $queryString = http_build_query($data);
 
             $url = $url_paypal . "?" . $queryString;
+            /*echo $url;
+            exit();*/
             return redirect()->to($url);
 
         }
@@ -690,7 +696,7 @@ class CartController extends Controller
             }
         }
 
-        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello'),'title' => trans('msg.carrello')];
+        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello'),'title' => trans('msg.carrello'),'url'=>route('website.cart',\App::getLocale())];
     }
 
     public function addproduct(Request $request)
@@ -730,7 +736,7 @@ class CartController extends Controller
             }
             catch(\Exception $e){
 
-                return ['result' => 0,'msg' => $e->getMessage(),'title' => trans('msg.carrello')];
+                return ['result' => 0,'msg' => $e->getMessage(),'title' => trans('msg.carrello'),'title' => trans('msg.carrello')];
             }
 
         }
@@ -739,7 +745,7 @@ class CartController extends Controller
             //se il prodotto non è disponibile
             if($product->stock < $qta)
             {
-                return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile')];
+                return ['result' => 0,'msg' => trans('msg.prodotto_non_piu_disponibile'),'title' => trans('msg.carrello')];
             }
 
             try{
@@ -761,7 +767,7 @@ class CartController extends Controller
 
         }
 
-        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello'),'title' => trans('msg.carrello')];
+        return ['result' => 1,'msg' => trans('msg.prodotto_aggiunto_al_carrello'),'title' => trans('msg.carrello'),'url'=>route('website.cart',\App::getLocale())];
     }
 
     public function redeem_coupon(Request $request)

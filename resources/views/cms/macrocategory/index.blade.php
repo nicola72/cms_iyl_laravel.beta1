@@ -41,6 +41,7 @@
                                     <td data-orderable="false">
 
                                         <!-- Pulsante Switch Stato -->
+                                        @if(Auth::user()->role->id == 1)
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_{{$macro->id}}"
@@ -53,11 +54,13 @@
                                                 </label>
                                             </div>
                                         </div>
+                                        @endif
                                         <!-- -->
 
                                     </td>
                                     <td>{{$macro->order}}</td>
                                     <td data-orderable="false">
+                                        @if(Auth::user()->role->id == 1)
                                         <!-- Pulsante per modificare -->
                                         <a class="azioni-table" onclick="get_modal('{{route('macrocategory.edit',['id'=>$macro->id])}}')"  href="javascript:void(0)">
                                             <i class="fa fa-edit fa-2x"></i>
@@ -81,6 +84,7 @@
                                             <i class="fa fa-trash fa-2x"></i>
                                         </a>
                                         <!-- -->
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

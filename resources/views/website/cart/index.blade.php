@@ -25,7 +25,7 @@
     <div class="container">
         <div class="row" style="margin-top:10px;">
             <div class="pull-right">
-                <a href="/" class="fjalla btn btn-default">Back to Shop</a>
+                <a href="/" class="fjalla btn btn-default">@lang('msg.continua_gli_acquisti')</a>
             </div>
         </div>
         <div class="row">

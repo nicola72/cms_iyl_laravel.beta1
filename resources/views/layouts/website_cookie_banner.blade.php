@@ -27,7 +27,7 @@
     function AcceptCookies()
     {	//Se funzione singola
         $.ajax({
-            url: "/clear_cookies",
+            url: "{{url(app()->getLocale().'/clear_cookies')}}",
             type: "post",
             success: function (data)
             {
@@ -37,7 +37,7 @@
     }
 </script>
 <div id="cookies" style="color:#000;" class="montserrat">
-    @lang('msg.cookie_banner_msg_1') <a href="{{url('/cookies_policy')}}" style="font-weight:bold;" target="_blank">Policy</a>
+    @lang('msg.cookie_banner_msg_1') <a href="{{url(app()->getLocale().'/cookies_policy')}}" style="font-weight:bold;" target="_blank">Policy</a>
     &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
     @lang('msg.cookie_banner_msg_2') <a href="javascript:void(0);" onclick="AcceptCookies();" id="cookies_ok" style="color:#fff;">OK</a>
 </div>

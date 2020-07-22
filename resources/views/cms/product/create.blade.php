@@ -114,11 +114,11 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label>Peso</label>
-                                        <input type="number" name="peso" id="peso" class="form-control mb-2" />
+                                        <input type="number"min="0" name="peso" id="peso" class="form-control mb-2" />
                                     </div>
                                     <div class="col-md-4">
                                         <label>Stock</label>
-                                        <input type="number" value="1000" name="stock" id="stock" class="form-control mb-2" />
+                                        <input type="number" min="1" value="1000" name="stock" id="stock" class="form-control mb-2" />
                                     </div>
                                 </div>
                             </div>

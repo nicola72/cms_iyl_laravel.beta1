@@ -148,4 +148,10 @@ return[
     'nessun_ordine' => 'You have not placed any orders to date',
     'dettagli' => 'Details',
     'totale_finale' => 'Final Total',
+    'rimborso_iva' => 'Tax Refund',
+    'continua_gli_acquisti' => 'Back to shop',
+    'disponibile_subito' => 'Available immediately',
+    'non_disponibile_al_momento' => 'Not available at the time',
+    'disponibile_a_breve' => 'Available soon.<br> For info conact our <a class="customer-service" href="mailto:customerservice@chess-store.it">Customer Service</a>',
+    'disponibile_su_ordinazione' => 'Article made to order.<br> For info conact our <a class="customer-service" href="mailto:customerservice@chess-store.it">Customer Service</a>',
 ];

@@ -33,16 +33,16 @@
                 </div>
             </a>
             <div class="fjalla prezzo" >
-                @if($product->availability_id == 4)
-                    @lang('msg.su_ordinazione')
-                @else
+                @if($product->prezzo != '0.00' && $product->prezzo != '100000')
                     @if($product->is_scontato())
                         <span class="FullProdPrice">@money($product->prezzo)</span>
                         &nbsp;&nbsp;
                         <span>@money($product->prezzo_scontato)</span>
                     @else
-                        <span>@money($product->prezzo)</span>
-                    @endif
+                        <span>@money($product->prezzo)</span>                    @endif
+
+                @else
+                    @lang('msg.su_ordinazione')
                 @endif
             </div>
             <!--<div class="prodDescrizione">

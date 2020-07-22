@@ -35,7 +35,7 @@
                             @foreach($newsitems as $item)
                                 <tr>
                                     <td>{{$item->nome_it}}</td>
-                                    <td>{{$item->desc_it}}</td>
+                                    <td>{!! $item->desc_it !!}</td>
 
                                     <td data-orderable="false">
 

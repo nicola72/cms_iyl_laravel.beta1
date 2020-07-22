@@ -933,6 +933,26 @@ class PageController extends Controller
         }
     }
 
+    protected function clear_cookies()
+    {
+        $_POST = array_map("trim", $_POST); // se esternamente ad uno switch
+        $expiration_date = time() + (10 * 365 * 24 * 60 * 60); // in 10 years => Faccio scadere il cookie in un futuro abbastanza lontano
+        setcookie("c_acceptance", "yes", $expiration_date, "/");
+    }
+
+    protected function cookies_policy()
+    {
+        $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
+
+        $params = [
+            'carts' => $this->getCarts(),
+            'macrocategorie' => $macrocategorie,
+            'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
+            'function' => __FUNCTION__ //visualizzato nei meta tag della header
+        ];
+        return view('website.page.cookies_policy',$params);
+    }
+
     protected function wishlist_delete(Request $request)
     {
         //se non è loggato esco

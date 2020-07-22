@@ -33,6 +33,18 @@ class OrderController extends Controller
         return view('cms.order.order',$params);
     }
 
+    public function order_print(Request $request, $id)
+    {
+        $order = Order::find($id);
+
+        $params = [
+            'title_page' => 'Ordine '.$order->id,
+            'order' => $order
+        ];
+
+        return view('cms.order.print',$params);
+    }
+
     public function pdf(Request $request, $id)
     {
         $order = Order::find($id);

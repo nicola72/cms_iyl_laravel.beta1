@@ -36,7 +36,7 @@
                                     <td>{{$review->id}}</td>
                                     <td>{{$review->nome}}</td>
                                     <td>{{$review->data_evento}}</td>
-                                    <td>{{$review->messaggio}}</td>
+                                    <td>{!! $review->messaggio !!}</td>
 
                                     <td data-orderable="false">
 

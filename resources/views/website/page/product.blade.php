@@ -107,8 +107,17 @@
                                             <br />
                                             {{ $product->{'misure_'.app()->getLocale()} }}
                                             <br />
+                                            <br />
                                             <span class="text-capitalize">
-                                            {{ $product->availability->{'nome_'.app()->getLocale()} }}
+                                                @if($product->availability->id == 1)
+                                                    @lang('msg.disponibile_subito')
+                                                @elseif($product->availability->id == 2)
+                                                    @lang('msg.non_disponibile_al_momento')
+                                                @elseif($product->availability->id == 3)
+                                                    @lang('msg.disponibile_a_breve')
+                                                @else
+                                                    @lang('msg.disponibile_su_ordinazione')
+                                                @endif
                                             </span>
                                         </div>
                                         <!-- -->
@@ -117,7 +126,7 @@
                                         @if($product->prezzo != '0.00' && $product->prezzo != '100000.00')
                                             <div class="btn-area">
                                                 <a href="javascript:void(0)" onclick="addToCart('{{ url(app()->getLocale().'/cart/addproduct',$product->id) }}')" class="btn btn-primary btn-block">
-                                                    + carrello <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                    + @lang('msg.carrello') <i class="fa fa-angle-right" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                         @endif

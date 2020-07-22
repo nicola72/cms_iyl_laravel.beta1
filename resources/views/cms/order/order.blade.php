@@ -9,8 +9,14 @@
                     <div class="ibox-title">
 
                         <!-- CREA PDF -->
-                        <a href="{{url('cms/order/pdf',$order->id)}}" class="btn btn-w-m btn-primary">
+                        <!--<a href="{{url('cms/order/pdf',$order->id)}}" target="_blank" class="btn btn-w-m btn-primary">
                             <i class="fa fa-file-pdf-o"></i> PDF
+                        </a>-->
+                        <!-- fine pulsante nuovo -->
+
+                        <!-- STAMPA -->
+                        <a href="{{url('cms/order/order_print',$order->id)}}" target="_blank" class="btn btn-w-m btn-primary">
+                            <i class="fa fa-print"></i> STAMPA
                         </a>
                         <!-- fine pulsante nuovo -->
 
@@ -78,7 +84,9 @@
                         </div>
                         <div class="row mb-4">
                             <div class="col-md-12">
-                                <h3>IMPORTO: @money($order->importo)</h3>
+                                <h3>Importo: @money($order->importo)</h3>
+                                <h3>TOTALE: @money($order->importo + $order->spese_spedizione + $order->spese_conf_regalo + $order->spese_contrassegno - $order->sconto - $order->sconto_iva)</h3>
+
                             </div>
                         </div>
                         <div class="row mb-2">

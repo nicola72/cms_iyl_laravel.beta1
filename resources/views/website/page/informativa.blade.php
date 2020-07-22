@@ -4,16 +4,16 @@
         <div class="row">
             <div class="col-md-2 hidden-xs hidden-sm" style="background-color:#e4e0dc; padding:20px 0;">
                 <!-- MENU' DESKTOP -->
-            @include('layouts.website_menu_desktop')
-            <!-- FINE MENU' DESKTOP -->
-                <!-- box facebook -->
-            @include('layouts.website_box_facebook')
-            <!-- -->
-                <!-- box spedizione -->
-            @if(app()->getLocale() == 'it')
-                @include('layouts.website_box_spedizione')
-            @endif
-            <!-- -->
+                @include('layouts.website_menu_desktop')
+                <!-- FINE MENU' DESKTOP -->
+                    <!-- box facebook -->
+                @include('layouts.website_box_facebook')
+                <!-- -->
+                    <!-- box spedizione -->
+                @if(app()->getLocale() == 'it')
+                    @include('layouts.website_box_spedizione')
+                @endif
+                <!-- -->
             </div>
             <div class="col-md-10" style="background-color: #fff;">
                 <!-- TITOLO PAGINA -->

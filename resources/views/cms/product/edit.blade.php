@@ -9,7 +9,7 @@
                     <div class="ibox-title">
 
                         <!-- Indietro -->
-                        <a href="{{url('cms/products')}}" class="btn btn-w-m btn-primary">Prodotti</a>
+                        <a href="{{url('cms/product')}}" class="btn btn-w-m btn-primary">Prodotti</a>
                         <!-- fine pulsante nuovo -->
 
                         <div class="ibox-tools">

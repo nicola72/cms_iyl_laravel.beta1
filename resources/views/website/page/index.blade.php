@@ -90,7 +90,7 @@
                     <h4 class="modalpopup-title">{{$popup->{'nome_'.app()->getLocale()} }}</h4>
                 </div>
                 <div class="modalpopup-body">
-                    {{$popup->{'desc_'.app()->getLocale()} }}
+                    {!! $popup->{'desc_'.app()->getLocale()} !!}
                 </div>
                 <div class="modal-footer" style="text-align:left;">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

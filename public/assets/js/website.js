@@ -66,7 +66,8 @@ function addToCart(url) {
                 $('#alert_modal').modal();
 
                 $('#alert_modal').on('hidden.bs.modal', function (e) {
-                    location.reload();
+                    //location.reload();
+                    location.assign(data.url);
                 });
 
             }

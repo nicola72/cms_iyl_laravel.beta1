@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserDetail extends Model
 {
+    protected $dates = ['data_nascita'];
+
     protected $fillable = [
         'user_id',
         'data_nascita',

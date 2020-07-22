@@ -148,4 +148,10 @@ return[
     'nessun_ordine' => 'Non hai effettuato nessun ordine fino ad oggi',
     'dettagli' => 'Dettagli',
     'totale_finale' => 'Totale finale',
+    'rimborso_iva' => 'Rimborso Iva',
+    'continua_gli_acquisti' => 'Continua gli acquisti',
+    'disponibile_subito' => 'Disponibile subito',
+    'non_disponibile_al_momento' => 'Non disponibile al momento',
+    'disponibile_a_breve' => 'Disponibile a breve. Per info contattare il <a class="customer-service" href="mailto:customerservice@chess-store.it">Customer Service</a>',
+    'disponibile_su_ordinazione' => 'Articolo realizzato su ordinazione. Per info contattare il <a class="customer-service" href="mailto:customerservice@chess-store.it">Customer Service</a>',
 ];

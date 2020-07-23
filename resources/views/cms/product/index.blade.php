@@ -43,7 +43,7 @@
                                     <td>{{$product->id}}</td>
                                     <td>{{$product->codice}}</td>
                                     <td>{{$product->nome_it}}</td>
-                                    <td>{{$product->category->nome_it}}</td>
+                                    <td>{{$product->category->nome_it ?? ''}}</td>
                                     <td>@money($product->prezzo)</td>
                                     <td>@money($product->prezzo_scontato)</td>
                                     <td>@money($product->prezzo_fabbrica)</td>

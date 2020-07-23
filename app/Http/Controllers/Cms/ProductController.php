@@ -38,7 +38,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categorie = Category::all();
+        $categorie = Category::all()->sortBy('nome_it');
         $availabilities = Availability::all();
         $params = [
             'form_name' => 'form_create_product',

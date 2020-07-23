@@ -172,6 +172,22 @@ class CategoryController extends Controller
     {
         //return back()->with('error','Devo fare controllo prodotti presenti!');
         $categoria = Category::find($id);
+
+        $products = Product::where('category_id',$categoria->id)->get();
+
+        if($products->count() > 0)
+        {
+            return back()->with('error','Non puoi eliminare questa categoria perchè ci sono prodotti associati ad essa!');
+        }
+
+        $pairings = Pairing::where('category_id',$categoria->id)->get();
+        if($pairings->count() > 0)
+        {
+            return back()->with('error','Non puoi eliminare questa categoria perchè ci sono abbinamenti associati ad essa!');
+        }
+
+
+
         $categoria->delete();
 
         //elimino anche le url associate alla macro

@@ -7,4 +7,27 @@
         </a>
 
     </div>
+    <p style="width: 100%;font-size: 12px;text-align:left;">
+        Privacy* @lang('msg.consenso')
+        <input name="privacy" type="checkbox" id="privacy" value="Privacy" required />&nbsp;&nbsp; <br>
+        <a style="color:#000" href="{{$pages->where('nome','informativa')->first()->url()}}" target="_blank">
+            @lang('msg.leggi_informativa')
+        </a>
+    </p>
 </form>
+@section('js_script_form')
+    <script>
+        $("#newsletter_form").validate({
+            ignore: [],
+            event: 'blur',
+            rules: {
+                news_email: {required: true, email: true},
+                privacy: {required: true},
+            },
+            messages: {
+                news_email: {required: "@lang('msg.obbligatorio')", email: "@lang('msg.inserisci_email_valida')"},
+                privacy: {required: "@lang('msg.obbligatorio')"}
+            },
+        });
+    </script>
+@stop

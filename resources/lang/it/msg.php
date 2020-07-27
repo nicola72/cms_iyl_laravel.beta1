@@ -154,4 +154,9 @@ return[
     'non_disponibile_al_momento' => 'Non disponibile al momento',
     'disponibile_a_breve' => 'Disponibile a breve. Per info contattare il <a class="customer-service" href="mailto:customerservice@chess-store.it">Customer Service</a>',
     'disponibile_su_ordinazione' => 'Articolo realizzato su ordinazione. Per info contattare il <a class="customer-service" href="mailto:customerservice@chess-store.it">Customer Service</a>',
+    'fai_la_mossa_giusta' => 'FAI LA MOSSA GIUSTA..REGALA UN SET SCACCHI!!',
+    'scacchi' => 'Scacchi',
+    'soldatini' => 'Soldatini',
+    'statuine' => 'Statuine',
+    'chiudi' => 'Chiudi',
 ];

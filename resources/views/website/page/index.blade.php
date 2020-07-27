@@ -41,7 +41,7 @@
                         <p class="mossa-giusta-p">
                             <img src="/img/scacco.png" alt="{{ $seo->alt ?? '' }}" style="vertical-align:middle; max-height:40px;" />
                             <br/>
-                            FAI LA MOSSA GIUSTA..REGALA UN SET SCACCHI!!
+                            @lang('msg.fai_la_mossa_giusta')
                         </p>
 
                         <img src="/img/pacco-regalo-copia.jpg" class="img-responsive img-center" alt="{{ $seo->alt ?? '' }}" style="margin-bottom: 20px; width:80%"/>

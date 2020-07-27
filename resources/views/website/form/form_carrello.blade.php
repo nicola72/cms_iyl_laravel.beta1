@@ -178,9 +178,9 @@
             <!-- SUBMIT  verso 'riepilogo_ordine' NO AJAX -->
             <div class="col-md-4">
                 <button id="submit_btn" type="submit" class="btn btn-default" style="color:#fff; background-color:#840025;">
-                    @lang('continua')
+                    @lang('msg.continua')
                 </button>
-                <span style="padding-top: 10px;font-size: 12px;color:#000; display: block;">* @lang('obbligatorio')</span>
+                <span style="padding-top: 10px;font-size: 12px;color:#000; display: block;">* @lang('msg.obbligatorio')</span>
             </div>
             <!-- -->
         </div>

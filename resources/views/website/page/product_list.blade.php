@@ -40,13 +40,13 @@
         <div class="col-md-10" style="background-color: #fff;">
             <!-- TITOLO PAGINA -->
             <div class="row header-page">
-                <div class="col-xs-6">
+                <div class="col-12 col-md-6">
                     <div class="page-title">
                         <h2 class="fjalla">{{ $titolo }}</h2>
                     </div>
                 </div>
 
-                <div class="col-xs-6">
+                <div class="col-md-6 hidden-xs">
                     <ol class="breadcrumb pull-right">
                         <li><a href="/">Home</a></li>
                         <li><a href="#" id="name_category">{{ $titolo }}</a></li>

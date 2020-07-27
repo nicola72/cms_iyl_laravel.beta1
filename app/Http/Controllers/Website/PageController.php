@@ -66,6 +66,7 @@ class PageController extends Controller
             'carts' => $this->getCarts(),
             'seo' => $seo,
             'slider' => $slider,
+            'macrocategory' => false,
             'macrocategorie' => $macrocategorie,
             'macro_request' => null, //paramtero necessario per stabilire il collapse del menu a sinistra
             'prodotti_novita' => $prodotti_novita,
@@ -165,7 +166,23 @@ class PageController extends Controller
         //altrimenti cerco il seo generico per le categorie
         if(!$seo)
         {
-            $seo = $this->getSeoGenerico('App\Model\Macrocategory', $macrocategory->{'nome_'.\App::getLocale()});
+            if($url->urlable_id == 23 || $url->urlable_id == 24 )
+            {
+                $segnaposto = trans('msg.scacchi').' '.$macrocategory->{'nome_'.\App::getLocale()};
+            }
+            elseif($url->urlable_id == 26)
+            {
+                $segnaposto = trans('msg.soldatini').' '.$macrocategory->{'nome_'.\App::getLocale()};
+            }
+            elseif($url->urlable_id == 25)
+            {
+                $segnaposto = trans('msg.statue').' '.$macrocategory->{'nome_'.\App::getLocale()};
+            }
+            else
+            {
+                $segnaposto = $macrocategory->{'nome_'.\App::getLocale()};
+            }
+            $seo = $this->getSeoGenerico('App\Model\Macrocategory', $segnaposto);
         }
 
         return $this->catalogo($request,$macrocategory,$macrocategory,$seo);

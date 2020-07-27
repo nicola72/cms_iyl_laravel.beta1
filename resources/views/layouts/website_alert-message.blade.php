@@ -9,7 +9,7 @@
                 <strong id="modal-alert-msg"></strong>
             </div>
             <div class="modal-footer no-padding">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@lang('msg.chiudi')</button>
             </div>
         </div>
     </div>

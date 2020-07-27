@@ -154,4 +154,9 @@ return[
     'non_disponibile_al_momento' => 'Not available at the time',
     'disponibile_a_breve' => 'Available soon.<br> For info conact our <a class="customer-service" href="mailto:customerservice@chess-store.it">Customer Service</a>',
     'disponibile_su_ordinazione' => 'Article made to order.<br> For info conact our <a class="customer-service" href="mailto:customerservice@chess-store.it">Customer Service</a>',
+    'fai_la_mossa_giusta' => 'MAKE THE RIGHT MOVE..Let\'s give a chess set!!',
+    'scacchi' => 'Chess',
+    'soldatini' => 'Soldiers',
+    'statuine' => 'Statues',
+    'chiudi' => 'Close',
 ];

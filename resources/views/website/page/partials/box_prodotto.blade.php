@@ -39,7 +39,8 @@
                         &nbsp;&nbsp;
                         <span>@money($product->prezzo_scontato)</span>
                     @else
-                        <span>@money($product->prezzo)</span>                    @endif
+                        <span>@money($product->prezzo)</span>
+                    @endif
 
                 @else
                     @lang('msg.su_ordinazione')
@@ -56,8 +57,4 @@
         </div>
     </div>
 </div>
-@if(($key+1)%4 == 0)
-    <div class="hidden-sm hidden-xs">
-        <div class="clearfix "></div>
-    </div>
-@endif
+

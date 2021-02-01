@@ -90,6 +90,9 @@
                     <h4 class="modalpopup-title">{{$popup->{'nome_'.app()->getLocale()} }}</h4>
                 </div>
                 <div class="modalpopup-body">
+                    <div>
+                        <img src="/file/news/small/{{$popup->cover()}}" alt="" class="img_news">
+                    </div>
                     {!! $popup->{'desc_'.app()->getLocale()} !!}
                 </div>
                 <div class="modal-footer" style="text-align:left;">

@@ -24,16 +24,17 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Codice</th>
+                                <th>Peso</th>
                                 <th>Nome</th>
                                 <th>Categoria</th>
                                 <th>Prezzo</th>
                                 <th>Scontato</th>
                                 <th>Fabbrica</th>
                                 <th>Disp.</th>
-                                <th data-orderable="false">Visibile</th>
-                                <th data-orderable="false">Italfama</th>
-                                <th data-orderable="false">Offerta</th>
-                                <th data-orderable="false">Novità</th>
+                                <th>Visibile</th>
+                                <th>Italfama</th>
+                                <th>Offerta</th>
+                                <th>Novità</th>
                                 <th data-orderable="false">Azioni</th>
                             </tr>
                             </thead>
@@ -42,6 +43,7 @@
                                 <tr>
                                     <td>{{$product->id}}</td>
                                     <td>{{$product->codice}}</td>
+                                    <td>{{$product->peso}}</td>
                                     <td>{{$product->nome_it}}</td>
                                     <td>{{$product->category->nome_it ?? ''}}</td>
                                     <td>@money($product->prezzo)</td>
@@ -51,6 +53,7 @@
 
                                     <td>
                                         <!-- Pulsante Switch Visibilita -->
+                                        <span class="d-none">{{$product->visibile}}</span>
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_vis_{{$product->id}}"
@@ -68,6 +71,7 @@
 
                                     <td>
                                         <!-- Pulsante Switch Visibilita Italfama -->
+                                        <span class="d-none">{{$product->italfama}}</span>
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_ital_{{$product->id}}"
@@ -85,6 +89,7 @@
                                     </td>
                                     <td>
                                         <!-- Pulsante Switch Offerta-->
+                                        <span class="d-none">{{$product->offerta}}</span>
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_offer_{{$product->id}}"
@@ -101,6 +106,7 @@
                                     </td>
                                     <td>
                                         <!-- Pulsante Switch Novita-->
+                                        <span class="d-none">{{$product->novita}}</span>
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_novita_{{$product->id}}"
@@ -152,6 +158,8 @@
         $(document).ready(function ()
         {
             $('#table-products').DataTable({
+                "sDom": '<"top"lpf>rt<"bottom"i><"clear">', // questa riga per tenere in alto la barra di riscerca vedere https://datatables.net/forums/discussion/1622/pagination-position
+                stateSave: true,
                 responsive: true,
                 pageLength: 100,
                 order: [[ 0, "desc" ]], //order in base a order

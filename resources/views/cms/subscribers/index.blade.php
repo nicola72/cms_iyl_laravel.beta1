@@ -17,6 +17,7 @@
                         <table id="table-iscritti" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
+                                <th>Id</th>
                                 <th>Email</th>
                                 <th>Lingua</th>
                                 <th data-orderable="false">Azioni</th>
@@ -25,6 +26,7 @@
                             <tbody>
                             @foreach($iscritti as $item)
                                 <tr>
+                                    <td>{{$item->id}}</td>
                                     <td>{{$item->email}}</td>
 
                                     <td>{{$item->lang}}</td>
@@ -56,7 +58,19 @@
             $('#table-iscritti').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
-                    {extend: 'csv'},
+                    {
+                        extend: 'csvHtml5',
+                        exportOptions: {
+                            columns: ':not(:last-child)', //per rimuovere il campo azioni vedere https://datatables.net/forums/discussion/30504/exclude-column-from-export-by-using-html5-buttons
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':not(:last-child)', //per rimuovere il campo azioni vedere https://datatables.net/forums/discussion/30504/exclude-column-from-export-by-using-html5-buttons
+                        }
+                    }
+
                 ],
                 responsive: true,
                 pageLength: 100,

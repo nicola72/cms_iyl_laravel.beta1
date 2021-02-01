@@ -695,7 +695,8 @@ class PageController extends Controller
     {
         $seo = $url->seo;
         $macrocategorie = Macrocategory::where('stato',1)->orderBy('order')->get();
-        $reviews = Review::where('visibile',1)->orderBy('id','DESC')->get();
+        //$reviews = Review::where('visibile',1)->orderBy('id','DESC')->get();
+        $reviews = Review::where('visibile',1)->orderBy('created_at','DESC')->get();
 
         $params = [
             'carts' => $this->getCarts(),

@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         //i moduli presenti
-        view()->share('cms_modules',Module::all()->sortBy('id'));
+        view()->share('cms_modules',Module::all()->sortBy('order'));
 
         //la configurazione del sito web
         $website_config = $this->getWebsiteConfig();

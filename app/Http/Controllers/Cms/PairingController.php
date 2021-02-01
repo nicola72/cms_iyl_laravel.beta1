@@ -44,7 +44,7 @@ class PairingController extends Controller
         //prendo le categorie con la macro Set Completi
         $categorie = Category::where('macrocategory_id',22)->get();
         $styles = Style::all();
-        $products = Product::all();
+        $products = Product::all()->sortBy('codice');
         $params = [
             'form_name' => 'form_create_pairing',
             'title_page'=> 'Nuovo Abbinamento',

@@ -28,10 +28,10 @@
                                 <th>Prodotto 2</th>
                                 <th>Categoria</th>
                                 <th>Prezzo</th>
-                                <th data-orderable="false">Visibile</th>
-                                <th data-orderable="false">Italfama</th>
-                                <th data-orderable="false">Offerta</th>
-                                <th data-orderable="false">Novità</th>
+                                <th>Visibile</th>
+                                <th>Italfama</th>
+                                <th>Offerta</th>
+                                <th>Novità</th>
                                 <th data-orderable="false">Azioni</th>
                             </tr>
                             </thead>
@@ -50,6 +50,7 @@
 
                                     <td>
                                         <!-- Pulsante Switch Visibilita -->
+                                        <span class="d-none">{{$pairing->visibile}}</span>
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_vis_{{$pairing->id}}"
@@ -67,6 +68,7 @@
 
                                     <td>
                                         <!-- Pulsante Switch Visibilita Italfama -->
+                                        <span class="d-none">{{$pairing->italfama}}</span>
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_ital_{{$pairing->id}}"
@@ -84,6 +86,7 @@
                                     </td>
                                     <td>
                                         <!-- Pulsante Switch Offerta-->
+                                        <span class="d-none">{{$pairing->offerta}}</span>
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_offer_{{$pairing->id}}"
@@ -100,6 +103,7 @@
                                     </td>
                                     <td>
                                         <!-- Pulsante Switch Novita-->
+                                        <span class="d-none">{{$pairing->novita}}</span>
                                         <div class="switch">
                                             <div class="onoffswitch">
                                                 <input type="checkbox" id="switch_novita_{{$pairing->id}}"
@@ -151,6 +155,8 @@
         $(document).ready(function ()
         {
             $('#table-pairings').DataTable({
+                "sDom": '<"top"lpf>rt<"bottom"i><"clear">', // questa riga per tenere in alto la barra di riscerca vedere https://datatables.net/forums/discussion/1622/pagination-position
+                stateSave: true,
                 responsive: true,
                 pageLength: 100,
                 order: [[ 0, "desc" ]], //order in base a order

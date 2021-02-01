@@ -46,9 +46,10 @@
                                     <td>@money($order->importo)</td>
                                     <td>{{$order->locale}}</td>
                                     <td>
-                                        @if($order->user_id != '')
-                                            {{$order->user->name}} {{$order->user->surname}}
-                                        @endif
+                                        {{$order->orderShipping->nome}} {{$order->orderShipping->cognome}}
+{{--                                        @if($order->user_id != '')--}}
+{{--                                            {{$order->user->name}} {{$order->user->surname}}--}}
+{{--                                        @endif--}}
                                     </td>
                                     <td>
                                         <a href="{{url('cms/order/order',$order->id)}}">

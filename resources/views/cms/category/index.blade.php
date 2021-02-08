@@ -22,6 +22,7 @@
                         <table id="table-categories" style="font-size:12px" class="table table-striped table-bordered">
                             <thead>
                             <tr>
+                                <th>Id</th>
                                 <th>Nome</th>
                                 <th>Macro</th>
                                 <th>Descrizione</th>
@@ -34,6 +35,7 @@
                             <tbody>
                             @foreach($categorie as $cat)
                                 <tr>
+                                    <td>{{$cat->id}}</td>
                                     <td>{{$cat->nome_it}}</td>
                                     <td>{{$cat->macrocategory->nome_it}}</td>
                                     <td>{{$cat->desc_it}}</td>

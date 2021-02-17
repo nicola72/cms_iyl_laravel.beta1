@@ -131,6 +131,9 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/material/images/{id}', 'Cms\MaterialController@images');
         Route::get('/material', 'Cms\MaterialController@index')->name('cms.materiali');
 
+        Route::get('/product/export', 'Cms\ProductController@export');
+        Route::get('/product/importExportView', 'Cms\ProductController@importExportView');
+        Route::post('/product/import', 'Cms\ProductController@import');
         Route::get('/product/switch_visibility','Cms\ProductController@switch_visibility');
         Route::get('/product/switch_visibility_italfama','Cms\ProductController@switch_visibility_italfama');
         Route::get('/product/switch_offerta','Cms\ProductController@switch_offerta');
@@ -140,6 +143,7 @@ Route::group(['prefix' => 'cms'], function ()
         Route::get('/product/images/{id}', 'Cms\ProductController@images');
         Route::get('/product/destroy/{id}', 'Cms\ProductController@destroy');
         Route::get('/product','Cms\ProductController@index')->name('cms.prodotti');
+
 
         Route::get('/pairing/switch_visibility','Cms\PairingController@switch_visibility');
         Route::get('/pairing/switch_visibility_italfama','Cms\PairingController@switch_visibility_italfama');

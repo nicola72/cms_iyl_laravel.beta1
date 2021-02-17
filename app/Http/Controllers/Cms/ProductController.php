@@ -10,9 +10,12 @@ use App\Model\Module;
 use App\Model\ModuleConfig;
 use App\Model\Product;
 use App\Model\Url;
+use App\Exports\ProductsExport;
+use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Intervention\Image\Facades\Image;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -423,6 +426,22 @@ class ProductController extends Controller
             return ['result' => 0,'msg' => $e->getMessage()];
         }
         return ['result' => 1,'msg' => 'Elemento aggiornato con successo!'];
+    }
 
+
+    public function importExportView()
+    {
+        return view('import');
+    }
+
+    public function export()
+    {
+        return Excel::download(new ProductsExport, 'users.xlsx');
+    }
+
+    public function import()
+    {
+        Excel::import(new ProductsImport,request()->file('file'));
+        return back();
     }
 }

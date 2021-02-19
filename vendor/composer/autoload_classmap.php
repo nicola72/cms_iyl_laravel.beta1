@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Exports\\ProductsExport' => $baseDir . '/app/Exports/ProductsExport.php',
     'App\\Http\\Controllers\\Cms\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Cms/Auth/ForgotPasswordController.php',
     'App\\Http\\Controllers\\Cms\\Auth\\LoginController' => $baseDir . '/app/Http/Controllers/Cms/Auth/LoginController.php',
     'App\\Http\\Controllers\\Cms\\Auth\\RegisterController' => $baseDir . '/app/Http/Controllers/Cms/Auth/RegisterController.php',
@@ -53,6 +54,7 @@ return array(
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Http\\Middleware\\Website\\IsAuth' => $baseDir . '/app/Http/Middleware/Website/IsAuth.php',
     'App\\Http\\Middleware\\Website\\SetLocale' => $baseDir . '/app/Http/Middleware/Website/SetLocale.php',
+    'App\\Imports\\ProductsImport' => $baseDir . '/app/Imports/ProductsImport.php',
     'App\\Mail\\Contact' => $baseDir . '/app/Mail/Contact.php',
     'App\\Mail\\NotifyOrder' => $baseDir . '/app/Mail/NotifyOrder.php',
     'App\\Mail\\Order' => $baseDir . '/app/Mail/Order.php',

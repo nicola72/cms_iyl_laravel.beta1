@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'df7116f6dd609934ef7640fe0f284729ac1ac730',
+    'reference' => '4ca7596a0cf12da07285f61256d1667c30624b70',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -537,7 +537,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'df7116f6dd609934ef7640fe0f284729ac1ac730',
+      'reference' => '4ca7596a0cf12da07285f61256d1667c30624b70',
     ),
     'laravel/tinker' => 
     array (
@@ -626,12 +626,12 @@ private static $installed = array (
     ),
     'myclabs/php-enum' => 
     array (
-      'pretty_version' => '1.7.7',
-      'version' => '1.7.7.0',
+      'pretty_version' => '1.8.0',
+      'version' => '1.8.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'd178027d1e679832db9f38248fcc7200647dc2b7',
+      'reference' => '46cf3d8498b095bd33727b13fd5707263af99421',
     ),
     'nesbot/carbon' => 
     array (
